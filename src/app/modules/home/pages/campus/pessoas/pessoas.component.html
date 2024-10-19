@@ -7,7 +7,7 @@
 
   <div class="filter">
     <app-input
-      label="Nome"
+      label="CPF"
       type="text"
       placeholder="Digite o nome"
       [hasError]="false"
@@ -22,30 +22,22 @@
       errorMsg="Nome é obrigatório"
       [isDisable]="false"
     ></app-input>
-    <app-select-input
-      label="Tipo"
-      [options]="primeiroFiltro"
-      placeholder="Selecione uma opção"
-      [hasError]="false"
-      errorMsg="Seleção é obrigatória"
-      [isDisable]="false"
-    ></app-select-input>
-    <app-select-input
-      label="Cartão"
-      [options]="segundoFiltro"
-      placeholder="Selecione uma opção"
-      [hasError]="false"
-      errorMsg="Seleção é obrigatória"
-      [isDisable]="false"
-    ></app-select-input>
-    <app-select-input
-      label="Situação"
-      [options]="terceiroFiltro"
-      placeholder="Selecione uma opção"
-      [hasError]="false"
-      errorMsg="Seleção é obrigatória"
-      [isDisable]="false"
-    ></app-select-input>
+    <app-input
+    label="Email"
+    type="text"
+    placeholder="Digite o nome"
+    [hasError]="false"
+    errorMsg="Nome é obrigatório"
+    [isDisable]="false"
+  ></app-input>
+  <app-input
+  label="Telefone"
+  type="text"
+  placeholder="Digite o nome"
+  [hasError]="false"
+  errorMsg="Nome é obrigatório"
+  [isDisable]="false"
+></app-input>
     <button class="lupa"></button>
   </div>
 
