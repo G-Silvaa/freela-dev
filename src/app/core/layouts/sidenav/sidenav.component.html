@@ -24,14 +24,17 @@
   <div class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none navegacaot">
     <ul class="list-unstyled">
       <li class="cursor-pointer" 
-          [ngClass]="{'active': selectedNav === 1}" 
-          (click)="selectNav(1)">navegação 1</li>
-      <li class="cursor-pointer" 
-          [ngClass]="{'active': selectedNav === 2}" 
-          (click)="selectNav(2)">navegação 2</li>
-      <li class="cursor-pointer" 
-          [ngClass]="{'active': selectedNav === 3}" 
-          (click)="selectNav(3)">navegação 3</li>
+      [ngClass]="{'active': selectedNav === 1}" 
+      (click)="selectNav(1)" 
+      [routerLink]="['/']">navegação 1</li>
+  <li class="cursor-pointer" 
+      [ngClass]="{'active': selectedNav === 2}" 
+      (click)="selectNav(2)" 
+      [routerLink]="['/colaboradores']">navegação 2</li>
+  <li class="cursor-pointer" 
+      [ngClass]="{'active': selectedNav === 3}" 
+      (click)="selectNav(3)" 
+      [routerLink]="['/contratos']">navegação 3</li>
     </ul>
 </div>
    
