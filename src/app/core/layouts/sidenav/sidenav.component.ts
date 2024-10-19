@@ -104,24 +104,7 @@ export class SidenavComponent {
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
-    this.updateHeader();
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => this.updateHeader());
-  }
-
-  updateHeader() {
-    const child = this.activatedRoute.firstChild;
-    if (child?.snapshot.data['title'] && child?.snapshot.data['description']) {
-      this.headerTitle = child.snapshot.data['title'];
-      this.headerDescription = child.snapshot.data['description'];
-    } else {
-      this.headerTitle = 'Boa tarde,';
-      this.headerDescription = 'Genilton';
-    }
-
-    // Verifica se a rota atual é a inicial
-    this.isInitialPage = this.router.url === '/';
+   
   }
 
   toggleCollapse(): void {
@@ -156,24 +139,7 @@ export class SidenavComponent {
     }
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imageUrl = e.target?.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
+  
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const clickedInside =
-      target.closest('.profile') || target.closest('.menuNavbar');
-    if (!clickedInside && this.isDropdownOpen) {
-      this.dropdownMenu();
-    }
-  }
+ 
 }

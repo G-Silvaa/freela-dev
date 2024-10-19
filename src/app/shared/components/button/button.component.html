@@ -2,6 +2,6 @@
     [style.font-size]="size || '0.8rem'"
     [style.backgroundColor]="backgroundColor"
 >
-  <intra-spinner *ngIf="isLoading" />
+  <app-spinner *ngIf="isLoading" />
   <ng-content *ngIf="!isLoading"></ng-content>
 </button>

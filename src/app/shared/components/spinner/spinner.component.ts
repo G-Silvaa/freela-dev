@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'intra-spinner',
+  selector: 'app-spinner',
   standalone: true,
   imports: [],
   templateUrl: './spinner.component.html',

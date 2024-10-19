@@ -4,7 +4,7 @@ import { SelectInputComponent } from "../../../../../../../shared/components/inp
 import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
 
 @Component({
-  selector: 'intra-add-users-modal',
+  selector: 'app-add-users-modal',
   standalone: true,
   imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent],
   templateUrl: './add-users-modal.component.html',

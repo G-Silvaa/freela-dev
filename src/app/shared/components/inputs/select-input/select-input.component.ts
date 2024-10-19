@@ -3,7 +3,7 @@ import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/co
 import { NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'intra-select-input',
+  selector: 'app-select-input',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [

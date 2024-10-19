@@ -3,7 +3,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'intra-button',
+  selector: 'app-button',
   standalone: true,
   imports: [CommonModule, SpinnerComponent],
   templateUrl: './button.component.html',

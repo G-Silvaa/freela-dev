@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'intra-input',
+  selector: 'app-input',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [

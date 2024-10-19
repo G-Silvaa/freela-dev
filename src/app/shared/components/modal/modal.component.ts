@@ -6,7 +6,7 @@ import {
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'intra-modal',
+  selector: 'app-modal',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './modal.component.html',

@@ -10,7 +10,7 @@ interface Item {
 }
 
 @Component({
-  selector: 'intra-table',
+  selector: 'app-table',
   standalone: true,
   imports: [TitleCasePipe, CommonModule],
   templateUrl: './table.component.html',

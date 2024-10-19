@@ -11,12 +11,12 @@
     left: 0px;
     z-index: 0;
 
-    @media (max-width: 992px) {
+   
       display: none;
 
       &.backdropActive {
         display: block;
-      }
+      
     }
   }
 }
@@ -28,11 +28,16 @@
   overflow-x: auto;
   overflow-y: hidden;
   z-index: 1;
-
+  background-color: #08024C;
   transform: translateX(0);
-
   transition: 0.3s;
+  transform: translateX(-100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
 }
+
 
 .dropdown-toggle {
   outline: 0;
@@ -99,6 +104,18 @@
   overflow-y: auto;
 }
 
+.sidenav {
+  transform: translateX(-100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+
+  &.isActive {
+    transform: translateX(0);
+  }
+}
+
 main {
   width: 100%;
   min-height: 100vh;
@@ -106,13 +123,13 @@ main {
   background-color: var(--background-primary);
 
   header {
-    width: 90%;
+    width: 100%;
     height: 60px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 40px;
+    background-color: #08024C;
 
     .box-button {
       width: 25%;
@@ -124,7 +141,7 @@ main {
     .button-bar {
       width: 40px;
       height: 40px;
-      display: none;
+      
       align-items: center;
       justify-content: center;
       border: none;
@@ -446,9 +463,7 @@ main {
     object-fit: cover;
   }
 }
-.box-button {
-  display: none;
-}
+
 
 @media (max-width: 1281px) {
   h6 {
@@ -496,9 +511,7 @@ main {
   }
 }
 
-.box-button {
-  display: none !important;
-}
+
 
 .text{
   display: flex;
@@ -529,9 +542,7 @@ main {
 }
 
 @media (max-width: 992px) {
-  .box-button {
-    display: flex !important;
-  }
+
   .none{
     display: none !important;
   }

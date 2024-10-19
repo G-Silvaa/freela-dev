@@ -6,59 +6,59 @@
   </div>
 
   <div class="filter">
-    <intra-input
+    <app-input
       label="Nome"
       type="text"
       placeholder="Digite o nome"
       [hasError]="false"
       errorMsg="Nome é obrigatório"
       [isDisable]="false"
-    ></intra-input>
-    <intra-input
+    ></app-input>
+    <app-input
       label="Nome"
       type="text"
       placeholder="Digite o nome"
       [hasError]="false"
       errorMsg="Nome é obrigatório"
       [isDisable]="false"
-    ></intra-input>
-    <intra-select-input
+    ></app-input>
+    <app-select-input
       label="Tipo"
       [options]="primeiroFiltro"
       placeholder="Selecione uma opção"
       [hasError]="false"
       errorMsg="Seleção é obrigatória"
       [isDisable]="false"
-    ></intra-select-input>
-    <intra-select-input
+    ></app-select-input>
+    <app-select-input
       label="Cartão"
       [options]="segundoFiltro"
       placeholder="Selecione uma opção"
       [hasError]="false"
       errorMsg="Seleção é obrigatória"
       [isDisable]="false"
-    ></intra-select-input>
-    <intra-select-input
+    ></app-select-input>
+    <app-select-input
       label="Situação"
       [options]="terceiroFiltro"
       placeholder="Selecione uma opção"
       [hasError]="false"
       errorMsg="Seleção é obrigatória"
       [isDisable]="false"
-    ></intra-select-input>
+    ></app-select-input>
     <button class="lupa"></button>
   </div>
 
-  <intra-table
+  <app-table
     [columns]="['Nome', 'Email', 'Lotação', 'Local']"
     [data]="pessoasData"
     [showActions]="true"
     [itemsPerPage]="10"
     (edit)="onEdit($event)"
     (delete)="onDelete($event)"
-  ></intra-table>
+  ></app-table>
   
 </div>
 <ng-template #editTemplate>
-  <intra-add-users-modal/>
+  <app-add-users-modal/>
 </ng-template>
