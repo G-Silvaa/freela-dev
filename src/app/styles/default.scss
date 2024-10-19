@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+  padding: 0rem;
+  margin: 0rem;
+}
+
+:root {
+  --primary: #2f9e41;
+  --secundary: #cd191e;
+
+  --success: #2f9e41;
+  --danger: #cd191e;
+
+  --info: #37b0f4;
+  --warning: #fabb24;
+
+  --primary-text: #3a3a3a;
+  --secundary-text: #909090;
+
+  --background-primary: #f9fcfa;
+  --background-secundary: #ffffff;
+
+  --white: #ffffff;
+
+  --font-primary: "Open Sans", sans-serif;
+}
+
+html {
+  @media (max-width: 62.5rem) {
+    font-size: 93.75%;
+  }
+
+  @media (max-width: 45rem) {
+    font-size: 87.5%;
+  }
+}
+
+body {
+  background-color: var(--background-primary);
+  --webkit-font-smoothing: antialisse;
+  font-family: var(--font-primary);
+}

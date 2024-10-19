@@ -1,0 +1,57 @@
+<div class="table-container">
+  <table class="table table-bordered table-hover">
+    <tr>
+      <th *ngFor="let column of columns">{{ column | titlecase }}</th>
+      <th *ngIf="showActions">Ações</th>
+    </tr>
+
+    <tr *ngFor="let item of paginatedData">
+      <td *ngFor="let column of columns">
+        {{ truncateText(column, item) }}
+      </td>
+      <td *ngIf="showActions" class="actions-container">
+        <button class="btn btn-warning" (click)="onEdit(item['id'])">
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+        <button class="btn btn-danger" (click)="onDelete(item['id'])">
+          <i class="bi bi-trash-fill"></i>
+        </button>
+      </td>
+    </tr>
+  </table>
+
+  <nav class="">
+    <ul>
+      <li>
+        <button
+          class="button-step"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+        >
+          <i class="bi bi-caret-left-fill"></i>
+        </button>
+      </li>
+
+      <li *ngFor="let page of visiblePages">
+        <button
+          *ngIf="page !== -1"
+          (click)="changePage(page)"
+          [class.active]="page === currentPage"
+        >
+          {{ page }}
+        </button>
+        <span *ngIf="page === -1">...</span>
+      </li>
+
+      <li>
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages.length"
+          class="button-step"
+        >
+          <i class="bi bi-caret-right-fill"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

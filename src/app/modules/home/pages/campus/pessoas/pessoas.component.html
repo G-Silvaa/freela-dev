@@ -1,0 +1,64 @@
+<div class="container">
+ 
+  <div class="adicionar">
+    <h1>Filtros</h1>
+    <button class="adicionarUsuario" (click)="cadatrarUsuario = false"></button>
+  </div>
+
+  <div class="filter">
+    <intra-input
+      label="Nome"
+      type="text"
+      placeholder="Digite o nome"
+      [hasError]="false"
+      errorMsg="Nome é obrigatório"
+      [isDisable]="false"
+    ></intra-input>
+    <intra-input
+      label="Nome"
+      type="text"
+      placeholder="Digite o nome"
+      [hasError]="false"
+      errorMsg="Nome é obrigatório"
+      [isDisable]="false"
+    ></intra-input>
+    <intra-select-input
+      label="Tipo"
+      [options]="primeiroFiltro"
+      placeholder="Selecione uma opção"
+      [hasError]="false"
+      errorMsg="Seleção é obrigatória"
+      [isDisable]="false"
+    ></intra-select-input>
+    <intra-select-input
+      label="Cartão"
+      [options]="segundoFiltro"
+      placeholder="Selecione uma opção"
+      [hasError]="false"
+      errorMsg="Seleção é obrigatória"
+      [isDisable]="false"
+    ></intra-select-input>
+    <intra-select-input
+      label="Situação"
+      [options]="terceiroFiltro"
+      placeholder="Selecione uma opção"
+      [hasError]="false"
+      errorMsg="Seleção é obrigatória"
+      [isDisable]="false"
+    ></intra-select-input>
+    <button class="lupa"></button>
+  </div>
+
+  <intra-table
+    [columns]="['Nome', 'Email', 'Lotação', 'Local']"
+    [data]="pessoasData"
+    [showActions]="true"
+    [itemsPerPage]="10"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></intra-table>
+  
+</div>
+<ng-template #editTemplate>
+  <intra-add-users-modal/>
+</ng-template>

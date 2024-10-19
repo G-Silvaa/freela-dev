@@ -1,0 +1,7 @@
+<button [style.width]="width || '100%'"
+    [style.font-size]="size || '0.8rem'"
+    [style.backgroundColor]="backgroundColor"
+>
+  <intra-spinner *ngIf="isLoading" />
+  <ng-content *ngIf="!isLoading"></ng-content>
+</button>

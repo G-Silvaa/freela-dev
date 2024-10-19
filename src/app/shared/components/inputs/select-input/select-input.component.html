@@ -1,0 +1,27 @@
+<div class="box-input" [ngClass]="{ 'is-disabled': isDisable }">
+  <label for="" class="form-label">{{ label }}</label>
+  <div class="custom-select">
+    <div class="selected-value"
+         #selectedValue
+         tabindex="0"
+         (click)="toggleDropdown()"
+         (keydown)="onKeydown($event)"
+         (blur)="onBlur()"
+         (focus)="onFocus()"
+         [ngClass]="{ 'is-invalid': hasError, 'is-focused': isFocused }">
+      {{ getSelectedLabel() }}
+      <span *ngIf="value" class="clear-selection" (click)="clearSelection($event)">&#x2715;</span>
+    </div>
+    <div class="dropdown" *ngIf="isOpen">
+      <div class="dropdown-option"
+           *ngFor="let option of options; let i = index"
+           (click)="selectOption(option, $event)"
+           [ngClass]="{ 'focused': i === focusedOptionIndex }">
+        {{ option.label }}
+      </div>
+    </div>
+  </div>
+  <div class="invalid-feedback">
+    {{ errorMsg }}
+  </div>
+</div>

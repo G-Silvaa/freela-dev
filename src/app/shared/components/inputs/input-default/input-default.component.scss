@@ -1,0 +1,32 @@
+.box-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 0.9rem;
+    color: var(--color-text-secundary);
+    font-weight: 500;
+    margin: 0px;
+  }
+
+  input {
+    &:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(0, 155, 21, 0.397);
+    }
+
+    &.is-invalid:focus {
+      border-color: #ff0000 !important;
+      box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25) !important;
+    }
+
+    &::placeholder {
+      font-size: 0.9rem;
+    }
+  }
+
+  .invalid-feedback {
+    font-weight: 500;
+  }
+}

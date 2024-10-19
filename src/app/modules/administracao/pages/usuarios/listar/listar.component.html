@@ -1,0 +1,13 @@
+<p>listar usuarios works!</p>
+<br>
+<p *ngIf="!buscando">
+  {{ usuarios | json }}
+</p>
+
+<p *ngIf="buscando">
+  Buscando...
+</p>
+
+<br>
+
+<button (click)="buscar()">Buscar</button>

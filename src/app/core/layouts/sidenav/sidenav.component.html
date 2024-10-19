@@ -1,0 +1,55 @@
+<div class="main-layout" [ngClass]="{ backdrop: isActiveBar }">
+  <div
+    class="shadow sidenav flex-shrink-0 p-4"
+    [ngClass]="{ isActive: isActiveBar }"
+  >
+    <a
+      href="/"
+      class="d-flex mt-3 justify-content-center align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none"
+    >
+      <img
+        ngSrc="logo-estrutura.svg"
+        width="170"
+        height="60"
+        alt="estrutura Logo"
+      />
+
+    </a>
+   
+
+  </div>
+  <main>
+    <header>
+      <div class="box-button">
+        <button class="button-bar" (click)="openSideBar()">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+
+      <h6 class="none" *ngIf="isInitialPage">
+        {{ headerTitle }}
+        <div class="neg">{{ headerDescription }}</div>
+      </h6>
+      <div
+        class="text none"
+        *ngIf="headerTitle && headerDescription && !isInitialPage"
+      >
+        <h2>{{ headerTitle }}</h2>
+        <span>{{ headerDescription }}</span>
+      </div>
+
+      <h6 class="hid">teste</h6>
+
+    </header>
+    <section>
+      <router-outlet></router-outlet>
+     
+    </section>
+  </main>
+
+  <div
+    class="backdrop"
+    [ngClass]="{ backdropActive: isActiveBar }"
+    (click)="closeSideBar()"
+  ></div>
+</div>
