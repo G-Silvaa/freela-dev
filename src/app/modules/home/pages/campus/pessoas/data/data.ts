@@ -1,36 +1,13 @@
 export const primeiroFiltro = [
-    { label:'Aluno', value: '1' },
-    { label:'Servidor', value: '2' },
-    { label:'Terceirizado', value: '3'},
+    
     
   ];
   export const segundoFiltro = [
-    { label:'Aluno - Graduação', value: '1' },
-    { label:'Aluno - Técnico', value: '2' },
-    { label:'Aluno - integrado', value: '3' },
-    { label:'Aluno - Extensão', value: '4' },
-    { label:'Servidor - Docente', value: '16' },
-    { label:'Servidor - Técnico administrativo', value: '17' },
-    { label:'Estagiário', value: '18' },
-    { label:'Terceirizado - auxíliar Administrativo', value: '31' },
-    { label:'Terceirizado - Limpeza', value: '32' },
-    { label:'Terceirizado - Manutenção', value: '33' },
-    { label:'Terceirizado - Recepcionista', value: '34' },
-    { label:'Terceirizado - Vigilãncia', value: '35' },
+    
     
   ];
   export const terceiroFiltro = [
-    { label:'Aluno - Matriculado', value: '1'},
-    { label:'Aluno - Estagiário (concludente)', value: '2'},
-    { label:'Aluno - Concluído' ,value: '3'},
-    { label:'Aluno - transferido Externo' ,value: '4'},
-    { label:'Aluno - transferido interno' ,value: '5'},
-    { label:'Aluno - trancado' ,value: '6'},
-    { label:'Aluno - Cancelado Voluntariamente' ,value: '7'},
-    { label:'Aluno - Evasão' ,value: '8'},
-    { label:'Aluno - Afastado' ,value: '9'},
-    { label:'Ativo' ,value: '22'},
-    { label:'Inativo' ,value: '23'},
+    
 
     
   ];

@@ -151,6 +151,7 @@ main {
       transition: 0.3s;
       background-color: transparent;
       font-size: 1.7rem;
+      color: white;
 
       &:hover {
         filter: brightness(0.9);
@@ -253,6 +254,25 @@ main {
   main {
     width: 100%;
   }
+}
+
+.logo-sidebar{
+  width: 47% !important;
+  height: 56% !important;
+}
+
+.texts4{
+  h2{
+    font-size: 26px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffc80b96;
+    margin: 0px;
+    font-family: poppins;
+  }
+ 
 }
 
 .menuNavbar {
@@ -550,6 +570,36 @@ main {
     display: inline !important;
   }
 }
+
+.navegacaot{
+gap: 20px;
+margin-top: 40px;
+
+ul{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+li{
+  cursor: pointer;
+  font-size: 18px;
+  text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 200, 11, 0.5882352941);
+    margin: 0px;
+    font-family: Open Sans, sans-serif;
+    &.active {
+      color: yellow; /* Cor de fundo quando ativo */
+       transition: 0.3s ;
+     }
+}
+}
+
+
 
 // @media (max-width: 1600px) {
 // .sidenav{

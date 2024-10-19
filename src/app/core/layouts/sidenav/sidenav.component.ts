@@ -66,6 +66,11 @@ export class SidenavComponent {
   imageUrl?: string | ArrayBuffer | null = null;
   animationClass = '';
   isInitialPage: boolean = false;
+  selectedNav: number = 0;
+
+  selectNav(navNumber: number): void {
+    this.selectedNav = navNumber;
+  }
 
   headerTitle!: string;
   headerDescription!: string;

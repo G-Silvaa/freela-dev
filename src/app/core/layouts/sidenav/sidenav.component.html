@@ -5,16 +5,35 @@
   >
     <a
       href="/"
-      class="d-flex mt-3 justify-content-center align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none"
+      class="d-flex justify-content-center align-items-center  link-body-emphasis text-decoration-none"
     >
       <img
-        ngSrc="logo-estrutura.svg"
+      class="logo-sidebar"
+        ngSrc="logo.jpeg"
         width="170"
         height="60"
         alt="estrutura Logo"
       />
 
     </a>
+    <div class="texts4">
+    <h2>Assessoria</h2>
+    <h2>previdenciária</h2>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none navegacaot">
+    <ul class="list-unstyled">
+      <li class="cursor-pointer" 
+          [ngClass]="{'active': selectedNav === 1}" 
+          (click)="selectNav(1)">navegação 1</li>
+      <li class="cursor-pointer" 
+          [ngClass]="{'active': selectedNav === 2}" 
+          (click)="selectNav(2)">navegação 2</li>
+      <li class="cursor-pointer" 
+          [ngClass]="{'active': selectedNav === 3}" 
+          (click)="selectNav(3)">navegação 3</li>
+    </ul>
+</div>
    
   </div>
   <main>
