@@ -13,7 +13,7 @@
   input {
     &:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 0.2rem rgba(0, 155, 21, 0.397);
+      box-shadow: 0 0 0 0.1rem #0f057c;
     }
 
     &.is-invalid:focus {
