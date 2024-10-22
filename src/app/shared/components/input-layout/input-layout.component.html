@@ -1,0 +1,19 @@
+<div class="input-content">
+    <label>
+        <p class="placeholder" [class.focused]="isFocused || value">
+            {{ placeholder }}
+        </p>
+        <input
+            [type]="type"
+            [value]="value"
+            (input)="onInput($event)"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            [mask]="mask"
+            [class.focused]="isFocused || value"
+        />
+    </label>
+    <div class="icon">
+        <ng-content></ng-content>
+    </div>
+</div>

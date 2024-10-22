@@ -1,0 +1,32 @@
+<div class="container-login">
+    <aside class="left-wrapper">
+        <div class="container-img">
+            <img src="nova-logo.png" />
+        </div>
+    </aside>
+
+    <aside class="right-wrapper">
+        <h1>Faça seu login</h1>
+        <form [formGroup]="loginForm">
+            <app-input-layout
+                type="email"
+                formControlName="email"
+                placeholder="Digite seu email"
+            ></app-input-layout>
+            <app-input-layout
+                type="password"
+                formControlName="password"
+                placeholder="Digite sua senha"
+            ></app-input-layout>
+            <a href="">Esqueceu a senha?</a>
+            <button
+                type="submit"
+                class="primary"
+                (click)="submitLogin()"
+                (keydown.enter)="submitLogin()"
+            >
+                Entrar
+            </button>
+        </form>
+    </aside>
+</div>
