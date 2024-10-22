@@ -32,7 +32,7 @@ export class PessoasComponent {
 
   onEdit(item: any) {
     const initialState = {
-      title: 'Adicionar Identificação',
+      title: 'Cadastrar um Cliente',
       formTemplate: this.editTemplate, 
       iconTemplate: 'bi bi-pencil'
     };

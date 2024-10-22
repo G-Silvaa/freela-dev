@@ -22,11 +22,11 @@ export const routes: Routes = [
     ],
   },
   {
-    path: "home",
+    path: "",
     component: SidenavComponent,
     children: [
       {
-        path: "cursos",
+        path: "home",
         loadComponent: () =>
           import("./modules/home/pages/campus/cursos/cursos.component").then(
             (m) => m.CursosComponent,

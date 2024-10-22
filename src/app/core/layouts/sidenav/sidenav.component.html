@@ -4,7 +4,7 @@
         [ngClass]="{ isActive: isActiveBar }"
     >
         <a
-            href="/"
+            href="/home"
             class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none"
         >
             <img
@@ -28,7 +28,7 @@
                     class="cursor-pointer"
                     [ngClass]="{ active: selectedNav === 1 }"
                     (click)="selectNav(1)"
-                    [routerLink]="['/home/cursos']"
+                    [routerLink]="['/home']"
                 >
                     navegação 1
                 </li>
@@ -36,7 +36,7 @@
                     class="cursor-pointer"
                     [ngClass]="{ active: selectedNav === 2 }"
                     (click)="selectNav(2)"
-                    [routerLink]="['/home/colaboradores']"
+                    [routerLink]="['/colaboradores']"
                 >
                     navegação 2
                 </li>
@@ -44,7 +44,7 @@
                     class="cursor-pointer"
                     [ngClass]="{ active: selectedNav === 3 }"
                     (click)="selectNav(3)"
-                    [routerLink]="['/home/grupo-acesso']"
+                    [routerLink]="['/grupo-acesso']"
                 >
                     navegação 3
                 </li>

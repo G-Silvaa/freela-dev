@@ -1,50 +1,127 @@
-<form action="javascript:void(0)" >
-  <div class="container-inputs">
-    <app-input
-      label="Nome:"
-      placeholder="Nome:"
-      formControlName="nome" />
-  
+<form [formGroup]="form" action="javascript:void(0)">
+  <div class="pt1" *ngIf="currentStep === 1">
+    <div class="container-inputs">
       <app-input
-      label="Nome:"
-      placeholder="Nome:"
-      formControlName="nome" />
+        label="Nome:"
+        placeholder="Digite seu nome:"
+        formControlName="nome">
+      </app-input>
+    
       <app-input
-      label="Nome:"
-      placeholder="Nome:"
-      formControlName="nome" />
-  
-  </div>
-  <div class="container-inputs">
-    <app-input
-      label="Nome:"
-      placeholder="Nome:"
-      formControlName="nome" />
-  
+        label="E-mail:"
+        placeholder="Digite seu email:"
+        formControlName="email">
+      </app-input>
       <app-input
-      label="Nome:"
-      placeholder="Nome:"
-      formControlName="nome" />
+        label="CPF:"
+        placeholder="Digite seu CPF:"
+        formControlName="cpf">
+      </app-input>
+
       <app-input
-      label="Nome:"
-      placeholder="Nome:"
-      formControlName="nome" />
-  
-  </div>
-  
-  
-    <div class="footer-modal">
-      <app-button variant="danger" width="100px" (click)="onCloseModal()">
-        Fechar
-      </app-button>
-      <app-button
-        width="100px"
-      
-        [isLoading]="isLoading"
-     
-      >
-        Salvar
-      </app-button>
+        label="Telefone:"
+        placeholder="Digite seu telefone:"
+        formControlName="telefone">
+      </app-input>
+
+      <app-input
+        label="RG:"
+        placeholder="Digite seu RG:"
+        formControlName="rg">
+      </app-input>
+
+      <app-input
+        label="Data De Nascimento:"
+        placeholder="Digite sua data de nascimento:"
+        formControlName="dataNascimento">
+      </app-input>
     </div>
-  </form>
+  </div>
+
+  <div class="pt2" *ngIf="currentStep === 2">
+    <div class="container-inputs">
+      <app-input
+        label="CEP:"
+        placeholder="Digite seu CEP:"
+        formControlName="cep">
+      </app-input>
+
+      <app-input
+        label="Logradouro:"
+        placeholder="Digite seu logradouro:"
+        formControlName="logradouro">
+      </app-input>
+    
+      <app-input
+        label="Complemento:"
+        placeholder="Digite seu complemento:"
+        formControlName="complemento">
+      </app-input>
+
+      <app-input
+        label="Bairro:"
+        placeholder="Digite seu bairro:"
+        formControlName="bairro">
+      </app-input>
+
+      <app-input
+        label="Cidade:"
+        placeholder="Digite sua cidade:"
+        formControlName="cidade">
+      </app-input>
+
+      <app-select-input 
+        [label]="'Tem representante?'" 
+        [options]="selectOptions" 
+        [placeholder]="'Escolha uma opção'"
+        formControlName="temRepresentante"
+        (change)="onRepresentativeChange($event)">
+      </app-select-input>
+    </div>
+  </div>
+
+  <div class="pt3" *ngIf="currentStep === 3">
+    <div class="container-inputs">
+      <app-input
+        label="Parentesco:"
+        placeholder="Digite o parentesco:"
+        formControlName="parentesco">
+      </app-input>
+    
+      <app-input
+        label="CPF do Representante:"
+        placeholder="Digite o CPF do representante:"
+        formControlName="representanteCpf">
+      </app-input>
+      <app-input
+        label="RG do Representante:"
+        placeholder="Digite o RG do representante:"
+        formControlName="representanteRg">
+      </app-input>
+
+      <app-input
+        label="Data de Nascimento do Representante:"
+        placeholder="Digite a data de nascimento do representante:"
+        formControlName="representanteDataNascimento">
+      </app-input>
+    </div>
+  </div>
   
+  <div class="footer-modal">
+    <app-button variant="danger" width="100px" (click)="onCloseModal()">
+      Fechar
+    </app-button>
+    <app-button
+      width="100px"
+      *ngIf="currentStep < 3 && (currentStep !== 2 || form.get('temRepresentante')?.value === 'sim')"
+      (click)="onNextStep()">
+      Próximo
+    </app-button>
+    <app-button
+      width="100px"
+      *ngIf="currentStep === 3 || (currentStep === 2 && form.get('temRepresentante')?.value === 'nao')"
+      [isLoading]="isLoading">
+      Salvar
+    </app-button>
+  </div>
+</form>
