@@ -90,18 +90,18 @@
     
       <app-input
         label="CPF do Representante:"
-        placeholder="Digite o CPF do representante:"
+        placeholder="Digite o CPF:"
         formControlName="representanteCpf">
       </app-input>
       <app-input
         label="RG do Representante:"
-        placeholder="Digite o RG do representante:"
+        placeholder="Digite o RG:"
         formControlName="representanteRg">
       </app-input>
 
       <app-input
-        label="Data de Nascimento do Representante:"
-        placeholder="Digite a data de nascimento do representante:"
+        label="Data de Nascimento:"
+        placeholder="Digite a data de nascimento:"
         formControlName="representanteDataNascimento">
       </app-input>
     </div>
@@ -110,6 +110,12 @@
   <div class="footer-modal">
     <app-button variant="danger" width="100px" (click)="onCloseModal()">
       Fechar
+    </app-button>
+    <app-button
+      width="100px"
+      *ngIf="currentStep > 1"
+      (click)="onPreviousStep()">
+      Voltar
     </app-button>
     <app-button
       width="100px"
