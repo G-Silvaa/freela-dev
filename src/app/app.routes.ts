@@ -13,6 +13,19 @@ export const routes: Routes = [
     component: SidenavComponent,
     children: [
       {
+        path: "",
+        loadComponent: () =>
+          import(
+            "./modules/home/pages/initial-page/initial-page.component"
+          ).then((m) => m.InitialPageComponent),
+      },
+    ],
+  },
+  {
+    path: "home",
+    component: SidenavComponent,
+    children: [
+      {
         path: "cursos",
         loadComponent: () =>
           import("./modules/home/pages/campus/cursos/cursos.component").then(

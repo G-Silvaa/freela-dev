@@ -1,70 +1,79 @@
 <div class="main-layout" [ngClass]="{ backdrop: isActiveBar }">
-  <div
-    class="shadow sidenav flex-shrink-0 p-4"
-    [ngClass]="{ isActive: isActiveBar }"
-  >
-    <a
-      href="/"
-      class="d-flex justify-content-center align-items-center  link-body-emphasis text-decoration-none"
+    <div
+        class="shadow sidenav flex-shrink-0 p-4"
+        [ngClass]="{ isActive: isActiveBar }"
     >
-      <img
-      class="logo-sidebar"
-        ngSrc="logo.jpeg"
-        width="170"
-        height="60"
-        alt="estrutura Logo"
-      />
+        <a
+            href="/"
+            class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none"
+        >
+            <img
+                class="logo-sidebar"
+                ngSrc="logo.jpeg"
+                width="170"
+                height="60"
+                alt="estrutura Logo"
+            />
+        </a>
+        <div class="texts4">
+            <h2>Assessoria</h2>
+            <h2>previdenciária</h2>
+        </div>
 
-    </a>
-    <div class="texts4">
-    <h2>Assessoria</h2>
-    <h2>previdenciária</h2>
-  </div>
+        <div
+            class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none navegacaot"
+        >
+            <ul class="list-unstyled">
+                <li
+                    class="cursor-pointer"
+                    [ngClass]="{ active: selectedNav === 1 }"
+                    (click)="selectNav(1)"
+                    [routerLink]="['/home/cursos']"
+                >
+                    navegação 1
+                </li>
+                <li
+                    class="cursor-pointer"
+                    [ngClass]="{ active: selectedNav === 2 }"
+                    (click)="selectNav(2)"
+                    [routerLink]="['/home/colaboradores']"
+                >
+                    navegação 2
+                </li>
+                <li
+                    class="cursor-pointer"
+                    [ngClass]="{ active: selectedNav === 3 }"
+                    (click)="selectNav(3)"
+                    [routerLink]="['/home/grupo-acesso']"
+                >
+                    navegação 3
+                </li>
+            </ul>
+        </div>
+    </div>
+    <main>
+        <header>
+            <div class="box-button">
+                <button class="button-bar" (click)="openSideBar()">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
 
-  <div class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none navegacaot">
-    <ul class="list-unstyled">
-      <li class="cursor-pointer" 
-      [ngClass]="{'active': selectedNav === 1}" 
-      (click)="selectNav(1)" 
-      [routerLink]="['/']">navegação 1</li>
-  <li class="cursor-pointer" 
-      [ngClass]="{'active': selectedNav === 2}" 
-      (click)="selectNav(2)" 
-      [routerLink]="['/colaboradores']">navegação 2</li>
-  <li class="cursor-pointer" 
-      [ngClass]="{'active': selectedNav === 3}" 
-      (click)="selectNav(3)" 
-      [routerLink]="['/contratos']">navegação 3</li>
-    </ul>
-</div>
-   
-  </div>
-  <main>
-    <header>
-      <div class="box-button">
-        <button class="button-bar" (click)="openSideBar()">
-          <i class="bi bi-list"></i>
-        </button>
-      </div>
+            <h6 class="none" *ngIf="isInitialPage">
+                {{ headerTitle }}
+                <div class="neg">{{ headerDescription }}</div>
+            </h6>
 
-      <h6 class="none" *ngIf="isInitialPage">
-        {{ headerTitle }}
-        <div class="neg">{{ headerDescription }}</div>
-      </h6>
-      
+            <h6 class="hid">teste</h6>
+        </header>
+        <section>
+            <router-outlet></router-outlet>
+        </section>
+    </main>
 
-      <h6 class="hid">teste</h6>
-
-    </header>
-    <section>
-      <router-outlet></router-outlet>
-     
-    </section>
-  </main>
-
-  <div
-    class="backdrop"
-    [ngClass]="{ backdropActive: isActiveBar }"
-    (click)="closeSideBar()"
-  ></div>
+    <div
+        class="backdrop"
+        [ngClass]="{ backdropActive: isActiveBar }"
+        (click)="closeSideBar()"
+    ></div>
 </div>
