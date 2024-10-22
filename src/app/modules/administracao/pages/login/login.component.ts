@@ -1,5 +1,6 @@
 import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
 import { InputLayoutComponent } from "@shared/components/input-layout/input-layout.component";
 import { NgxMaskDirective, NgxMaskPipe } from "ngx-mask";
 
@@ -17,7 +18,8 @@ import { NgxMaskDirective, NgxMaskPipe } from "ngx-mask";
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class LoginComponent {
-  formBuilder = inject(FormBuilder);
+  private readonly formBuilder = inject(FormBuilder);
+  private router = inject(Router);
 
   loginForm = this.formBuilder.group({
     email: [""],
@@ -26,5 +28,6 @@ export class LoginComponent {
 
   submitLogin() {
     console.log(this.loginForm.value);
+    this.router.navigate(["/home"]);
   }
 }

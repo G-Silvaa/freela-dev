@@ -6,20 +6,10 @@ import { CursosComponent } from "@modules/home/pages/campus/cursos/cursos.compon
 export const routes: Routes = [
   {
     path: "",
-    component: SidenavComponent,
-    children: [
-      {
-        path: "",
-        loadComponent: () =>
-          import(
-            "./modules/home/pages/initial-page/initial-page.component"
-          ).then((m) => m.InitialPageComponent),
-      },
-    ],
+    children: adminRoutes,
   },
-
   {
-    path: "",
+    path: "home",
     component: SidenavComponent,
     children: [
       {
@@ -60,10 +50,5 @@ export const routes: Routes = [
         },
       },
     ],
-  },
-
-  {
-    path: "admin",
-    children: adminRoutes,
   },
 ];
