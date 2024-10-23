@@ -6,7 +6,7 @@ import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
   standalone: true,
   imports: [NgxChartsModule],
   templateUrl: './graficos.component.html',
-  styleUrl: './graficos.component.scss'
+  styleUrls: ['./graficos.component.scss']
 })
 export class GraficosComponent {
   view: [number, number] = [700, 400]; // Tamanho do gráfico
@@ -14,29 +14,17 @@ export class GraficosComponent {
   // Dados do gráfico
   data = [
     {
-      "name": "Germany",
-      "value": 8940000
+      "name": "Processos",
+      "value": 1000
     },
     {
-      "name": "USA",
-      "value": 5000000
+      "name": "Contratos",
+      "value": 500
     },
     {
-      "name": "France",
-      "value": 7200000
+      "name": "Clientes",
+      "value": 60
     },
-    {
-      "name": "UK",
-      "value": 6200000
-    },
-    {
-      "name": "Italy",
-      "value": 4200000
-    },
-    {
-      "name": "Spain",
-      "value": 8200000
-    }
   ];
 
   // Opções de personalização
@@ -45,9 +33,24 @@ export class GraficosComponent {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Country';
+  xAxisLabel = 'Categorias'; // Nome customizado do eixo X
   showYAxisLabel = true;
-  yAxisLabel = 'Population';
+  yAxisLabel = 'Total de Registros'; // Nome customizado do eixo Y
+
+  // Customização da formatação dos números do eixo Y
+  yAxisTickFormatting = (value: number) => {
+    // Aqui você pode definir os valores customizados que aparecerão no gráfico
+   
+    if (value === 2000000) return 60;
+    if (value === 4000000) return 200;
+    if (value === 6000000) return 500;
+    if (value === 8000000) return 1000;
+    return value;
+  };
+
+  // Controlar o valor máximo do eixo Y para ajustar o gráfico ao novo intervalo
+  yScaleMax = 1000; // Altere para o valor máximo desejado
+
   colorScheme: Color = {
     name: 'custom',
     selectable: true,
