@@ -1,86 +1,56 @@
 <div class="main-layout" [ngClass]="{ backdrop: isActiveBar }">
-    <div
-        class="shadow sidenav flex-shrink-0 p-4"
-        [ngClass]="{ isActive: isActiveBar }"
-    >
-        <a
-            href="/home"
-            class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none"
-        >
-            <img
-                class="logo-sidebar"
-                ngSrc="logo.jpeg"
-                width="170"
-                height="60"
-                alt="estrutura Logo"
-            />
-        </a>
-        <div class="texts4">
-            <h2>Assessoria</h2>
-            <h2>previdenciária</h2>
-        </div>
-
-        <div
-            class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none navegacaot"
-        >
-            <ul class="list-unstyled">
-                <li
-                    class="cursor-pointer"
-                    [ngClass]="{ active: selectedNav === 1 }"
-                    (click)="selectNav(1)"
-                    [routerLink]="['/home']"
-                >
-                    Inicio
-                </li>
-                <li
-                    class="cursor-pointer"
-                    [ngClass]="{ active: selectedNav === 2 }"
-                    (click)="selectNav(2)"
-                    [routerLink]="['/clientes']"
-                >
-                    Clientes
-                </li>
-                <li
-                    class="cursor-pointer"
-                    [ngClass]="{ active: selectedNav === 3 }"
-                    (click)="selectNav(3)"
-                    [routerLink]="['/processos']"
-                >
-                    Processos
-                </li>
-                <li
-                class="cursor-pointer"
-                [ngClass]="{ active: selectedNav === 4 }"
-                (click)="selectNav(4)"
-                [routerLink]="['/contratos']"
-            >
-               Contratos
-            </li>
-            </ul>
-        </div>
+  <div class="shadow sidenav flex-shrink-0" [ngClass]="{ isActive: isActiveBar }">
+    <a href="/home" class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none">
+      <img class="logo-sidebar" ngSrc="logo.jpeg" width="170" height="60" alt="estrutura Logo" />
+    </a>
+    <div class="texts4">
+      <h3>Assessoria</h3>
+      <h3>previdenciária</h3>
     </div>
-    <main>
-        <header>
-            <div class="box-button">
-                <button class="button-bar" (click)="openSideBar()">
-                    <i class="bi bi-list"></i>
-                </button>
-            </div>
 
-            <h6 class="none" *ngIf="isInitialPage">
-                {{ headerTitle }}
-                <div class="neg">{{ headerDescription }}</div>
-            </h6>
+    <div class="d-flex align-items-center link-body-emphasis text-decoration-none navegacaot">
+      <ul class="list-unstyled">
+        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 1 }" (click)="selectNav(1)"
+          [routerLink]="['/home']">
+          <lucide-icon name="house" [size]="24"></lucide-icon>
+          Inicio
+        </li>
+        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 2 }" (click)="selectNav(2)"
+          [routerLink]="['/clientes']">
+          <lucide-icon name="users" [size]="24"></lucide-icon>
+          Clientes
+        </li>
+        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 3 }" (click)="selectNav(3)"
+          [routerLink]="['/processos']">
+          <lucide-icon name="clipboard-list" [size]="24"></lucide-icon>
+          Processos
+        </li>
+        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 4 }" (click)="selectNav(4)"
+          [routerLink]="['/contratos']">
+          <lucide-icon name="file-chart-column-increasing" [size]="24"></lucide-icon>
+          Contratos
+        </li>
+      </ul>
+    </div>
+  </div>
+  <main>
+    <header>
+      <div class="box-button">
+        <button class="button-bar" (click)="openSideBar()">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
 
-        </header>
-        <section>
-            <router-outlet></router-outlet>
-        </section>
-    </main>
+      <h6 class="none" *ngIf="isInitialPage">
+        {{ headerTitle }}
+        <div class="neg">{{ headerDescription }}</div>
+      </h6>
 
-    <div
-        class="backdrop"
-        [ngClass]="{ backdropActive: isActiveBar }"
-        (click)="closeSideBar()"
-    ></div>
+    </header>
+    <section>
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+
+  <div class="backdrop" [ngClass]="{ backdropActive: isActiveBar }" (click)="closeSideBar()"></div>
 </div>

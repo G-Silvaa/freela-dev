@@ -13,6 +13,7 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
 import { SidebarService } from '@core/services/sidebar/sidebar.service';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { LucideAngularModule } from 'lucide-angular';
 
 
 interface SideNavToggle {
@@ -30,7 +31,7 @@ interface SideNavToggle {
     RouterLinkActive,
     NgOptimizedImage,
     MenuItemComponent,
-   
+    LucideAngularModule
   ],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
@@ -109,7 +110,7 @@ export class SidenavComponent {
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
-   
+
   }
 
   toggleCollapse(): void {
@@ -144,7 +145,7 @@ export class SidenavComponent {
     }
   }
 
-  
 
- 
+
+
 }

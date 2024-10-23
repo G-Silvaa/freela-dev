@@ -1,10 +1,10 @@
 <div class="container">
- 
+
     <div class="adicionar">
       <h1>Processos</h1>
-     
+
     </div>
-  
+
     <div class="filter">
       <app-input
         label="Nome"
@@ -40,7 +40,7 @@
   ></app-input>
       <button class="lupa"></button>
     </div>
-  
+
     <app-table
       [columns]="['Nome', 'CPF', 'RG', 'E-mail', 'Tem representante?']"
       [data]="pessoasData"
@@ -49,9 +49,8 @@
       (edit)="onEdit($event)"
       (delete)="onDelete($event)"
     ></app-table>
-    
+
   </div>
   <ng-template #editTemplate>
     <app-add-users-modal/>
   </ng-template>
-  
