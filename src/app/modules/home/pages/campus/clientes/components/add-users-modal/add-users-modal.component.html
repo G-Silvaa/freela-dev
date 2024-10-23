@@ -1,9 +1,11 @@
 <div class="progress-bar">
-  <div class="step" [class.active]="currentStep >= 1">Dados</div>
+  <div class="step" [class.active]="currentStep >= 1">Contato</div>
   <div class="line" [class.active]="currentStep >= 2"></div>
-  <div class="step" [class.active]="currentStep >= 2">Endereço</div>
+  <div class="step" [class.active]="currentStep >= 2">Dados</div>
   <div class="line" [class.active]="currentStep >= 3"></div>
-  <div class="step" [class.active]="currentStep >= 3">Parentesco</div>
+  <div class="step" [class.active]="currentStep >= 3">Endereço</div>
+  <div class="line" [class.active]="currentStep >= 4"></div>
+  <div class="step" [class.active]="currentStep >= 4">Representante</div>
 </div>
 
 <form [formGroup]="form" action="javascript:void(0)">
@@ -21,21 +23,25 @@
         formControlName="email">
       </app-input>
       <app-input
-        label="CPF:"
-        placeholder="Digite seu CPF:"
-        formControlName="cpf">
-      </app-input>
-
-      <app-input
         label="Telefone:"
         placeholder="Digite seu telefone:"
         formControlName="telefone">
       </app-input>
+    </div>
+  </div>
 
+  <div class="pt2" *ngIf="currentStep === 2">
+    <div class="container-inputs">
       <app-input
         label="RG:"
         placeholder="Digite seu RG:"
         formControlName="rg">
+      </app-input>
+
+      <app-input
+        label="CPF:"
+        placeholder="Digite seu CPF:"
+        formControlName="cpf">
       </app-input>
 
       <app-input
@@ -46,7 +52,7 @@
     </div>
   </div>
 
-  <div class="pt2" *ngIf="currentStep === 2">
+  <div class="pt3" *ngIf="currentStep === 3">
     <div class="container-inputs">
       <app-input
         label="CEP:"
@@ -88,7 +94,7 @@
     </div>
   </div>
 
-  <div class="pt3" *ngIf="currentStep === 3">
+  <div class="pt4" *ngIf="currentStep === 4">
     <div class="container-inputs">
       <app-input
         label="Parentesco:"
@@ -127,13 +133,13 @@
     </app-button>
     <app-button
       width="100px"
-      *ngIf="currentStep < 3 && (currentStep !== 2 || form.get('temRepresentante')?.value === 'sim')"
+      *ngIf="currentStep < 4 && (currentStep !== 3 || form.get('temRepresentante')?.value === 'sim')"
       (click)="onNextStep()">
       Próximo
     </app-button>
     <app-button
       width="100px"
-      *ngIf="currentStep === 3 || (currentStep === 2 && form.get('temRepresentante')?.value === 'nao')"
+      *ngIf="currentStep === 4 || (currentStep === 3 && form.get('temRepresentante')?.value === 'nao')"
       [isLoading]="isLoading">
       Salvar
     </app-button>

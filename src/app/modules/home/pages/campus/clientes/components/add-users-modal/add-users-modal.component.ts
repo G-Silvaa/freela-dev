@@ -45,7 +45,7 @@ export class AddUsersModalComponent {
   }
 
   onNextStep() {
-    if (this.currentStep < 3) {
+    if (this.currentStep < 4) {
       this.currentStep++;
     }
   }
