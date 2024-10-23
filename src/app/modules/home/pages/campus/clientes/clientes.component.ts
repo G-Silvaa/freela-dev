@@ -1,22 +1,22 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core'; // Importar TemplateRef e ViewChild
-import { InputDefaultComponent } from '@shared/components/inputs/input-default/input-default.component';
-import { SelectInputComponent } from '@shared/components/inputs/select-input/select-input.component';
-import { ModalComponent } from '@shared/components/modal/modal.component';
-import { TableComponent } from '@shared/components/table/table.component';
-import { AddUsersModalComponent } from '../pessoas/components/add-users-modal/add-users-modal.component';
-import { ButtonComponent } from '@shared/components/button/button.component';
-import { adicionarPessoasData, pessoasData, primeiroFiltro, segundoFiltro, terceiroFiltro } from '../pessoas/data/data';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-
+import { TableComponent } from "../../../../../shared/components/table/table.component";
+import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
+import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
+import { ModalComponent } from "../../../../../shared/components/modal/modal.component";
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { pessoasData, primeiroFiltro, segundoFiltro, terceiroFiltro, adicionarPessoasData } from './data/data';
+import { Span } from '@opentelemetry/sdk-trace-web';
+import { AddUsersModalComponent } from "./components/add-users-modal/add-users-modal.component";
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
-  selector: 'app-grupo-de-acesso',
+  selector: 'app-pessoas',
   standalone: true,
   imports: [TableComponent, InputDefaultComponent, SelectInputComponent, ModalComponent, AddUsersModalComponent, ButtonComponent],
-  templateUrl: './grupo-de-acesso.component.html',
-  styleUrl: './grupo-de-acesso.component.scss'
+  templateUrl: './clientes.component.html',
+  styleUrls: ['./clientes.component.scss']
 })
-export class GrupoDeAcessoComponent {
+export class ClientesComponent {
   cadatrarUsuario = true;
   pessoasData = pessoasData;
   adicionarPessoasData = adicionarPessoasData;

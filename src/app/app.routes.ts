@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
 import { SidenavComponent } from "@core/layouts/sidenav/sidenav.component";
 import { adminRoutes } from "@modules/administracao/administracao-routing.module";
-import { CursosComponent } from "@modules/home/pages/campus/cursos/cursos.component";
+import { ProcessosComponent } from "@modules/home/pages/campus/processos/processos.component";
 
 export const routes: Routes = [
   {
@@ -28,39 +28,26 @@ export const routes: Routes = [
       {
         path: "processos",
         loadComponent: () =>
-          import("./modules/home/pages/campus/cursos/cursos.component").then(
-            (m) => m.CursosComponent,
+          import("./modules/home/pages/campus/processos/processos.component").then(
+            (m) => m.ProcessosComponent,
           ),
-        data: {
-          title: "Cursos",
-          description:
-            "Cadastre, edite, exclua ou consulte os cursos do campus",
-        },
+       
       },
       {
         path: "contratos",
         loadComponent: () =>
           import(
-            "./modules/home/pages/campus/grupo-de-acesso/grupo-de-acesso.component"
-          ).then((m) => m.GrupoDeAcessoComponent),
-        data: {
-          title: "Grupo de Acesso",
-          description:
-            "Cadastre, edite, exclua ou consulte os cursos do campus",
-        },
+            "./modules/home/pages/campus/contratos/contratos.component"
+          ).then((m) => m.ContratosComponent),
+        
       },
 
       {
         path: "clientes",
         loadComponent: () =>
-          import("./modules/home/pages/campus/pessoas/pessoas.component").then(
-            (m) => m.PessoasComponent,
+          import("./modules/home/pages/campus/clientes/clientes.component").then(
+            (m) => m.ClientesComponent,
           ),
-        data: {
-          title: "Pessoas",
-          description:
-            "Cadastre, edite, exclua ou consulte os cursos do campus",
-        },
       },
     ],
   },
