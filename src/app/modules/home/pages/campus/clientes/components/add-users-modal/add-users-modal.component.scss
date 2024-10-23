@@ -17,9 +17,10 @@ form {
   display: flex;
   gap: 19px;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
   margin-left: 17px;
+  
 }
 
 .ts {
@@ -41,7 +42,7 @@ form {
 }
 
 .step {
-  width: 100px;
+  width: 120px; /* Aumente a largura para caber o texto */
   text-align: center;
   padding: 10px;
   border-radius: 50%;
@@ -49,6 +50,7 @@ form {
   color: #000;
   font-weight: bold;
   transition: background-color 0.3s, color 0.3s;
+  font-size: 14px; /* Ajuste o tamanho da fonte */
 }
 
 .line {
@@ -62,3 +64,16 @@ form {
   background-color: #08024C;
   color: #fff;
 }
+
+@media (max-width: 980px) {
+  .container-inputs {
+    display: flex;
+    gap: 19px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: 17px;
+    flex-direction: column !important;
+    width: 90% !important;
+    align-items: stretch;
+}
+  }

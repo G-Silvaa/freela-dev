@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  TemplateRef,
-} from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -10,16 +7,14 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.scss'
+  styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
   title?: string;
   closeBtnName?: string;
   list: string[] = [];
   formTemplate!: TemplateRef<any>;
-  iconTemplate: string = ''
- 
+  iconTemplate: string = '';
+
   constructor(public bsModalRef: BsModalRef) {}
- 
-  
 }

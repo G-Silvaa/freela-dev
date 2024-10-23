@@ -36,7 +36,7 @@ export class ClientesComponent {
       formTemplate: this.editTemplate, 
       
     };
-    this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
+    this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
     this.bsModalRef.content.closeBtnName = 'Close';
   }
 
