@@ -1,33 +1,64 @@
 form {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .footer-modal {
     width: 100%;
-    height: 100%;
-    position: relative;
-  
-    .footer-modal {
-      width: 100%;
-      height: 68px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-  }
-  .container-inputs{
+    height: 68px;
     display: flex;
-    gap: 19px;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    margin-left: 17px;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 10px;
   }
+}
 
-  .ts{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-  }
+.container-inputs {
+  display: flex;
+  gap: 19px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-left: 17px;
+}
 
-  .testes{
-    margin-bottom: 20px;
-  }
+.ts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.testes {
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.step {
+  width: 100px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #000;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.line {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #e0e0e0;
+  transition: background-color 0.3s;
+}
+
+.step.active, .line.active {
+  background-color: #08024C;
+  color: #fff;
+}

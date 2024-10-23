@@ -34,7 +34,7 @@ export class PessoasComponent {
     const initialState = {
       title: 'Cadastrar um Cliente',
       formTemplate: this.editTemplate, 
-      iconTemplate: 'bi bi-pencil'
+      
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
     this.bsModalRef.content.closeBtnName = 'Close';
