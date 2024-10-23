@@ -26,7 +26,7 @@ export const routes: Routes = [
     component: SidenavComponent,
     children: [
       {
-        path: "home",
+        path: "processos",
         loadComponent: () =>
           import("./modules/home/pages/campus/cursos/cursos.component").then(
             (m) => m.CursosComponent,
@@ -38,7 +38,7 @@ export const routes: Routes = [
         },
       },
       {
-        path: "grupo-acesso",
+        path: "contratos",
         loadComponent: () =>
           import(
             "./modules/home/pages/campus/grupo-de-acesso/grupo-de-acesso.component"
@@ -51,7 +51,7 @@ export const routes: Routes = [
       },
 
       {
-        path: "colaboradores",
+        path: "clientes",
         loadComponent: () =>
           import("./modules/home/pages/campus/pessoas/pessoas.component").then(
             (m) => m.PessoasComponent,

@@ -1,4 +1,57 @@
-
-<app-select-input [label]="'escolha um opção'"   [options]="selectOptions" [placeholder]="'lol'"/>
-<p>grupo-de-acesso works!</p>
-
+<div class="container">
+ 
+    <div class="adicionar">
+      <h1>Clientes</h1>
+      <button class="adicionarUsuario" (click)="onEdit($event)">Adicionar Clientes <img src="/adicionarUsuario.svg" alt=""></button>
+    </div>
+  
+    <div class="filter">
+      <app-input
+        label="Nome"
+        type="text"
+        placeholder="Digite o nome"
+        [hasError]="false"
+        errorMsg="Nome é obrigatório"
+        [isDisable]="false"
+      ></app-input>
+      <app-input
+        label="E-mail"
+        type="text"
+        placeholder="Digite o nome"
+        [hasError]="false"
+        errorMsg="Nome é obrigatório"
+        [isDisable]="false"
+      ></app-input>
+      <app-input
+      label="RG"
+      type="text"
+      placeholder="Digite o nome"
+      [hasError]="false"
+      errorMsg="Nome é obrigatório"
+      [isDisable]="false"
+    ></app-input>
+    <app-input
+    label="CPF"
+    type="text"
+    placeholder="Digite o nome"
+    [hasError]="false"
+    errorMsg="Nome é obrigatório"
+    [isDisable]="false"
+  ></app-input>
+      <button class="lupa"></button>
+    </div>
+  
+    <app-table
+      [columns]="['Nome', 'CPF', 'RG', 'E-mail', 'Tem representante?']"
+      [data]="pessoasData"
+      [showActions]="true"
+      [itemsPerPage]="10"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+    ></app-table>
+    
+  </div>
+  <ng-template #editTemplate>
+    <app-add-users-modal/>
+  </ng-template>
+  

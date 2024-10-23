@@ -30,24 +30,32 @@
                     (click)="selectNav(1)"
                     [routerLink]="['/home']"
                 >
-                    navegação 1
+                    Inicio
                 </li>
                 <li
                     class="cursor-pointer"
                     [ngClass]="{ active: selectedNav === 2 }"
                     (click)="selectNav(2)"
-                    [routerLink]="['/colaboradores']"
+                    [routerLink]="['/clientes']"
                 >
-                    navegação 2
+                    Clientes
                 </li>
                 <li
                     class="cursor-pointer"
                     [ngClass]="{ active: selectedNav === 3 }"
                     (click)="selectNav(3)"
-                    [routerLink]="['/grupo-acesso']"
+                    [routerLink]="['/processos']"
                 >
-                    navegação 3
+                    Processos
                 </li>
+                <li
+                class="cursor-pointer"
+                [ngClass]="{ active: selectedNav === 4 }"
+                (click)="selectNav(4)"
+                [routerLink]="['/contratos']"
+            >
+               Contratos
+            </li>
             </ul>
         </div>
     </div>
@@ -64,7 +72,6 @@
                 <div class="neg">{{ headerDescription }}</div>
             </h6>
 
-            <h6 class="hid">teste</h6>
         </header>
         <section>
             <router-outlet></router-outlet>
