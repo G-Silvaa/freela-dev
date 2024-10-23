@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^18.2.8",
     "@angular/common": "^18.1.0",
     "@angular/compiler": "^18.1.0",
     "@angular/core": "^18.1.0",
@@ -28,8 +29,10 @@
     "@opentelemetry/resources": "^1.25.1",
     "@opentelemetry/sdk-trace-web": "^1.25.1",
     "@opentelemetry/semantic-conventions": "^1.25.1",
+    "@swimlane/ngx-charts": "^20.5.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "d3": "^7.9.0",
     "ngx-bootstrap": "^18.0.2",
     "ngx-mask": "^18.0.0",
     "rxjs": "~7.8.0",
