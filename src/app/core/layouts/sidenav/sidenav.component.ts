@@ -86,14 +86,12 @@ export class SidenavComponent {
     return this.sidebarService.isActive;
   }
 
-
-
-  openSideBar(): void {
-    this.sidebarService.onActiveSide();
-  }
-
-  closeSideBar(): void {
-    this.sidebarService.onInactiveSide();
+  toggleSideBar(): void {
+    if(this.isActiveBar) {
+      this.sidebarService.onInactiveSide()
+    } else {
+      this.sidebarService.onActiveSide()
+    }
   }
 
   @HostListener('window:resize', ['$event'])

@@ -36,8 +36,12 @@
   <main>
     <header>
       <div class="box-button">
-        <button class="button-bar" (click)="openSideBar()">
-          <i class="bi bi-list"></i>
+        <button class="button-bar" (click)="toggleSideBar()" [ngClass]="{ active: isActiveBar}">
+          @if (isActiveBar) {
+            <i class="bi bi-x"></i>
+          } @else {
+            <i class="bi bi-list"></i>
+          }
         </button>
       </div>
 
@@ -52,5 +56,5 @@
     </section>
   </main>
 
-  <div class="backdrop" [ngClass]="{ backdropActive: isActiveBar }" (click)="closeSideBar()"></div>
+  <div class="backdrop" [ngClass]="{ backdropActive: isActiveBar }" (click)="toggleSideBar()"></div>
 </div>
