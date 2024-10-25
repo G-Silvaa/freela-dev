@@ -11,23 +11,23 @@
     <div class="d-flex align-items-center link-body-emphasis text-decoration-none navegacaot">
       <ul class="list-unstyled">
         <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 1 }" (click)="selectNav(1)"
-          [routerLink]="['/home']">
-          <lucide-icon name="house" [size]="24"></lucide-icon>
+          [routerLink]="['/home']" routerLinkActive="active-link">
+          <lucide-icon name="house" [size]="18"></lucide-icon>
           Inicio
         </li>
         <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 2 }" (click)="selectNav(2)"
-          [routerLink]="['/clientes']">
-          <lucide-icon name="users" [size]="24"></lucide-icon>
+          [routerLink]="['/clientes']" routerLinkActive="active-link">
+          <lucide-icon name="users" [size]="18"></lucide-icon>
           Clientes
         </li>
         <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 3 }" (click)="selectNav(3)"
-          [routerLink]="['/processos']">
-          <lucide-icon name="clipboard-list" [size]="24"></lucide-icon>
+          [routerLink]="['/processos']" routerLinkActive="active-link">
+          <lucide-icon name="clipboard-list" [size]="18"></lucide-icon>
           Processos
         </li>
         <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 4 }" (click)="selectNav(4)"
-          [routerLink]="['/contratos']">
-          <lucide-icon name="file-chart-column-increasing" [size]="24"></lucide-icon>
+          [routerLink]="['/contratos']" routerLinkActive="active-link">
+          <lucide-icon name="file-chart-column-increasing" [size]="18"></lucide-icon>
           Contratos
         </li>
       </ul>
