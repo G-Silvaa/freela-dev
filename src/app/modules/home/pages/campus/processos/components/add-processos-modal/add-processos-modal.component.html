@@ -1,0 +1,39 @@
+<form [formGroup]="form" action="javascript:void(0)">
+  <div class="container-inputs">
+    <app-input
+      label="Status:"
+      placeholder="Digite o status:"
+      formControlName="status">
+    </app-input>
+    
+    <app-input
+      label="Perícia Médica:"
+      placeholder="Digite a perícia médica:"
+      formControlName="periciaMedica">
+    </app-input>
+    
+    <app-input
+      label="Avaliação Social:"
+      placeholder="Digite a avaliação social:"
+      formControlName="avaliacaoSocial">
+    </app-input>
+    
+    <app-input
+      label="Entrada Do Protocolo:"
+      placeholder="Digite a entrada do protocolo:"
+      formControlName="entradaProtocolo">
+    </app-input>
+  </div>
+  
+  <div class="footer-modal">
+    <app-button variant="danger" width="100px" (click)="onCloseModal()">
+      Fechar
+    </app-button>
+    <app-button
+      width="100px"
+      [isLoading]="isLoading"
+      (click)="onSave()">
+      Salvar
+    </app-button>
+  </div>
+</form>

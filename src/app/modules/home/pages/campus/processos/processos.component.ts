@@ -7,13 +7,14 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '@shared/components/modal/modal.component';
 import { AddUsersModalComponent } from "../clientes/components/add-users-modal/add-users-modal.component";
 import { TableComponent } from "../../../../../shared/components/table/table.component";
+import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
 
 
 
 @Component({
   selector: 'app-cursos',
   standalone: true,
-  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddUsersModalComponent, TableComponent],
+  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddUsersModalComponent, TableComponent, AddprocessosModalComponent],
   templateUrl: './processos.component.html',
   styleUrl: './processos.component.scss'
 })
@@ -33,7 +34,7 @@ export class ProcessosComponent {
 
   onEdit(item: any) {
     const initialState = {
-      title: 'Cadastrar um Cliente',
+      title: 'Editar um Processo',
       formTemplate: this.editTemplate, 
       
     };
