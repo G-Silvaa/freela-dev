@@ -49,6 +49,43 @@ export const primeiroFiltro = [
     { Nome: 'Diego', CPF: '123.456.789-00', RG: 'MG-12.345.678', 'E-mail': 'diego@example.com', 'Tem representante?': 'Sim' },
     { Nome: 'Simone', CPF: '234.567.890-11', RG: 'MG-23.456.789', 'E-mail': 'simone@example.com', 'Tem representante?': 'Não' },
 ];
+
+export const ProcessosData = [                                                                      
+  { Nome: 'João', CPF: '123.456.789-00', Status: 'Em análise', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-01-01' },
+  { Nome: 'Maria', CPF: '234.567.890-11', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-02-01' },
+  { Nome: 'Carlos', CPF: '345.678.901-22', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-03-01' },
+  { Nome: 'Ana', CPF: '456.789.012-33', Status: 'Em análise', 'Perícia médica': 'Pendente', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-04-01' },
+  { Nome: 'Pedro', CPF: '567.890.123-44', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-05-01' },
+  { Nome: 'Paula', CPF: '678.901.234-55', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Rejeitada', 'Entrada do protocolo': '2023-06-01' },
+  { Nome: 'Lucas', CPF: '789.012.345-66', Status: 'Em análise', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-07-01' },
+  { Nome: 'Fernanda', CPF: '890.123.456-77', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-08-01' },
+  { Nome: 'Rafael', CPF: '901.234.567-88', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-09-01' },
+  { Nome: 'Juliana', CPF: '012.345.678-99', Status: 'Em análise', 'Perícia médica': 'Pendente', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-10-01' },
+  { Nome: 'Bruno', CPF: '123.456.789-00', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-11-01' },
+  { Nome: 'Camila', CPF: '234.567.890-11', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Rejeitada', 'Entrada do protocolo': '2023-12-01' },
+  { Nome: 'Gustavo', CPF: '345.678.901-22', Status: 'Em análise', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-01-15' },
+  { Nome: 'Larissa', CPF: '456.789.012-33', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-02-15' },
+  { Nome: 'Felipe', CPF: '567.890.123-44', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-03-15' },
+  { Nome: 'Renata', CPF: '678.901.234-55', Status: 'Em análise', 'Perícia médica': 'Pendente', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-04-15' },
+  { Nome: 'Thiago', CPF: '789.012.345-66', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-05-15' },
+  { Nome: 'Patrícia', CPF: '890.123.456-77', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Rejeitada', 'Entrada do protocolo': '2023-06-15' },
+  { Nome: 'Rodrigo', CPF: '901.234.567-88', Status: 'Em análise', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-07-15' },
+  { Nome: 'Aline', CPF: '012.345.678-99', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-08-15' },
+  { Nome: 'Eduardo', CPF: '123.456.789-00', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-09-15' },
+  { Nome: 'Vanessa', CPF: '234.567.890-11', Status: 'Em análise', 'Perícia médica': 'Pendente', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-10-15' },
+  { Nome: 'Marcelo', CPF: '345.678.901-22', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-11-15' },
+  { Nome: 'Beatriz', CPF: '456.789.012-33', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Rejeitada', 'Entrada do protocolo': '2023-12-15' },
+  { Nome: 'André', CPF: '567.890.123-44', Status: 'Em análise', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-01-30' },
+  { Nome: 'Tatiana', CPF: '678.901.234-55', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-02-30' },
+  { Nome: 'Ricardo', CPF: '789.012.345-66', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-03-30' },
+  { Nome: 'Sabrina', CPF: '890.123.456-77', Status: 'Em análise', 'Perícia médica': 'Pendente', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-04-30' },
+  { Nome: 'Fábio', CPF: '901.234.567-88', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-05-30' },
+  { Nome: 'Carla', CPF: '012.345.678-99', Status: 'Rejeitado', 'Perícia médica': 'Rejeitada', 'Avaliação social': 'Rejeitada', 'Entrada do protocolo': '2023-06-30' },
+  { Nome: 'Diego', CPF: '123.456.789-00', Status: 'Em análise', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Pendente', 'Entrada do protocolo': '2023-07-30' },
+  { Nome: 'Simone', CPF: '234.567.890-11', Status: 'Aprovado', 'Perícia médica': 'Aprovada', 'Avaliação social': 'Aprovada', 'Entrada do protocolo': '2023-08-30' },
+];
+
+
   
   export const adicionarPessoasData = [
     { Nome: 'João', Email: 'joao@example.com', Lotação: 'Departamento A', Local: 'Sala 101' },
