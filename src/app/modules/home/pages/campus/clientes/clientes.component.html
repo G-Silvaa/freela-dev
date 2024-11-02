@@ -1,8 +1,9 @@
 <div class="container">
- 
   <div class="adicionar">
     <h1>Clientes</h1>
-    <button class="adicionarUsuario" (click)="onEdit($event)">Adicionar Clientes <img src="/adicionarUsuario.svg" alt=""></button>
+    <button class="adicionarUsuario" (click)="onEdit($event)">
+      Adicionar Clientes <img src="/adicionarUsuario.svg" alt="" />
+    </button>
   </div>
 
   <div class="filter">
@@ -23,21 +24,21 @@
       [isDisable]="false"
     ></app-input>
     <app-input
-    label="RG"
-    type="text"
-    placeholder="Digite o nome"
-    [hasError]="false"
-    errorMsg="Nome é obrigatório"
-    [isDisable]="false"
-  ></app-input>
-  <app-input
-  label="CPF"
-  type="text"
-  placeholder="Digite o nome"
-  [hasError]="false"
-  errorMsg="Nome é obrigatório"
-  [isDisable]="false"
-></app-input>
+      label="RG"
+      type="text"
+      placeholder="Digite o nome"
+      [hasError]="false"
+      errorMsg="Nome é obrigatório"
+      [isDisable]="false"
+    ></app-input>
+    <app-input
+      label="CPF"
+      type="text"
+      placeholder="Digite o nome"
+      [hasError]="false"
+      errorMsg="Nome é obrigatório"
+      [isDisable]="false"
+    ></app-input>
     <button class="lupa"></button>
   </div>
 
@@ -49,8 +50,7 @@
     (edit)="onEdit($event)"
     (delete)="onDelete($event)"
   ></app-table>
-  
 </div>
 <ng-template #editTemplate>
-  <app-add-users-modal/>
+  <app-add-users-modal />
 </ng-template>

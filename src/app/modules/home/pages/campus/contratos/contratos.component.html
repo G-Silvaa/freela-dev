@@ -1,10 +1,10 @@
 <div class="container">
- 
-    <div class="adicionar">
-      <h1>Contratos</h1>
-    </div>
-  
-    <div class="filter">
+  <div class="adicionar">
+    <h1>Contratos</h1>
+  </div>
+
+  <div class="filter">
+    <div>
       <app-input
         label="Nome"
         type="text"
@@ -14,43 +14,36 @@
         [isDisable]="false"
       ></app-input>
       <app-input
-        label="E-mail"
+        label="Cpf"
         type="text"
-        placeholder="Digite o nome"
+        placeholder="Digite o cpf"
         [hasError]="false"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
       ></app-input>
       <app-input
-      label="RG"
-      type="text"
-      placeholder="Digite o nome"
-      [hasError]="false"
-      errorMsg="Nome é obrigatório"
-      [isDisable]="false"
-    ></app-input>
-    <app-input
-    label="CPF"
-    type="text"
-    placeholder="Digite o nome"
-    [hasError]="false"
-    errorMsg="Nome é obrigatório"
-    [isDisable]="false"
-  ></app-input>
-      <button class="lupa"></button>
+        label="Status"
+        type="text"
+        placeholder="Digite o status"
+        [hasError]="false"
+        errorMsg="Nome é obrigatório"
+        [isDisable]="false"
+      ></app-input>
     </div>
-  
-    <app-table
-      [columns]="['Nome', 'CPF', 'RG', 'E-mail', 'Tem representante?']"
-      [data]="pessoasData"
-      [showActions]="true"
-      [itemsPerPage]="10"
-      (edit)="onEdit($event)"
-      (delete)="onDelete($event)"
-    ></app-table>
-    
+
+    <button class="lupa"></button>
   </div>
-  <ng-template #editTemplate>
-    <app-add-users-modal/>
-  </ng-template>
-  
+
+  <app-table
+    [columns]="['Nome', 'Cpf', 'Status', 'Beneficio', 'Inicio', 'Conclusao']"
+    [data]="pessoasContrato"
+    [showActions]="true"
+    [itemsPerPage]="10"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></app-table>
+</div>
+<ng-template #editTemplate>
+  <!-- <app-add-users-modal /> -->
+  <app-edit-contrato-modal></app-edit-contrato-modal>
+</ng-template>

@@ -1,5 +1,5 @@
-import { CommonModule, TitleCasePipe } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule, TitleCasePipe } from "@angular/common";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 interface DataItem<T> {
   [key: string]: T;
@@ -10,11 +10,11 @@ interface Item {
 }
 
 @Component({
-  selector: 'app-table',
+  selector: "app-table",
   standalone: true,
   imports: [TitleCasePipe, CommonModule],
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss'],
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.scss"],
 })
 export class TableComponent<T> {
   @Input() columns!: string[];
@@ -35,8 +35,8 @@ export class TableComponent<T> {
 
   truncateText(column: string, item: Item): string {
     const value = item[column];
-    if (typeof value === 'string' && value.length > 30) {
-      return value.slice(0, 30) + '...';
+    if (typeof value === "string" && value.length > 30) {
+      return value.slice(0, 30) + "...";
     }
     return value;
   }
@@ -65,7 +65,12 @@ export class TableComponent<T> {
     }
 
     const firstPages = [1, 2, 3, 4];
-    const lastPages = [totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    const lastPages = [
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
 
     if (currentPage <= 4) {
       visiblePages.push(...firstPages);

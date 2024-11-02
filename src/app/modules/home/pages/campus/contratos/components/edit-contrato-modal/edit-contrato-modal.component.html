@@ -1,0 +1,50 @@
+<form [formGroup]="form" action="javascript:void(0)">
+  <div class="container-inputs">
+    <app-input
+      label="Nome:"
+      placeholder="Digite o nome:"
+      formControlName="nome"
+    >
+    </app-input>
+
+    <app-input label="Cpf:" placeholder="Digite o cpf:" formControlName="cpf">
+    </app-input>
+
+    <app-input
+      label="Status"
+      placeholder="Digite o status:"
+      formControlName="status"
+    >
+    </app-input>
+
+    <app-input
+      label="Beneficio"
+      placeholder="Digite o benefício:"
+      formControlName="beneficio"
+    >
+    </app-input>
+
+    <app-input
+      label="Inicio"
+      placeholder="Digite a data de início:"
+      formControlName="inicio"
+    >
+    </app-input>
+
+    <app-input
+      label="Conclusão"
+      placeholder="Digite a data de conclusão:"
+      formControlName="conclusao"
+    >
+    </app-input>
+  </div>
+
+  <div class="footer-modal">
+    <app-button variant="danger" width="100px" (click)="onCloseModal()">
+      Fechar
+    </app-button>
+    <app-button width="100px" [isLoading]="isLoading" (click)="onSave()">
+      Salvar
+    </app-button>
+  </div>
+</form>
