@@ -1,17 +1,14 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'; // Importar TemplateRef e ViewChild
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
 import { ModalComponent } from "../../../../../shared/components/modal/modal.component";
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { pessoasData, primeiroFiltro, segundoFiltro, terceiroFiltro, adicionarPessoasData } from './data/data';
-import { Span } from '@opentelemetry/sdk-trace-web';
 import { AddUsersModalComponent } from "./components/add-users-modal/add-users-modal.component";
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
-import { UsuariosService } from '@modules/administracao/services/usuarios.service';
 import { ClientesService } from './services/clientes.service';
-import { id } from '@swimlane/ngx-charts';
 import { EditUsersModalComponent } from './components/edit-users-modal/edit-users-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pessoas',
@@ -30,11 +27,7 @@ import { EditUsersModalComponent } from './components/edit-users-modal/edit-user
 })
 export class ClientesComponent implements OnInit {
   cadatrarUsuario = true;
-  pessoasData = [];
-  adicionarPessoasData = adicionarPessoasData;
-  primeiroFiltro = primeiroFiltro;
-  segundoFiltro = segundoFiltro;
-  terceiroFiltro = terceiroFiltro;
+  pessoasData: any[] = [];
   isLoading = false;
   bsModalRef?: BsModalRef;
 
@@ -45,12 +38,25 @@ export class ClientesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loaclientes();
+    this.usuarioService.clienteAdicionado$.subscribe((novoCliente) => {
+      this.pessoasData.push({
+        id: novoCliente.id,
+        Nome: novoCliente.contato.nome,
+        CPF: novoCliente.cpf,
+        RG: novoCliente.rg,
+        'E-mail': novoCliente.contato.email,
+        'Tem representante?': novoCliente.representante ? 'Sim' : 'Não'
+      });
+    });
+    this.usuarioService.clienteDeletado$.subscribe((id) => {
+      this.pessoasData = this.pessoasData.filter(cliente => cliente.id !== id);
+    });
   }
-  adicionarcliente(item: any) {
+
+  adicionarcliente() {
     const initialState = {
       title: 'Cadastrar um Cliente',
-      formTemplate: this.adicionar, 
-      
+      formTemplate: this.adicionar
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
     this.bsModalRef.content.closeBtnName = 'Close';
@@ -60,7 +66,7 @@ export class ClientesComponent implements OnInit {
     const initialState = {
       title: 'Editar um Cliente',
       formTemplate: this.editar,
-      data: item 
+      data: item
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
     this.bsModalRef.content.closeBtnName = 'Close';
@@ -69,6 +75,34 @@ export class ClientesComponent implements OnInit {
 
   onDelete(item: any) {
     console.log('Delete item:', item);
+    Swal.fire({
+      title: 'Você tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, delete!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usuarioService.deletarUsuario(item).subscribe(() => {
+          this.usuarioService.emitirClienteDeletado(item);
+          Swal.fire(
+            'Deletado!',
+            'O usuário foi deletado.',
+            'success'
+          );
+        }, (error) => {
+          console.error('Erro ao deletar usuário:', error);
+          Swal.fire(
+            'Erro!',
+            'Ocorreu um erro ao deletar o usuário.',
+            'error'
+          );
+        });
+      }
+    });
   }
 
   loaclientes() {
@@ -86,7 +120,6 @@ export class ClientesComponent implements OnInit {
       console.error('Error fetching data:', error);
     }); 
   }
-
 
   back() {
     this.cadatrarUsuario = true;

@@ -73,7 +73,7 @@ export class AddUsersModalComponent {
   ];
 
   onSubmit() {
-   this.isLoading = true;
+    this.isLoading = true;
 
     const dados = this.form.value;
     const payload = {
@@ -104,19 +104,18 @@ export class AddUsersModalComponent {
         nascimento: dados.representanteDataNascimento
       } : null,
     };
-console.log('Payload:', payload);
+    console.log('Payload:', payload);
     this.clientesService.adicionarUsuario(payload).subscribe(
-      (Response) => {
+      (response) => {
+        this.clientesService.emitirClienteAdicionado(response);
         this.onCloseModal();
         this.isLoading = false;
         console.log('Usuário adicionado com sucesso!');
-        
-        console.log('Response:', Response);
+        console.log('Response:', response);
       },
-     (err) => {
-      this.isLoading = false;
+      (err) => {
+        this.isLoading = false;
         console.error('Erro ao adicionar usuário:', err);
-       
       }
     );
   }
