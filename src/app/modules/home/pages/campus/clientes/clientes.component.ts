@@ -59,11 +59,12 @@ export class ClientesComponent implements OnInit {
   onEdit(item: any) {
     const initialState = {
       title: 'Editar um Cliente',
-      formTemplate: this.editar, 
-      
+      formTemplate: this.editar,
+      data: item 
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
     this.bsModalRef.content.closeBtnName = 'Close';
+    console.log('Edit item:', item);
   }
 
   onDelete(item: any) {
@@ -72,7 +73,6 @@ export class ClientesComponent implements OnInit {
 
   loaclientes() {
     this.usuarioService.pegarUsuario().subscribe((response) => {
-console.log('response', response);
       this.pessoasData = response.map((element: any) => ({
         id: element.id,
         Nome: element.contato.nome,
@@ -83,7 +83,7 @@ console.log('response', response);
       }));
       console.log('response', this.pessoasData);
     }, (error) => {
-      console.error('Error:', error);
+      console.error('Error fetching data:', error);
     }); 
   }
 

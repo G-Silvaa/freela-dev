@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
@@ -14,7 +14,8 @@ import { ClientesService } from '../../services/clientes.service';
   templateUrl: './edit-users-modal.component.html',
   styleUrls: ['./edit-users-modal.component.scss']
 })
-export class EditUsersModalComponent {
+export class EditUsersModalComponent implements OnInit {
+  @Input() data: any;
   @Output() closeModal = new EventEmitter<void>();
   isLoading = false;
   currentStep = 1;
@@ -45,6 +46,29 @@ export class EditUsersModalComponent {
     });
   }
 
+  ngOnInit(): void {
+    if (this.data) {
+      this.form.patchValue({
+        nome: this.data.Nome,
+        email: this.data['E-mail'],
+        telefone: this.data.telefone,
+        cpf: this.data.CPF,
+        rg: this.data.RG,
+        dataNascimento: this.data.nascimento,
+        cep: this.data.endereco.cep,
+        logradouro: this.data.endereco.logradouro,
+        complemento: this.data.endereco.complemento,
+        bairro: this.data.endereco.bairro,
+        cidade: this.data.endereco.cidade,
+        temRepresentante: this.data.representante ? 'sim' : 'nao',
+        parentesco: this.data.representante?.parentesco,
+        representanteCpf: this.data.representante?.cpf,
+        representanteRg: this.data.representante?.rg,
+        representanteDataNascimento: this.data.representante?.nascimento
+      });
+    }
+  }
+
   onCloseModal() {
     this.modalService.hide();
     this.closeModal.emit();
@@ -73,8 +97,6 @@ export class EditUsersModalComponent {
   ];
 
   onSubmit() {
-   
-
     const dados = this.form.value;
     const payload = {
       contato: {
@@ -104,16 +126,15 @@ export class EditUsersModalComponent {
         nascimento: dados.representanteDataNascimento
       } : null,
     };
-console.log('Payload:', payload);
+    console.log('Payload:', payload);
     this.clientesService.adicionarUsuario(payload).subscribe(
       (Response) => {
         console.log('Usuário adicionado com sucesso!');
-        
         console.log('Response:', Response);
+        this.onCloseModal();
       },
-     (err) => {
+      (err) => {
         console.error('Erro ao adicionar usuário:', err);
-       
       }
     );
   }
