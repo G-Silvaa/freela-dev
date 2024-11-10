@@ -1,0 +1,34 @@
+{
+    "contato": {
+      "nome": "Nome do Usuário",
+      "email": "usuario@exemplo.com",
+      "telefone": "(11) 1234-5678"
+    },
+    "cpf": "123.456.789-00",
+    "rg": "12.345.678-9",
+    "nascimento": "2000-01-01",
+    "endereco": {
+      "cep": "12345-678",
+      "logradouro": "Rua Exemplo",
+      "complemento": "Apto 101",
+      "bairro": "Bairro Exemplo",
+      "cidade": "Cidade Exemplo"
+    },
+    "representante": {
+      "contato": {
+        "nome": "Nome do Representante",
+        "email": "representante@exemplo.com",
+        "telefone": "(11) 9876-5432"
+      },
+      "parentesco": "Parentesco Exemplo",
+      "cpf": "987.654.321-00",
+      "rg": "98.765.432-1",
+      "nascimento": "1980-05-05"
+    },
+    "contrato": {
+      "beneficio": {
+        "id": 1
+      }
+    }
+  }
+  

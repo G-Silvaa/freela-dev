@@ -8,7 +8,7 @@
   <div class="step" [class.active]="currentStep >= 4">Representante</div>
 </div>
 
-<form [formGroup]="form" action="javascript:void(0)">
+<form [formGroup]="form" >
   <div class="pt1" *ngIf="currentStep === 1">
     <div class="container-inputs">
       <app-input
@@ -138,10 +138,11 @@
       Próximo
     </app-button>
     <app-button
-      width="100px"
-      *ngIf="currentStep === 4 || (currentStep === 3 && form.get('temRepresentante')?.value === 'nao')"
-      [isLoading]="isLoading">
-      Salvar
-    </app-button>
+    width="100px"
+    *ngIf="currentStep === 4 || (currentStep === 3 && form.get('temRepresentante')?.value === 'nao')"
+    [isLoading]="isLoading"
+    (click)="onSubmit()">
+    Salvar
+  </app-button>
   </div>
 </form>

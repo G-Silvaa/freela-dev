@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core'; // Importar TemplateRef e ViewChild
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'; // Importar TemplateRef e ViewChild
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
@@ -8,6 +8,9 @@ import { pessoasData, primeiroFiltro, segundoFiltro, terceiroFiltro, adicionarPe
 import { Span } from '@opentelemetry/sdk-trace-web';
 import { AddUsersModalComponent } from "./components/add-users-modal/add-users-modal.component";
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
+import { UsuariosService } from '@modules/administracao/services/usuarios.service';
+import { ClientesService } from './services/clientes.service';
+import { id } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-pessoas',
@@ -16,9 +19,9 @@ import { ButtonComponent } from "../../../../../shared/components/button/button.
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss']
 })
-export class ClientesComponent {
+export class ClientesComponent implements OnInit {
   cadatrarUsuario = true;
-  pessoasData = pessoasData;
+  pessoasData = [];
   adicionarPessoasData = adicionarPessoasData;
   primeiroFiltro = primeiroFiltro;
   segundoFiltro = segundoFiltro;
@@ -28,8 +31,11 @@ export class ClientesComponent {
 
   @ViewChild('editTemplate') editTemplate!: TemplateRef<any>; 
 
-  constructor(private modalService: BsModalService) {}
+  constructor(private modalService: BsModalService, private usuarioService: ClientesService) {}
 
+  ngOnInit(): void {
+    this.loaclientes();
+  }
   onEdit(item: any) {
     const initialState = {
       title: 'Cadastrar um Cliente',
@@ -43,6 +49,24 @@ export class ClientesComponent {
   onDelete(item: any) {
     console.log('Delete item:', item);
   }
+
+  loaclientes() {
+    this.usuarioService.pegarUsuario().subscribe((response) => {
+console.log('response', response);
+      this.pessoasData = response.map((element: any) => ({
+        id: element.id,
+        Nome: element.contato.nome,
+        CPF: element.cpf,
+        RG: element.rg,
+        'E-mail': element.contato.email,
+        'Tem representante?': element.representante ? 'Sim' : 'Não'
+      }));
+      console.log('response', this.pessoasData);
+    }, (error) => {
+      console.error('Error:', error);
+    }); 
+  }
+
 
   back() {
     this.cadatrarUsuario = true;

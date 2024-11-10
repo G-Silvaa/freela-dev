@@ -5,6 +5,7 @@ import { SelectInputComponent } from "../../../../../../../shared/components/inp
 import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
+import { ClientesService } from '../../services/clientes.service';
 
 @Component({
   selector: 'app-add-users-modal',
@@ -19,12 +20,16 @@ export class AddUsersModalComponent {
   currentStep = 1;
   form: FormGroup;
 
-  constructor(private modalService: BsModalService, private fb: FormBuilder) {
+  constructor(
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    private clientesService: ClientesService
+  ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      cpf: ['', Validators.required],
       telefone: ['', Validators.required],
+      cpf: ['', Validators.required],
       rg: ['', Validators.required],
       dataNascimento: ['', Validators.required],
       cep: ['', Validators.required],
@@ -42,6 +47,7 @@ export class AddUsersModalComponent {
 
   onCloseModal() {
     this.modalService.hide();
+    this.closeModal.emit();
   }
 
   onNextStep() {
@@ -65,4 +71,50 @@ export class AddUsersModalComponent {
     { value: 'sim', label: 'Sim' },
     { value: 'nao', label: 'Não' },
   ];
+
+  onSubmit() {
+   
+
+    const dados = this.form.value;
+    const payload = {
+      contato: {
+        nome: dados.nome,
+        email: dados.email,
+        telefone: dados.telefone
+      },
+      cpf: dados.cpf,
+      rg: dados.rg,
+      nascimento: dados.dataNascimento,
+      endereco: {
+        cep: dados.cep,
+        logradouro: dados.logradouro,
+        complemento: dados.complemento,
+        bairro: dados.bairro,
+        cidade: dados.cidade
+      },
+      representante: dados.temRepresentante === 'sim' ? {
+        contato: {
+          nome: dados.representanteNome,
+          email: dados.representanteEmail,
+          telefone: dados.representanteTelefone
+        },
+        parentesco: dados.parentesco,
+        cpf: dados.representanteCpf,
+        rg: dados.representanteRg,
+        nascimento: dados.representanteDataNascimento
+      } : null,
+    };
+console.log('Payload:', payload);
+    this.clientesService.adicionarUsuario(payload).subscribe(
+      (Response) => {
+        console.log('Usuário adicionado com sucesso!');
+        
+        console.log('Response:', Response);
+      },
+     (err) => {
+        console.error('Erro ao adicionar usuário:', err);
+       
+      }
+    );
+  }
 }
