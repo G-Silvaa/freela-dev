@@ -11,11 +11,20 @@ import { ButtonComponent } from "../../../../../shared/components/button/button.
 import { UsuariosService } from '@modules/administracao/services/usuarios.service';
 import { ClientesService } from './services/clientes.service';
 import { id } from '@swimlane/ngx-charts';
+import { EditUsersModalComponent } from './components/edit-users-modal/edit-users-modal.component';
 
 @Component({
   selector: 'app-pessoas',
   standalone: true,
-  imports: [TableComponent, InputDefaultComponent, SelectInputComponent, ModalComponent, AddUsersModalComponent, ButtonComponent],
+  imports: [
+    TableComponent,
+    InputDefaultComponent,
+    SelectInputComponent,
+    ModalComponent,
+    AddUsersModalComponent,
+    ButtonComponent,
+    EditUsersModalComponent
+  ],
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss']
 })
@@ -29,17 +38,28 @@ export class ClientesComponent implements OnInit {
   isLoading = false;
   bsModalRef?: BsModalRef;
 
-  @ViewChild('editTemplate') editTemplate!: TemplateRef<any>; 
+  @ViewChild('adicionar') adicionar!: TemplateRef<any>; 
+  @ViewChild('editar') editar!: TemplateRef<any>;
 
   constructor(private modalService: BsModalService, private usuarioService: ClientesService) {}
 
   ngOnInit(): void {
     this.loaclientes();
   }
-  onEdit(item: any) {
+  adicionarcliente(item: any) {
     const initialState = {
       title: 'Cadastrar um Cliente',
-      formTemplate: this.editTemplate, 
+      formTemplate: this.adicionar, 
+      
+    };
+    this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
+    this.bsModalRef.content.closeBtnName = 'Close';
+  }
+
+  onEdit(item: any) {
+    const initialState = {
+      title: 'Editar um Cliente',
+      formTemplate: this.editar, 
       
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });

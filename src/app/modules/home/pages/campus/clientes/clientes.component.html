@@ -1,7 +1,7 @@
 <div class="container">
   <div class="adicionar">
     <h1>Clientes</h1>
-    <button class="adicionarUsuario" (click)="onEdit($event)">
+    <button class="adicionarUsuario" (click)="adicionarcliente($event)">
       Adicionar Clientes <img src="/adicionarUsuario.svg" alt="" />
     </button>
   </div>
@@ -51,6 +51,9 @@
     (delete)="onDelete($event)"
   ></app-table>
 </div>
-<ng-template #editTemplate>
+<ng-template #adicionar>
   <app-add-users-modal />
+</ng-template>
+<ng-template #editar>
+  <app-edit-users-modal />
 </ng-template>

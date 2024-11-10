@@ -8,13 +8,13 @@ import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 
 @Component({
-  selector: 'app-add-users-modal',
+  selector: 'app-edit-users-modal',
   standalone: true,
   imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule],
-  templateUrl: './add-users-modal.component.html',
-  styleUrls: ['./add-users-modal.component.scss']
+  templateUrl: './edit-users-modal.component.html',
+  styleUrls: ['./edit-users-modal.component.scss']
 })
-export class AddUsersModalComponent {
+export class EditUsersModalComponent {
   @Output() closeModal = new EventEmitter<void>();
   isLoading = false;
   currentStep = 1;
@@ -73,7 +73,7 @@ export class AddUsersModalComponent {
   ];
 
   onSubmit() {
-   this.isLoading = true;
+   
 
     const dados = this.form.value;
     const payload = {
@@ -107,14 +107,11 @@ export class AddUsersModalComponent {
 console.log('Payload:', payload);
     this.clientesService.adicionarUsuario(payload).subscribe(
       (Response) => {
-        this.onCloseModal();
-        this.isLoading = false;
         console.log('Usuário adicionado com sucesso!');
         
         console.log('Response:', Response);
       },
      (err) => {
-      this.isLoading = false;
         console.error('Erro ao adicionar usuário:', err);
        
       }
