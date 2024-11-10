@@ -54,7 +54,8 @@
 
   <div class="pt3" *ngIf="currentStep === 3">
     <div class="container-inputs">
-      <app-input
+      <div class="teste1">
+        <app-input
         label="CEP:"
         placeholder="Digite seu CEP:"
         formControlName="cep">
@@ -72,25 +73,29 @@
         formControlName="complemento">
       </app-input>
 
+      </div>
+     <div class="teste2">
       <app-input
-        label="Bairro:"
-        placeholder="Digite seu bairro:"
-        formControlName="bairro">
-      </app-input>
+      label="Bairro:"
+      placeholder="Digite seu bairro:"
+      formControlName="bairro">
+    </app-input>
 
-      <app-input
-        label="Cidade:"
-        placeholder="Digite sua cidade:"
-        formControlName="cidade">
-      </app-input>
+    <app-input
+      label="Cidade:"
+      placeholder="Digite sua cidade:"
+      formControlName="cidade">
+    </app-input>
 
-      <app-select-input 
-        [label]="'Tem representante?'" 
-        [options]="selectOptions" 
-        [placeholder]="'Escolha uma opção'"
-        formControlName="temRepresentante"
-        (change)="onRepresentativeChange($event)">
-      </app-select-input>
+    <app-select-input 
+      [label]="'Tem representante?'" 
+      [options]="selectOptions" 
+      [placeholder]="'Escolha uma opção'"
+      formControlName="temRepresentante"
+      (change)="onRepresentativeChange($event)">
+    </app-select-input>
+     </div>
+     
     </div>
   </div>
 

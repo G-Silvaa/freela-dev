@@ -76,4 +76,29 @@ form {
     width: 90% !important;
     align-items: stretch;
 }
+.teste1{
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.teste2{
+  display: flex;
+  gap: 21px;
+  width: 100%;
+  margin-left: 0px !important;
+  flex-direction: column;
+}
+  }
+
+  .teste1{
+    display: flex;
+    gap: 20px;
+  }
+
+  .teste2{
+    display: flex;
+    gap: 21px;
+    width: 100%;
+    margin-left: 48px;
   }
