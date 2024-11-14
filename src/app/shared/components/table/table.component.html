@@ -6,21 +6,21 @@
     </tr>
 
     <tr *ngFor="let item of paginatedData">
-      <td *ngFor="let column of columns">
+      <td *ngFor="let column of columns ">
         {{ truncateText(column, item) }}
       </td>
       <td *ngIf="showActions" class="actions-container">
-        <button class="btn btn-warning" (click)="onEdit(item['id'])">
+        <button class="btn btn-warning" (click)="onEdit(item)">
           <i class="bi bi-pencil-fill"></i>
         </button>
-        <button class="btn btn-danger" (click)="onDelete(item['id'])">
+        <button *ngIf="showDelete" class="btn btn-danger" (click)="onDelete(item)">
           <i class="bi bi-trash-fill"></i>
         </button>
       </td>
     </tr>
   </table>
 
-  <nav class="">
+  <nav>
     <ul>
       <li>
         <button
@@ -46,7 +46,7 @@
       <li>
         <button
           (click)="nextPage()"
-          [disabled]="currentPage === totalPages.length"
+          [disabled]="currentPage === totalPages"
           class="button-step"
         >
           <i class="bi bi-caret-right-fill"></i>

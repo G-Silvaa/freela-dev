@@ -26,7 +26,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./clientes.component.scss']
 })
 export class ClientesComponent implements OnInit {
-  cadatrarUsuario = true;
+  cadastrarUsuario = true;
   pessoasData: any[] = [];
   isLoading = false;
   bsModalRef?: BsModalRef;
@@ -37,7 +37,7 @@ export class ClientesComponent implements OnInit {
   constructor(private modalService: BsModalService, private usuarioService: ClientesService) {}
 
   ngOnInit(): void {
-    this.loaclientes();
+    this.loadClientes();
     this.usuarioService.clienteAdicionado$.subscribe((novoCliente) => {
       this.pessoasData.push({
         id: novoCliente.id,
@@ -53,13 +53,13 @@ export class ClientesComponent implements OnInit {
     });
   }
 
-  adicionarcliente() {
+  adicionarCliente() {
     const initialState = {
       title: 'Cadastrar um Cliente',
       formTemplate: this.adicionar
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
-    this.bsModalRef.content.closeBtnName = 'Close';
+    this.bsModalRef.content.closeBtnName = 'Fechar';
   }
 
   onEdit(item: any) {
@@ -69,45 +69,36 @@ export class ClientesComponent implements OnInit {
       data: item
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
-    this.bsModalRef.content.closeBtnName = 'Close';
-    console.log('Edit item:', item);
+    this.bsModalRef.content.closeBtnName = 'Fechar';
   }
 
   onDelete(item: any) {
-    console.log('Delete item:', item);
     Swal.fire({
       title: 'Você tem certeza?',
-      text: "Você não poderá reverter isso!",
+      text: "Essa ação não pode ser desfeita!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sim, delete!',
+      confirmButtonText: 'Sim, deletar!',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.usuarioService.deletarUsuario(item).subscribe(() => {
-          this.usuarioService.emitirClienteDeletado(item);
-          Swal.fire(
-            'Deletado!',
-            'O usuário foi deletado.',
-            'success'
-          );
+        this.usuarioService.deletarUsuario(item.id).subscribe(() => {
+          this.usuarioService.emitirClienteDeletado(item.id);
+          Swal.fire('Deletado!', 'O cliente foi removido.', 'success');
         }, (error) => {
-          console.error('Erro ao deletar usuário:', error);
-          Swal.fire(
-            'Erro!',
-            'Ocorreu um erro ao deletar o usuário.',
-            'error'
-          );
+          console.error('Erro ao deletar cliente:', error);
+          Swal.fire('Erro!', 'Ocorreu um erro ao remover o cliente.', 'error');
         });
       }
     });
   }
 
-  loaclientes() {
-    this.usuarioService.pegarUsuario().subscribe((response) => {
-      this.pessoasData = response.map((element: any) => ({
+  loadClientes() {
+    this.isLoading = true;
+    this.usuarioService.pegarTodosUsuarios().subscribe((clientes) => {
+      this.pessoasData = clientes.map((element: any) => ({
         id: element.id,
         Nome: element.contato.nome,
         CPF: element.cpf,
@@ -115,13 +106,14 @@ export class ClientesComponent implements OnInit {
         'E-mail': element.contato.email,
         'Tem representante?': element.representante ? 'Sim' : 'Não'
       }));
-      console.log('response', this.pessoasData);
+      this.isLoading = false;
     }, (error) => {
-      console.error('Error fetching data:', error);
-    }); 
+      console.error('Erro ao carregar clientes:', error);
+      this.isLoading = false;
+    });
   }
 
   back() {
-    this.cadatrarUsuario = true;
+    this.cadastrarUsuario = true;
   }
 }

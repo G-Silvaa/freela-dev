@@ -1,62 +1,59 @@
-import { CommonModule, TitleCasePipe } from "@angular/common";
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { CommonModule, TitleCasePipe } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 interface DataItem<T> {
   [key: string]: T;
 }
 
-interface Item {
-  [key: string]: any;
-}
-
 @Component({
-  selector: "app-table",
+  selector: 'app-table',
   standalone: true,
   imports: [TitleCasePipe, CommonModule],
-  templateUrl: "./table.component.html",
-  styleUrls: ["./table.component.scss"],
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.scss'],
 })
 export class TableComponent<T> {
   @Input() columns!: string[];
   @Input() data!: DataItem<T>[];
   @Input() showActions: boolean = true;
-  @Input() itemsPerPage: number = 6; // Número de itens por página
+  @Input() showDelete: boolean = true; 
+  @Input() itemsPerPage: number = 10; 
+
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
-  items: Item[] = [];
+  @Output() pageChange = new EventEmitter<number>(); 
 
   currentPage: number = 1;
 
   get paginatedData(): DataItem<T>[] {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const start = (this.currentPage - 1) * this.itemsPerPage; 
     const end = start + this.itemsPerPage;
     return this.data.slice(start, end);
   }
 
-  truncateText(column: string, item: Item): string {
+  get totalPages(): number {
+    return Math.ceil(this.data.length / this.itemsPerPage);
+  }
+  
+
+  truncateText(column: string, item: any): string {
     const value = item[column];
-    if (typeof value === "string" && value.length > 30) {
-      return value.slice(0, 30) + "...";
+    if (typeof value === 'string' && value.length > 30) {
+      return value.slice(0, 30) + '...';
     }
     return value;
   }
 
-  onEdit(item: T) {
+  onEdit(item: any) {
     this.edit.emit(item);
   }
 
-  onDelete(item: T) {
+  onDelete(item: any) {
     this.delete.emit(item);
   }
 
-  get totalPages(): number[] {
-    return Array(Math.ceil(this.data.length / this.itemsPerPage))
-      .fill(0)
-      .map((_, i) => i + 1);
-  }
-
   get visiblePages(): number[] {
-    const totalPages = this.totalPages.length;
+    const totalPages = this.totalPages;
     const currentPage = this.currentPage;
     const visiblePages: number[] = [];
 
@@ -64,48 +61,36 @@ export class TableComponent<T> {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const firstPages = [1, 2, 3, 4];
-    const lastPages = [
-      totalPages - 3,
-      totalPages - 2,
-      totalPages - 1,
-      totalPages,
-    ];
+    const firstPages = [1, 2, 3];
+    const lastPages = [totalPages - 2, totalPages - 1, totalPages];
 
     if (currentPage <= 4) {
-      visiblePages.push(...firstPages);
-      visiblePages.push(-1);
-      visiblePages.push(...lastPages);
+      visiblePages.push(...firstPages, 4, 5, -1, ...lastPages);
     } else if (currentPage >= totalPages - 3) {
-      visiblePages.push(...firstPages);
-      visiblePages.push(-1);
-      visiblePages.push(...lastPages);
+      visiblePages.push(...firstPages, -1, totalPages - 4, totalPages - 3, ...lastPages);
     } else {
-      visiblePages.push(1, 2);
-      visiblePages.push(-1);
-      visiblePages.push(currentPage - 1, currentPage, currentPage + 1);
-      visiblePages.push(-1);
-      visiblePages.push(totalPages - 1, totalPages);
+      visiblePages.push(1, 2, -1, currentPage - 1, currentPage, currentPage + 1, -1, totalPages - 1, totalPages);
     }
 
     return visiblePages;
   }
 
   changePage(page: number) {
-    if (page >= 1 && page <= this.totalPages.length) {
+    if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.pageChange.emit(this.currentPage); 
     }
   }
 
   nextPage() {
-    if (this.currentPage < this.totalPages.length) {
-      this.currentPage++;
+    if (this.currentPage < this.totalPages) {
+      this.changePage(this.currentPage + 1);
     }
   }
 
   prevPage() {
     if (this.currentPage > 1) {
-      this.currentPage--;
+      this.changePage(this.currentPage - 1);
     }
   }
 }
