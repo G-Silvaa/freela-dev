@@ -116,9 +116,18 @@ export class AddUsersModalComponent {
     { value: 'nao', label: 'Não' },
   ];
 
+
   beneficiosOptions = [
-    { value: 'beneficio1', label: 'Benefício 1' },
-    { value: 'beneficio2', label: 'Benefício 2' },
+    { value: '87', label: 'BPC/LOAS ao Deficiente' },
+    { value: '88', label: 'BPC/LOAS ao Idoso' },
+    { value: '41', label: 'Aposentadoria por Idade' },
+    { value: '42', label: 'Aposentadoria por Tempo de Contribuição' },
+    { value: '32', label: 'Aposentadoria por Invalidez' },
+    { value: '21', label: 'Pensão por Morte' },
+    { value: '25', label: 'Auxílio Reclusão' },
+    { value: '31', label: 'Auxílio por Incapacidade Temporária' },
+    { value: '36', label: 'Auxílio Acidente' },
+    { value: '80', label: 'Salário Maternidade' }
   ];
 
   onSubmit() {
