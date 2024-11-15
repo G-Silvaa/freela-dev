@@ -74,6 +74,8 @@ export class ClientesService {
     if (filtros.rg) params = params.set('filter', `rg like '${filtros.rg}'`);
     if (filtros.cpf) params = params.set('filter', `cpf like '${filtros.cpf}'`);
 
+    console.log('Parâmetros da requisição:', params.toString());
+
     return this.http.get(`${this.API_URL}domain/cliente`, { params, ...this.createOptions() });
   }
 

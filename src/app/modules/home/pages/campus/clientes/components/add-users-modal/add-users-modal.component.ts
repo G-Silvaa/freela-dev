@@ -7,6 +7,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from './utils/customvalidators'; // Importar o CustomValidationService
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-users-modal',
@@ -20,6 +22,7 @@ export class AddUsersModalComponent {
   isLoading = false;
   currentStep = 1;
   form: FormGroup;
+  private cpfSubject = new Subject<string>();
 
   constructor(
     private modalService: BsModalService,
@@ -75,6 +78,28 @@ export class AddUsersModalComponent {
       this.form.get('representanteCpf')?.updateValueAndValidity();
       this.form.get('representanteRg')?.updateValueAndValidity();
       this.form.get('representanteDataNascimento')?.updateValueAndValidity();
+    });
+
+   
+    this.cpfSubject.pipe(
+      debounceTime(300),
+      switchMap(cpf => {
+        console.log('CPF digitado:', cpf);
+        return this.clientesService.buscarClientesComFiltros({ cpf });
+      })
+    ).subscribe(response => {
+      console.log('Resposta da API:', response);
+      if (response && response.content && response.content.length > 0) {
+        console.log('Usuário encontrado:', response.content[0]);
+      } else {
+        console.log('Nenhum usuário encontrado com este CPF.');
+      }
+    });
+
+    this.form.get('cpf')?.valueChanges.subscribe(value => {
+      if (value.length === 11) {
+        this.cpfSubject.next(value);
+      }
     });
   }
 
