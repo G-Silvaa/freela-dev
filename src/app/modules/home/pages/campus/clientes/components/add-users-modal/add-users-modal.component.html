@@ -8,7 +8,7 @@
   <div class="step" [class.active]="currentStep >= 4">Representante</div>
 </div>
 
-<form [formGroup]="form" >
+<form [formGroup]="form">
   <div class="pt1" *ngIf="currentStep === 1">
     <div class="container-inputs">
       <app-input
@@ -101,7 +101,29 @@
 
   <div class="pt4" *ngIf="currentStep === 4">
     <div class="container-inputs">
+      <h4>Contato</h4>
+      <div class="container1">
+        <app-input
+        label="Nome do Representante:"
+        placeholder="Digite o nome do representante:"
+        formControlName="representanteNome">
+      </app-input>
+
       <app-input
+        label="E-mail do Representante:"
+        placeholder="Digite o e-mail do representante:"
+        formControlName="representanteEmail">
+      </app-input>
+
+      <app-input
+        label="Telefone do Representante:"
+        placeholder="Digite o telefone do representante:"
+        formControlName="representanteTelefone">
+      </app-input>
+      </div>
+      <h4>Dados do parentesco</h4>
+      <div class="container1">
+        <app-input
         label="Parentesco:"
         placeholder="Digite o parentesco:"
         formControlName="parentesco">
@@ -118,11 +140,17 @@
         formControlName="representanteRg">
       </app-input>
 
+    
+      </div>
+      <div class="t">
       <app-input
-        label="Data de Nascimento:"
-        placeholder="Digite a data de nascimento:"
-        formControlName="representanteDataNascimento">
-      </app-input>
+      label="Data de Nascimento:"
+      placeholder="Digite a data de nascimento:"
+      formControlName="representanteDataNascimento">
+    </app-input>
+  </div>
+
+     
     </div>
   </div>
   
