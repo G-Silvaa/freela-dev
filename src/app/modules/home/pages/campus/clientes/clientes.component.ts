@@ -1,4 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
@@ -14,6 +15,7 @@ import Swal from 'sweetalert2';
   selector: 'app-pessoas',
   standalone: true,
   imports: [
+    FormsModule,
     TableComponent,
     InputDefaultComponent,
     SelectInputComponent,
@@ -33,6 +35,13 @@ export class ClientesComponent implements OnInit {
 
   @ViewChild('adicionar') adicionar!: TemplateRef<any>; 
   @ViewChild('editar') editar!: TemplateRef<any>;
+
+  filtros = {
+    nome: '',
+    email: '',
+    rg: '',
+    cpf: ''
+  };
 
   constructor(private modalService: BsModalService, private usuarioService: ClientesService) {}
 
@@ -68,7 +77,7 @@ export class ClientesComponent implements OnInit {
       formTemplate: this.editar,
       data: item
     };
-    this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
+    this.bsModalRef = this.modalService.show(EditUsersModalComponent, { initialState, class: 'modal-lg' });
     this.bsModalRef.content.closeBtnName = 'Fechar';
   }
 
@@ -109,6 +118,28 @@ export class ClientesComponent implements OnInit {
       this.isLoading = false;
     }, (error) => {
       console.error('Erro ao carregar clientes:', error);
+      this.isLoading = false;
+    });
+  }
+
+  aplicarFiltros() {
+    this.isLoading = true;
+    this.usuarioService.buscarClientesComFiltros(this.filtros).subscribe((response) => {
+      if (Array.isArray(response.content)) {
+        this.pessoasData = response.content.map((element: any) => ({
+          id: element.id,
+          Nome: element.contato.nome,
+          CPF: element.cpf,
+          RG: element.rg,
+          'E-mail': element.contato.email,
+          'Tem representante?': element.representante ? 'Sim' : 'Não'
+        }));
+      } else {
+        console.error('A resposta da API não é um array:', response);
+      }
+      this.isLoading = false;
+    }, (error) => {
+      console.error('Erro ao aplicar filtros:', error);
       this.isLoading = false;
     });
   }

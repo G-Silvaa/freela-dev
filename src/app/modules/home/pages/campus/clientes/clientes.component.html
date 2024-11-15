@@ -11,6 +11,7 @@
       label="Nome"
       type="text"
       placeholder="Digite o nome"
+      [(ngModel)]="filtros.nome"
       [hasError]="false"
       errorMsg="Nome é obrigatório"
       [isDisable]="false"
@@ -18,28 +19,31 @@
     <app-input
       label="E-mail"
       type="text"
-      placeholder="Digite o nome"
+      placeholder="Digite o e-mail"
+      [(ngModel)]="filtros.email"
       [hasError]="false"
-      errorMsg="Nome é obrigatório"
+      errorMsg="E-mail é obrigatório"
       [isDisable]="false"
     ></app-input>
     <app-input
       label="RG"
       type="text"
-      placeholder="Digite o nome"
+      placeholder="Digite o RG"
+      [(ngModel)]="filtros.rg"
       [hasError]="false"
-      errorMsg="Nome é obrigatório"
+      errorMsg="RG é obrigatório"
       [isDisable]="false"
     ></app-input>
     <app-input
       label="CPF"
       type="text"
-      placeholder="Digite o nome"
+      placeholder="Digite o CPF"
+      [(ngModel)]="filtros.cpf"
       [hasError]="false"
-      errorMsg="Nome é obrigatório"
+      errorMsg="CPF é obrigatório"
       [isDisable]="false"
     ></app-input>
-    <button class="lupa"></button>
+    <button class="lupa" (click)="aplicarFiltros()">Filtrar</button>
   </div>
 
   <app-table
@@ -51,6 +55,7 @@
     (delete)="onDelete($event)"
   ></app-table>
 </div>
+
 <ng-template #adicionar>
   <app-add-users-modal />
 </ng-template>

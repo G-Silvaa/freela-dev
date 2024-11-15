@@ -62,6 +62,23 @@ export class ClientesService {
     return this.http.put(`${this.API_URL}domain/cliente/${id}`, payload);
   }
 
+  buscarClientesComFiltros(filtros: any): Observable<any> {
+    let params = new HttpParams().set('fields', '*,representante');
+    if (filtros.nome) {
+      params = params.set('filter', `contato.nome ilike '${filtros.nome}'`);
+    }
+    if (filtros.email) {
+      params = params.set('filter', `contato.email ilike '${filtros.email}'`);
+    }
+    if (filtros.rg) {
+      params = params.set('filter', `rg like '${filtros.rg}'`);
+    }
+    if (filtros.cpf) {
+      params = params.set('filter', `cpf like '${filtros.cpf}'`);
+    }
+    return this.http.get(`${this.API_URL}domain/cliente`, { params, ...this.createOptions() });
+  }
+
   get clienteAdicionado$(): Observable<any> {
     return this.clienteAdicionadoSubject.asObservable();
   }
