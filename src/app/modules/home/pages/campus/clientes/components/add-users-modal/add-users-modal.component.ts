@@ -203,9 +203,9 @@ export class AddUsersModalComponent {
   private getStepControls(step: number): string[] {
     switch (step) {
       case 1:
-        return ['nome', 'email', 'telefone'];
-      case 2:
         return ['rg', 'cpf', 'dataNascimento'];
+      case 2:
+        return ['nome', 'email', 'telefone'];
       case 3:
         return ['cep', 'logradouro', 'complemento', 'bairro', 'cidade', 'temRepresentante'];
       case 4:
