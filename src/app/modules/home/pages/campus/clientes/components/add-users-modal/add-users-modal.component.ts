@@ -24,6 +24,7 @@ export class AddUsersModalComponent implements OnInit {
   currentStep = 1;
   form: FormGroup;
   private cpfSubject = new Subject<string>();
+  private existingUserId: number | null = null;
 
   constructor(
     private modalService: BsModalService,
@@ -94,6 +95,7 @@ export class AddUsersModalComponent implements OnInit {
       console.log('Resposta da API:', response);
       if (response && response.content && response.content.length > 0) {
         const cliente = response.content[0];
+        this.existingUserId = cliente.id;
         console.log('Usuário encontrado:', cliente);
   
         // Format the date to DDMMYYYY
@@ -130,6 +132,7 @@ export class AddUsersModalComponent implements OnInit {
           control?.updateValueAndValidity({ onlySelf: true });
         });
       } else {
+        this.existingUserId = null;
         console.log('Nenhum usuário encontrado com este CPF.');
       }
     });
@@ -226,33 +229,50 @@ export class AddUsersModalComponent implements OnInit {
       beneficios: dados.beneficios
     };
     console.log('Payload:', payload);
-    this.clientesService.adicionarUsuario(payload).subscribe(
-      (response) => {
-        const clienteId = response.id;
-        const beneficioPayload = {
-          beneficio: dados.beneficios,
-          cliente: {
-            id: clienteId
-          }
-        };
-        this.clientesService.associarBeneficio(beneficioPayload).subscribe(
-          (beneficioResponse) => {
-            this.onCloseModal();
-            this.isLoading = false;
-            console.log('Benefício associado com sucesso!');
-            console.log('Benefício Response:', beneficioResponse);
-          },
-          (err) => {
-            this.isLoading = false;
-            console.error('Erro ao associar benefício:', err);
-          }
-        );
-      },
-      (err) => {
-        this.isLoading = false;
-        console.error('Erro ao adicionar usuário:', err);
-      }
-    );
+
+    if (this.existingUserId) {
+      // Update existing user
+      this.clientesService.atualizarUsuario(this.existingUserId, payload).subscribe(
+        (response) => {
+          this.onCloseModal();
+          this.isLoading = false;
+          console.log('Usuário atualizado com sucesso!');
+        },
+        (err) => {
+          this.isLoading = false;
+          console.error('Erro ao atualizar usuário:', err);
+        }
+      );
+    } else {
+      // Add new user
+      this.clientesService.adicionarUsuario(payload).subscribe(
+        (response) => {
+          const clienteId = response.id;
+          const beneficioPayload = {
+            beneficio: dados.beneficios,
+            cliente: {
+              id: clienteId
+            }
+          };
+          this.clientesService.associarBeneficio(beneficioPayload).subscribe(
+            (beneficioResponse) => {
+              this.onCloseModal();
+              this.isLoading = false;
+              console.log('Benefício associado com sucesso!');
+              console.log('Benefício Response:', beneficioResponse);
+            },
+            (err) => {
+              this.isLoading = false;
+              console.error('Erro ao associar benefício:', err);
+            }
+          );
+        },
+        (err) => {
+          this.isLoading = false;
+          console.error('Erro ao adicionar usuário:', err);
+        }
+      );
+    }
   }
 
   hasMaxLengthAndRequiredError(input: string): boolean {

@@ -59,6 +59,15 @@ export class ClientesService {
     );
   }
 
+  atualizarUsuario(id: number, payload: any): Observable<any> {
+    return this.http.patch(`${this.API_URL}domain/cliente/${id}`, payload).pipe(
+      map((response: any) => {
+        this.carregarTodosUsuarios(); // Atualiza a lista após atualizar
+        return response;
+      })
+    );
+  }
+
   deletarUsuario(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}domain/cliente/${id}`).pipe(
       map(() => {
