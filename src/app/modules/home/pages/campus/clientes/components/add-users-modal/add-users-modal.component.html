@@ -14,18 +14,24 @@
       <app-input
         label="Nome:"
         placeholder="Digite seu nome:"
-        formControlName="nome">
+        formControlName="nome"
+        [hasError]="hasMaxLengthAndRequiredError('nome')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')">
       </app-input>
     
       <app-input
         label="E-mail:"
         placeholder="Digite seu email:"
-        formControlName="email">
+        formControlName="email"
+        [hasError]="hasMaxLengthAndRequiredError('email')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')">
       </app-input>
       <app-input
         label="Telefone:"
         placeholder="Digite seu telefone:"
-        formControlName="telefone">
+        formControlName="telefone"
+        [hasError]="hasMaxLengthAndRequiredError('telefone')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')">
       </app-input>
     </div>
   </div>
@@ -35,19 +41,25 @@
       <app-input
         label="RG:"
         placeholder="Digite seu RG:"
-        formControlName="rg">
+        formControlName="rg"
+        [hasError]="hasMaxLengthAndRequiredError('rg')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')">
       </app-input>
 
       <app-input
         label="CPF:"
         placeholder="Digite seu CPF:"
-        formControlName="cpf">
+        formControlName="cpf"
+        [hasError]="hasMaxLengthAndRequiredError('cpf')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')">
       </app-input>
 
       <app-input
         label="Data De Nascimento:"
         placeholder="Digite sua data de nascimento:"
-        formControlName="dataNascimento">
+        formControlName="dataNascimento"
+        [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')">
       </app-input>
     </div>
   </div>
@@ -58,19 +70,25 @@
         <app-input
         label="CEP:"
         placeholder="Digite seu CEP:"
-        formControlName="cep">
+        formControlName="cep"
+        [hasError]="hasMaxLengthAndRequiredError('cep')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cep')">
       </app-input>
 
       <app-input
         label="Logradouro:"
         placeholder="Digite seu logradouro:"
-        formControlName="logradouro">
+        formControlName="logradouro"
+        [hasError]="hasMaxLengthAndRequiredError('logradouro')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')">
       </app-input>
     
       <app-input
         label="Complemento:"
         placeholder="Digite seu complemento:"
-        formControlName="complemento">
+        formControlName="complemento"
+        [hasError]="hasMaxLengthAndRequiredError('complemento')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')">
       </app-input>
 
       </div>
@@ -78,13 +96,17 @@
       <app-input
       label="Bairro:"
       placeholder="Digite seu bairro:"
-      formControlName="bairro">
+      formControlName="bairro"
+      [hasError]="hasMaxLengthAndRequiredError('bairro')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')">
     </app-input>
 
     <app-input
       label="Cidade:"
       placeholder="Digite sua cidade:"
-      formControlName="cidade">
+      formControlName="cidade"
+      [hasError]="hasMaxLengthAndRequiredError('cidade')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('cidade')">
     </app-input>
 
     <app-select-input 
@@ -92,6 +114,8 @@
       [options]="selectOptions" 
       [placeholder]="'Escolha uma opção'"
       formControlName="temRepresentante"
+      [hasError]="hasMaxLengthAndRequiredError('temRepresentante')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('temRepresentante')"
       (change)="onRepresentativeChange($event)">
     </app-select-input>
      </div>
@@ -106,19 +130,25 @@
         <app-input
         label="Nome do Representante:"
         placeholder="Digite o nome do representante:"
-        formControlName="representanteNome">
+        formControlName="representanteNome"
+        [hasError]="hasMaxLengthAndRequiredError('representanteNome')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteNome')">
       </app-input>
 
       <app-input
         label="E-mail do Representante:"
         placeholder="Digite o e-mail do representante:"
-        formControlName="representanteEmail">
+        formControlName="representanteEmail"
+        [hasError]="hasMaxLengthAndRequiredError('representanteEmail')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteEmail')">
       </app-input>
 
       <app-input
         label="Telefone do Representante:"
         placeholder="Digite o telefone do representante:"
-        formControlName="representanteTelefone">
+        formControlName="representanteTelefone"
+        [hasError]="hasMaxLengthAndRequiredError('representanteTelefone')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteTelefone')">
       </app-input>
       </div>
       <h4>Dados do parentesco</h4>
@@ -126,18 +156,24 @@
         <app-input
         label="Parentesco:"
         placeholder="Digite o parentesco:"
-        formControlName="parentesco">
+        formControlName="parentesco"
+        [hasError]="hasMaxLengthAndRequiredError('parentesco')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('parentesco')">
       </app-input>
     
       <app-input
         label="CPF do Representante:"
         placeholder="Digite o CPF:"
-        formControlName="representanteCpf">
+        formControlName="representanteCpf"
+        [hasError]="hasMaxLengthAndRequiredError('representanteCpf')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteCpf')">
       </app-input>
       <app-input
         label="RG do Representante:"
         placeholder="Digite o RG:"
-        formControlName="representanteRg">
+        formControlName="representanteRg"
+        [hasError]="hasMaxLengthAndRequiredError('representanteRg')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteRg')">
       </app-input>
 
     
@@ -146,7 +182,9 @@
       <app-input
       label="Data de Nascimento:"
       placeholder="Digite a data de nascimento:"
-      formControlName="representanteDataNascimento">
+      formControlName="representanteDataNascimento"
+      [hasError]="hasMaxLengthAndRequiredError('representanteDataNascimento')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteDataNascimento')">
     </app-input>
   </div>
 

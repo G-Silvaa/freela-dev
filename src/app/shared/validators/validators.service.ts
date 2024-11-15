@@ -10,7 +10,7 @@ export class ValidationService {
   msg: IErrorMsg = msg;
   passwordPattern = /^.{8,}$/;
 
-  //Errors
+  // Errors
 
   hasMaxLengthAndRequiredError(form: AbstractControl, input: string): boolean {
     return (
@@ -131,7 +131,7 @@ export class ValidationService {
     );
   }
 
-  //Error messages
+  // Error messages
 
   hasMsgPasswordError(form: AbstractControl): string {
     if (this.isInvalid(form, 'password', 'required')) {
@@ -149,6 +149,60 @@ export class ValidationService {
     }
   }
 
+  emailValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      const validEmail = emailPattern.test(control.value);
+      const validLength = typeof control.value === 'string' && control.value.length <= 150;
+      if (!validEmail) {
+        return { invalidEmail: true };
+      }
+      if (!validLength) {
+        return { maxLengthExceeded: true };
+      }
+      return null;
+    };
+  }
+
+  dateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return { required: true };
+      }
+      const date = new Date(control.value);
+      const year = date.getFullYear();
+      if (isNaN(date.getTime()) || year < 1900) {
+        return { invalidDate: true };
+      }
+      return null;
+    };
+  }
+
+  dateRangeValidator(startDateControlName: string, endDateControlName: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const startDateControl = control.get(startDateControlName);
+      const endDateControl = control.get(endDateControlName);
+  
+      if (!startDateControl || !endDateControl) {
+        return null;
+      }
+  
+      const startDate = startDateControl.value ? new Date(startDateControl.value) : null;
+      const endDate = endDateControl.value ? new Date(endDateControl.value) : null;
+  
+      if (startDate && endDate && startDate > endDate) {
+        endDateControl.setErrors({ dateRange: true });
+        return { dateRange: true };
+      }
+  
+      if (endDateControl.hasError('dateRange')) {
+        endDateControl.setErrors(null);
+      }
+  
+      return null;
+    };
+  }
+
   hasMaxLengthAndRequiredMsgError(
     form: AbstractControl,
     input: string
@@ -161,4 +215,20 @@ export class ValidationService {
       return this.msg.inputMinLength;
     }
   }
+
+  hasNumeroCartaoError(form: AbstractControl) {
+    const numeroCartaoFormControl = form.get('numeroCartao');
+
+    if (!numeroCartaoFormControl || !numeroCartaoFormControl.touched) {
+      return false;
+    }
+
+    const isRequiredError = numeroCartaoFormControl.hasError('required');
+
+    const numeroCartaoErrors = numeroCartaoFormControl.errors;
+    const isNumeroCartaoError = numeroCartaoErrors && !isRequiredError;
+
+    return !!isRequiredError || !!isNumeroCartaoError;
+  }
+
 }

@@ -6,6 +6,7 @@ import { ButtonComponent } from "../../../../../../../shared/components/button/b
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
+import { CustomValidationService } from './utils/customvalidators'; // Importar o CustomValidationService
 
 @Component({
   selector: 'app-add-users-modal',
@@ -23,7 +24,8 @@ export class AddUsersModalComponent {
   constructor(
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private customValidationService: CustomValidationService // Injetar o CustomValidationService
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -38,13 +40,40 @@ export class AddUsersModalComponent {
       bairro: ['', Validators.required],
       cidade: ['', Validators.required],
       temRepresentante: ['', Validators.required],
-      representanteNome: ['', Validators.required],
-      representanteEmail: ['', [Validators.required, Validators.email]],
-      representanteTelefone: ['', Validators.required],
-      parentesco: ['', Validators.required],
-      representanteCpf: ['', Validators.required],
-      representanteRg: ['', Validators.required],
-      representanteDataNascimento: ['', Validators.required]
+      representanteNome: [''],
+      representanteEmail: [''],
+      representanteTelefone: [''],
+      parentesco: [''],
+      representanteCpf: [''],
+      representanteRg: [''],
+      representanteDataNascimento: ['']
+    });
+
+    this.form.get('temRepresentante')?.valueChanges.subscribe(value => {
+      if (value === 'sim') {
+        this.form.get('representanteNome')?.setValidators(Validators.required);
+        this.form.get('representanteEmail')?.setValidators([Validators.required, Validators.email]);
+        this.form.get('representanteTelefone')?.setValidators(Validators.required);
+        this.form.get('parentesco')?.setValidators(Validators.required);
+        this.form.get('representanteCpf')?.setValidators(Validators.required);
+        this.form.get('representanteRg')?.setValidators(Validators.required);
+        this.form.get('representanteDataNascimento')?.setValidators(Validators.required);
+      } else {
+        this.form.get('representanteNome')?.clearValidators();
+        this.form.get('representanteEmail')?.clearValidators();
+        this.form.get('representanteTelefone')?.clearValidators();
+        this.form.get('parentesco')?.clearValidators();
+        this.form.get('representanteCpf')?.clearValidators();
+        this.form.get('representanteRg')?.clearValidators();
+        this.form.get('representanteDataNascimento')?.clearValidators();
+      }
+      this.form.get('representanteNome')?.updateValueAndValidity();
+      this.form.get('representanteEmail')?.updateValueAndValidity();
+      this.form.get('representanteTelefone')?.updateValueAndValidity();
+      this.form.get('parentesco')?.updateValueAndValidity();
+      this.form.get('representanteCpf')?.updateValueAndValidity();
+      this.form.get('representanteRg')?.updateValueAndValidity();
+      this.form.get('representanteDataNascimento')?.updateValueAndValidity();
     });
   }
 
@@ -54,8 +83,11 @@ export class AddUsersModalComponent {
   }
 
   onNextStep() {
-    if (this.currentStep < 4) {
+    const stepControls = this.getStepControls(this.currentStep);
+    if (stepControls.every(control => this.form.get(control)?.valid)) {
       this.currentStep++;
+    } else {
+      stepControls.forEach(control => this.form.get(control)?.markAsTouched());
     }
   }
 
@@ -121,5 +153,28 @@ export class AddUsersModalComponent {
         console.error('Erro ao adicionar usuário:', err);
       }
     );
+  }
+
+  hasMaxLengthAndRequiredError(input: string): boolean {
+    return this.customValidationService.hasMaxLengthAndRequiredError(this.form, input);
+  }
+
+  getMaxLengthAndRequiredErrorMsg(input: string): string {
+    return this.customValidationService.getMaxLengthAndRequiredErrorMsg(this.form, input);
+  }
+
+  private getStepControls(step: number): string[] {
+    switch (step) {
+      case 1:
+        return ['nome', 'email', 'telefone'];
+      case 2:
+        return ['rg', 'cpf', 'dataNascimento'];
+      case 3:
+        return ['cep', 'logradouro', 'complemento', 'bairro', 'cidade', 'temRepresentante'];
+      case 4:
+        return ['representanteNome', 'representanteEmail', 'representanteTelefone', 'parentesco', 'representanteCpf', 'representanteRg', 'representanteDataNascimento'];
+      default:
+        return [];
+    }
   }
 }
