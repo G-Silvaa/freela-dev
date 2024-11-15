@@ -68,9 +68,6 @@ export class ClientesComponent implements OnInit {
   isLoading = false;
   bsModalRef?: BsModalRef;
 
-  @ViewChild('adicionar') adicionar!: TemplateRef<any>; 
-  @ViewChild('editar') editar!: TemplateRef<any>;
-
   filtros = {
     nome: '',
     email: '',
@@ -78,23 +75,25 @@ export class ClientesComponent implements OnInit {
     cpf: ''
   };
 
+  @ViewChild('adicionar') adicionar!: TemplateRef<any>;
+  @ViewChild('editar') editar!: TemplateRef<any>;
+
   constructor(private modalService: BsModalService, private usuarioService: ClientesService) {}
 
   ngOnInit(): void {
-    this.loadClientes();
-    this.usuarioService.clienteAdicionado$.subscribe((novoCliente) => {
-      this.pessoasData.push({
-        id: novoCliente.id,
-        Nome: novoCliente.contato.nome,
-        CPF: novoCliente.cpf,
-        RG: novoCliente.rg,
-        'E-mail': novoCliente.contato.email,
-        'Tem representante?': this.temRepresentante(novoCliente.representante)
-      });
+    // Observa alterações na lista de clientes
+    this.usuarioService.clientes$.subscribe((clientes) => {
+      this.pessoasData = clientes.map((cliente: ICliente) => ({
+        id: cliente.id,
+        Nome: cliente.contato.nome,
+        CPF: cliente.cpf,
+        RG: cliente.rg,
+        'E-mail': cliente.contato.email,
+        'Tem representante?': this.temRepresentante(cliente.representante),
+      }));
     });
-    this.usuarioService.clienteDeletado$.subscribe((id) => {
-      this.pessoasData = this.pessoasData.filter(cliente => cliente.id !== id);
-    });
+
+    this.usuarioService.carregarTodosUsuarios(); // Carrega os dados iniciais
   }
 
   adicionarCliente() {
@@ -103,7 +102,6 @@ export class ClientesComponent implements OnInit {
       formTemplate: this.adicionar
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
-    this.bsModalRef.content.closeBtnName = 'Fechar';
   }
 
   onEdit(item: any) {
@@ -112,8 +110,7 @@ export class ClientesComponent implements OnInit {
       formTemplate: this.editar,
       data: item
     };
-    this.bsModalRef = this.modalService.show(EditUsersModalComponent, { initialState, class: 'modal-lg' });
-    this.bsModalRef.content.closeBtnName = 'Fechar';
+    this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
   }
 
   onDelete(item: any) {
@@ -129,32 +126,11 @@ export class ClientesComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.usuarioService.deletarUsuario(item.id).subscribe(() => {
-          this.usuarioService.emitirClienteDeletado(item.id);
           Swal.fire('Deletado!', 'O cliente foi removido.', 'success');
         }, (error) => {
-          console.error('Erro ao deletar cliente:', error);
           Swal.fire('Erro!', 'Ocorreu um erro ao remover o cliente.', 'error');
         });
       }
-    });
-  }
-
-  loadClientes() {
-    this.isLoading = true;
-    this.usuarioService.pegarTodosUsuarios().subscribe((clientes) => {
-      console.log('Clientes:', clientes);
-      this.pessoasData = clientes.map((element: ICliente) => ({
-        id: element.id,
-        Nome: element.contato.nome,
-        CPF: element.cpf,
-        RG: element.rg,
-        'E-mail': element.contato.email,
-        'Tem representante?': this.temRepresentante(element.representante)
-      }));
-      this.isLoading = false;
-    }, (error) => {
-      console.error('Erro ao carregar clientes:', error);
-      this.isLoading = false;
     });
   }
 
@@ -162,13 +138,13 @@ export class ClientesComponent implements OnInit {
     this.isLoading = true;
     this.usuarioService.buscarClientesComFiltros(this.filtros).subscribe((response) => {
       if (Array.isArray(response.content)) {
-        this.pessoasData = response.content.map((element: ICliente) => ({
-          id: element.id,
-          Nome: element.contato.nome,
-          CPF: element.cpf,
-          RG: element.rg,
-          'E-mail': element.contato.email,
-          'Tem representante?': this.temRepresentante(element.representante)
+        this.pessoasData = response.content.map((cliente: ICliente) => ({
+          id: cliente.id,
+          Nome: cliente.contato.nome,
+          CPF: cliente.cpf,
+          RG: cliente.rg,
+          'E-mail': cliente.contato.email,
+          'Tem representante?': this.temRepresentante(cliente.representante),
         }));
       } else {
         console.error('A resposta da API não é um array:', response);
@@ -181,13 +157,6 @@ export class ClientesComponent implements OnInit {
   }
 
   temRepresentante(representante: IRepresentante | null | undefined): string {
-    if (!representante || !representante.id) {
-      return 'Não';
-    }
-    return 'Sim';
-  }
-
-  back() {
-    this.cadastrarUsuario = true;
+    return representante && representante.id ? 'Sim' : 'Não';
   }
 }

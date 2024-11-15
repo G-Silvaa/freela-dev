@@ -107,7 +107,7 @@ export class AddUsersModalComponent {
     console.log('Payload:', payload);
     this.clientesService.adicionarUsuario(payload).subscribe(
       (response) => {
-        this.clientesService.emitirClienteAdicionado(response);
+        this.clientesService.adicionarUsuario(response);
         this.onCloseModal();
         this.isLoading = false;
         console.log('Usuário adicionado com sucesso!');

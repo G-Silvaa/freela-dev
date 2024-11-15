@@ -1,31 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, Subject, forkJoin } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.development';
-import { map, mergeMap, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
   private API_URL = environment.apiUrl;
-  private clienteAdicionadoSubject = new Subject<any>();
-  private clienteDeletadoSubject = new Subject<any>();
+  private clientesSubject = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  adicionarUsuario(payload: any): Observable<any> {
-    return this.http.post(`${this.API_URL}domain/cliente/add`, payload);
+  get clientes$(): Observable<any[]> {
+    return this.clientesSubject.asObservable();
   }
 
   createOptions() {
-    const httpOptions = {
+    return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': '1',
       }),
-    }; 
-    return httpOptions;
+    };
   }
 
   pegarUsuario(page: number = 0, size: number = 10): Observable<any> {
@@ -38,8 +36,8 @@ export class ClientesService {
     });
   }
 
-  pegarTodosUsuarios(): Observable<any[]> {
-    return this.pegarUsuario().pipe(
+  carregarTodosUsuarios(): void {
+    this.pegarUsuario().pipe(
       mergeMap((response: any) => {
         const totalPages = response.totalPages;
         const requests = [];
@@ -48,50 +46,34 @@ export class ClientesService {
         }
         return forkJoin(requests);
       }),
-      map((responses: any[]) => {
-        return responses.flatMap(response => response.content);
+      map((responses: any[]) => responses.flatMap(response => response.content))
+    ).subscribe(clientes => this.clientesSubject.next(clientes));
+  }
+
+  adicionarUsuario(payload: any): Observable<any> {
+    return this.http.post(`${this.API_URL}domain/cliente/add`, payload).pipe(
+      map((response: any) => {
+        this.carregarTodosUsuarios(); // Atualiza a lista após adicionar
+        return response;
       })
     );
   }
 
-  deletarUsuario(id: any): Observable<any> {
-    return this.http.delete(`${this.API_URL}domain/cliente/${id}`);
-  }
-
-  atualizarUsuario(id: any, payload: any): Observable<any> {
-    return this.http.put(`${this.API_URL}domain/cliente/${id}`, payload);
+  deletarUsuario(id: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}domain/cliente/${id}`).pipe(
+      map(() => {
+        this.carregarTodosUsuarios(); 
+      })
+    );
   }
 
   buscarClientesComFiltros(filtros: any): Observable<any> {
     let params = new HttpParams().set('fields', '*,representante');
-    if (filtros.nome) {
-      params = params.set('filter', `contato.nome ilike '${filtros.nome}'`);
-    }
-    if (filtros.email) {
-      params = params.set('filter', `contato.email ilike '${filtros.email}'`);
-    }
-    if (filtros.rg) {
-      params = params.set('filter', `rg like '${filtros.rg}'`);
-    }
-    if (filtros.cpf) {
-      params = params.set('filter', `cpf like '${filtros.cpf}'`);
-    }
+    if (filtros.nome) params = params.set('filter', `contato.nome ilike '${filtros.nome}'`);
+    if (filtros.email) params = params.set('filter', `contato.email ilike '${filtros.email}'`);
+    if (filtros.rg) params = params.set('filter', `rg like '${filtros.rg}'`);
+    if (filtros.cpf) params = params.set('filter', `cpf like '${filtros.cpf}'`);
+
     return this.http.get(`${this.API_URL}domain/cliente`, { params, ...this.createOptions() });
-  }
-
-  get clienteAdicionado$(): Observable<any> {
-    return this.clienteAdicionadoSubject.asObservable();
-  }
-
-  get clienteDeletado$(): Observable<any> {
-    return this.clienteDeletadoSubject.asObservable();
-  }
-
-  emitirClienteAdicionado(cliente: any) {
-    this.clienteAdicionadoSubject.next(cliente);
-  }
-
-  emitirClienteDeletado(id: any) {
-    this.clienteDeletadoSubject.next(id);
   }
 }
