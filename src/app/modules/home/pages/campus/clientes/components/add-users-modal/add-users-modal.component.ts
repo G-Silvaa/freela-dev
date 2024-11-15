@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
@@ -94,13 +95,18 @@ export class AddUsersModalComponent implements OnInit {
       if (response && response.content && response.content.length > 0) {
         const cliente = response.content[0];
         console.log('Usuário encontrado:', cliente);
+  
+        // Format the date to DDMMYYYY
+        const datePipe = new DatePipe('en-US');
+        const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
+  
         this.form.patchValue({
           nome: cliente.contato.nome,
           email: cliente.contato.email,
           telefone: cliente.contato.telefone,
           cpf: cliente.cpf,
           rg: cliente.rg,
-          dataNascimento: cliente.nascimento,
+          dataNascimento: formattedDate,
           cep: cliente.endereco.cep,
           logradouro: cliente.endereco.logradouro,
           complemento: cliente.endereco.complemento,
