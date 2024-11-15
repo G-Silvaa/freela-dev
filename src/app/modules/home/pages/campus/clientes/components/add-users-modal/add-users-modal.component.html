@@ -4,8 +4,10 @@
   <div class="step" [class.active]="currentStep >= 2">Dados</div>
   <div class="line" [class.active]="currentStep >= 3"></div>
   <div class="step" [class.active]="currentStep >= 3">Endereço</div>
-  <div class="line" [class.active]="currentStep >= 4"></div>
-  <div class="step" [class.active]="currentStep >= 4">Representante</div>
+  <div class="line" [class.active]="currentStep >= 4 && shouldShowStep(4)"></div>
+  <div class="step" [class.active]="currentStep >= 4 && shouldShowStep(4)">Representante</div>
+  <div class="line" [class.active]="currentStep >= 5"></div>
+  <div class="step" [class.active]="currentStep >= 5">Benefícios</div>
 </div>
 
 <form [formGroup]="form">
@@ -123,7 +125,7 @@
     </div>
   </div>
 
-  <div class="pt4" *ngIf="currentStep === 4">
+  <div class="pt4" *ngIf="currentStep === 4 && shouldShowStep(4)">
     <div class="container-inputs">
       <h4>Contato</h4>
       <div class="container1">
@@ -191,6 +193,19 @@
      
     </div>
   </div>
+
+  <div class="pt5" *ngIf="currentStep === 5">
+    <div class="container-inputs">
+      <app-select-input 
+        [label]="'Benefícios'" 
+        [options]="beneficiosOptions" 
+        [placeholder]="'Escolha um benefício'"
+        formControlName="beneficios"
+        [hasError]="hasMaxLengthAndRequiredError('beneficios')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('beneficios')">
+      </app-select-input>
+    </div>
+  </div>
   
   <div class="footer-modal">
     <app-button variant="danger" width="100px" (click)="onCloseModal()">
@@ -204,13 +219,13 @@
     </app-button>
     <app-button
       width="100px"
-      *ngIf="currentStep < 4 && (currentStep !== 3 || form.get('temRepresentante')?.value === 'sim')"
+      *ngIf="currentStep < 5"
       (click)="onNextStep()">
       Próximo
     </app-button>
     <app-button
     width="100px"
-    *ngIf="currentStep === 4 || (currentStep === 3 && form.get('temRepresentante')?.value === 'nao')"
+    *ngIf="currentStep === 5"
     [isLoading]="isLoading"
     (click)="onSubmit()">
     Salvar

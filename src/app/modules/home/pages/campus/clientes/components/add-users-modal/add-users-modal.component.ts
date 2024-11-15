@@ -46,7 +46,8 @@ export class AddUsersModalComponent {
       parentesco: [''],
       representanteCpf: [''],
       representanteRg: [''],
-      representanteDataNascimento: ['']
+      representanteDataNascimento: [''],
+      beneficios: ['', Validators.required] // Adicionar campo de benefícios
     });
 
     this.form.get('temRepresentante')?.valueChanges.subscribe(value => {
@@ -85,7 +86,11 @@ export class AddUsersModalComponent {
   onNextStep() {
     const stepControls = this.getStepControls(this.currentStep);
     if (stepControls.every(control => this.form.get(control)?.valid)) {
-      this.currentStep++;
+      if (this.currentStep === 3 && this.form.get('temRepresentante')?.value === 'nao') {
+        this.currentStep = 5; // Pular diretamente para "Benefícios"
+      } else {
+        this.currentStep++;
+      }
     } else {
       stepControls.forEach(control => this.form.get(control)?.markAsTouched());
     }
@@ -93,7 +98,11 @@ export class AddUsersModalComponent {
 
   onPreviousStep() {
     if (this.currentStep > 1) {
-      this.currentStep--;
+      if (this.currentStep === 5 && this.form.get('temRepresentante')?.value === 'nao') {
+        this.currentStep = 3; // Voltar diretamente para "Endereço"
+      } else {
+        this.currentStep--;
+      }
     }
   }
 
@@ -105,6 +114,11 @@ export class AddUsersModalComponent {
   selectOptions = [
     { value: 'sim', label: 'Sim' },
     { value: 'nao', label: 'Não' },
+  ];
+
+  beneficiosOptions = [
+    { value: 'beneficio1', label: 'Benefício 1' },
+    { value: 'beneficio2', label: 'Benefício 2' },
   ];
 
   onSubmit() {
@@ -138,6 +152,7 @@ export class AddUsersModalComponent {
         rg: dados.representanteRg,
         nascimento: dados.representanteDataNascimento
       } : null,
+      beneficios: dados.beneficios
     };
     console.log('Payload:', payload);
     this.clientesService.adicionarUsuario(payload).subscribe(
@@ -173,8 +188,17 @@ export class AddUsersModalComponent {
         return ['cep', 'logradouro', 'complemento', 'bairro', 'cidade', 'temRepresentante'];
       case 4:
         return ['representanteNome', 'representanteEmail', 'representanteTelefone', 'parentesco', 'representanteCpf', 'representanteRg', 'representanteDataNascimento'];
+      case 5:
+        return ['beneficios'];
       default:
         return [];
     }
+  }
+
+  shouldShowStep(step: number): boolean {
+    if (step === 4 && this.form.get('temRepresentante')?.value === 'nao') {
+      return false;
+    }
+    return true;
   }
 }
