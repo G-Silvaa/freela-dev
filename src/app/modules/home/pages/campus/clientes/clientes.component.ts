@@ -11,6 +11,41 @@ import { ClientesService } from './services/clientes.service';
 import { EditUsersModalComponent } from './components/edit-users-modal/edit-users-modal.component';
 import Swal from 'sweetalert2';
 
+export interface IContato {
+  nome: string;
+  email: string;
+  telefone: string;
+}
+
+export interface ICliente {
+  id: number;
+  contato: IContato;
+  cpf: string;
+  rg: string;
+  nascimento: string;
+  representante?: IRepresentante;
+}
+
+interface ClienteTabela {
+  id: number;
+  Nome: string;
+  CPF: string;
+  RG: string;
+  'E-mail': string;
+  'Tem representante?': string;
+}
+
+export interface IRepresentante {
+  id: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  parentesco: string;
+  cpf: string;
+  rg: string;
+  nascimento: string;
+}
+
 @Component({
   selector: 'app-pessoas',
   standalone: true,
@@ -29,7 +64,7 @@ import Swal from 'sweetalert2';
 })
 export class ClientesComponent implements OnInit {
   cadastrarUsuario = true;
-  pessoasData: any[] = [];
+  pessoasData: ClienteTabela[] = [];
   isLoading = false;
   bsModalRef?: BsModalRef;
 
@@ -54,7 +89,7 @@ export class ClientesComponent implements OnInit {
         CPF: novoCliente.cpf,
         RG: novoCliente.rg,
         'E-mail': novoCliente.contato.email,
-        'Tem representante?': novoCliente.representante ? 'Sim' : 'Não'
+        'Tem representante?': this.temRepresentante(novoCliente.representante)
       });
     });
     this.usuarioService.clienteDeletado$.subscribe((id) => {
@@ -107,13 +142,14 @@ export class ClientesComponent implements OnInit {
   loadClientes() {
     this.isLoading = true;
     this.usuarioService.pegarTodosUsuarios().subscribe((clientes) => {
-      this.pessoasData = clientes.map((element: any) => ({
+      console.log('Clientes:', clientes);
+      this.pessoasData = clientes.map((element: ICliente) => ({
         id: element.id,
         Nome: element.contato.nome,
         CPF: element.cpf,
         RG: element.rg,
         'E-mail': element.contato.email,
-        'Tem representante?': element.representante ? 'Sim' : 'Não'
+        'Tem representante?': this.temRepresentante(element.representante)
       }));
       this.isLoading = false;
     }, (error) => {
@@ -126,13 +162,13 @@ export class ClientesComponent implements OnInit {
     this.isLoading = true;
     this.usuarioService.buscarClientesComFiltros(this.filtros).subscribe((response) => {
       if (Array.isArray(response.content)) {
-        this.pessoasData = response.content.map((element: any) => ({
+        this.pessoasData = response.content.map((element: ICliente) => ({
           id: element.id,
           Nome: element.contato.nome,
           CPF: element.cpf,
           RG: element.rg,
           'E-mail': element.contato.email,
-          'Tem representante?': element.representante ? 'Sim' : 'Não'
+          'Tem representante?': this.temRepresentante(element.representante)
         }));
       } else {
         console.error('A resposta da API não é um array:', response);
@@ -142,6 +178,13 @@ export class ClientesComponent implements OnInit {
       console.error('Erro ao aplicar filtros:', error);
       this.isLoading = false;
     });
+  }
+
+  temRepresentante(representante: IRepresentante | null | undefined): string {
+    if (!representante || !representante.id) {
+      return 'Não';
+    }
+    return 'Sim';
   }
 
   back() {
