@@ -116,7 +116,6 @@ export class AddUsersModalComponent {
     { value: 'nao', label: 'Não' },
   ];
 
-
   beneficiosOptions = [
     { value: '87', label: 'BPC/LOAS ao Deficiente' },
     { value: '88', label: 'BPC/LOAS ao Idoso' },
@@ -166,11 +165,25 @@ export class AddUsersModalComponent {
     console.log('Payload:', payload);
     this.clientesService.adicionarUsuario(payload).subscribe(
       (response) => {
-        this.clientesService.adicionarUsuario(response);
-        this.onCloseModal();
-        this.isLoading = false;
-        console.log('Usuário adicionado com sucesso!');
-        console.log('Response:', response);
+        const clienteId = response.id;
+        const beneficioPayload = {
+          beneficio: dados.beneficios,
+          cliente: {
+            id: clienteId
+          }
+        };
+        this.clientesService.associarBeneficio(beneficioPayload).subscribe(
+          (beneficioResponse) => {
+            this.onCloseModal();
+            this.isLoading = false;
+            console.log('Benefício associado com sucesso!');
+            console.log('Benefício Response:', beneficioResponse);
+          },
+          (err) => {
+            this.isLoading = false;
+            console.error('Erro ao associar benefício:', err);
+          }
+        );
       },
       (err) => {
         this.isLoading = false;

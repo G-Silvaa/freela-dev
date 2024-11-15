@@ -76,4 +76,8 @@ export class ClientesService {
 
     return this.http.get(`${this.API_URL}domain/cliente`, { params, ...this.createOptions() });
   }
+
+  associarBeneficio(payload: any): Observable<any> {
+    return this.http.post(`${this.API_URL}domain/contrato/add`, payload, this.createOptions());
+  }
 }
