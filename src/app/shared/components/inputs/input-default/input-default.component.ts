@@ -4,6 +4,7 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
+  ControlValueAccessor,
 } from '@angular/forms';
 
 @Component({
@@ -18,11 +19,11 @@ import {
     },
   ],
   templateUrl: './input-default.component.html',
-  styleUrl: './input-default.component.scss',
+  styleUrls: ['./input-default.component.scss'],
 })
-export class InputDefaultComponent {
+export class InputDefaultComponent implements ControlValueAccessor {
   @Input() label: string = '';
-  @Input() type: string = '';
+  @Input() type: string = 'text';
   @Input() hasError: boolean = false;
   @Input() placeholder: string = '';
   @Input() errorMsg: string = '';
@@ -33,10 +34,6 @@ export class InputDefaultComponent {
 
   onChange: any = () => {};
   onTouched: any = () => {};
-
-  constructor() {}
-
-  ngOnInit() {}
 
   writeValue(value: any): void {
     this.value = value;
@@ -51,7 +48,7 @@ export class InputDefaultComponent {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    // Implemente a lógica para definir o estado desabilitado, se necessário
+    this.isDisable = isDisabled;
   }
 
   onInputChange(event: any) {

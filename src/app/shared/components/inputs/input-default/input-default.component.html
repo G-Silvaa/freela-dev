@@ -6,10 +6,10 @@
     [placeholder]="placeholder"
     [disabled]="isDisable"
     class="form-control"
-    placeholder="name@example.com"
+    [value]="value"
     [ngClass]="{ 'is-invalid': hasError }"
   />
   <div class="invalid-feedback">
     {{ errorMsg }}
   </div>
-</div> 
+</div>

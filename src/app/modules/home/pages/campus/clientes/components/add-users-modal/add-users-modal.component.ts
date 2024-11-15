@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from './utils/customvalidators'; // Importar o CustomValidationService
 import { Subject } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-users-modal',
@@ -17,7 +17,7 @@ import { debounceTime, switchMap } from 'rxjs/operators';
   templateUrl: './add-users-modal.component.html',
   styleUrls: ['./add-users-modal.component.scss']
 })
-export class AddUsersModalComponent {
+export class AddUsersModalComponent implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
   isLoading = false;
   currentStep = 1;
@@ -52,7 +52,9 @@ export class AddUsersModalComponent {
       representanteDataNascimento: [''],
       beneficios: ['', Validators.required] // Adicionar campo de benefícios
     });
+  }
 
+  ngOnInit() {
     this.form.get('temRepresentante')?.valueChanges.subscribe(value => {
       if (value === 'sim') {
         this.form.get('representanteNome')?.setValidators(Validators.required);
@@ -79,10 +81,10 @@ export class AddUsersModalComponent {
       this.form.get('representanteRg')?.updateValueAndValidity();
       this.form.get('representanteDataNascimento')?.updateValueAndValidity();
     });
-
-   
+  
     this.cpfSubject.pipe(
       debounceTime(300),
+      distinctUntilChanged(),
       switchMap(cpf => {
         console.log('CPF digitado:', cpf);
         return this.clientesService.buscarClientesComFiltros({ cpf });
@@ -90,12 +92,42 @@ export class AddUsersModalComponent {
     ).subscribe(response => {
       console.log('Resposta da API:', response);
       if (response && response.content && response.content.length > 0) {
-        console.log('Usuário encontrado:', response.content[0]);
+        const cliente = response.content[0];
+        console.log('Usuário encontrado:', cliente);
+        this.form.patchValue({
+          nome: cliente.contato.nome,
+          email: cliente.contato.email,
+          telefone: cliente.contato.telefone,
+          cpf: cliente.cpf,
+          rg: cliente.rg,
+          dataNascimento: cliente.nascimento,
+          cep: cliente.endereco.cep,
+          logradouro: cliente.endereco.logradouro,
+          complemento: cliente.endereco.complemento,
+          bairro: cliente.endereco.bairro,
+          cidade: cliente.endereco.cidade,
+          temRepresentante: this.temRepresentante(cliente.representante),
+          representanteNome: cliente.representante?.contato.nome,
+          representanteEmail: cliente.representante?.contato.email,
+          representanteTelefone: cliente.representante?.contato.telefone,
+          parentesco: cliente.representante?.parentesco,
+          representanteCpf: cliente.representante?.cpf,
+          representanteRg: cliente.representante?.rg,
+          representanteDataNascimento: cliente.representante?.nascimento
+        });
+        console.log('Formulário preenchido:', this.form.value);
+  
+        // Mark all fields as touched and update their validity
+        Object.keys(this.form.controls).forEach(field => {
+          const control = this.form.get(field);
+          control?.markAsTouched({ onlySelf: true });
+          control?.updateValueAndValidity({ onlySelf: true });
+        });
       } else {
         console.log('Nenhum usuário encontrado com este CPF.');
       }
     });
-
+  
     this.form.get('cpf')?.valueChanges.subscribe(value => {
       if (value.length === 11) {
         this.cpfSubject.next(value);
@@ -247,5 +279,9 @@ export class AddUsersModalComponent {
       return false;
     }
     return true;
+  }
+
+  temRepresentante(representante: any | null | undefined): string {
+    return representante && representante.id ? 'sim' : 'nao';
   }
 }
