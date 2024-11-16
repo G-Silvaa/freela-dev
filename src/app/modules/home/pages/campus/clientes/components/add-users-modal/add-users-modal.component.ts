@@ -55,53 +55,41 @@ export class AddUsersModalComponent implements OnInit {
       beneficios: ['', Validators.required] // Adicionar campo de benefícios
     });
   }
-
   ngOnInit() {
-    this.form.get('temRepresentante')?.valueChanges.subscribe(value => {
-      if (value === 'sim') {
-        this.form.get('representanteNome')?.setValidators(Validators.required);
-        this.form.get('representanteEmail')?.setValidators([Validators.required, Validators.email]);
-        this.form.get('representanteTelefone')?.setValidators(Validators.required);
-        this.form.get('parentesco')?.setValidators(Validators.required);
-        this.form.get('representanteCpf')?.setValidators(Validators.required);
-        this.form.get('representanteRg')?.setValidators(Validators.required);
-        this.form.get('representanteDataNascimento')?.setValidators(Validators.required);
-      } else {
-        this.form.get('representanteNome')?.clearValidators();
-        this.form.get('representanteEmail')?.clearValidators();
-        this.form.get('representanteTelefone')?.clearValidators();
-        this.form.get('parentesco')?.clearValidators();
-        this.form.get('representanteCpf')?.clearValidators();
-        this.form.get('representanteRg')?.clearValidators();
-        this.form.get('representanteDataNascimento')?.clearValidators();
-      }
-      this.form.get('representanteNome')?.updateValueAndValidity();
-      this.form.get('representanteEmail')?.updateValueAndValidity();
-      this.form.get('representanteTelefone')?.updateValueAndValidity();
-      this.form.get('parentesco')?.updateValueAndValidity();
-      this.form.get('representanteCpf')?.updateValueAndValidity();
-      this.form.get('representanteRg')?.updateValueAndValidity();
-      this.form.get('representanteDataNascimento')?.updateValueAndValidity();
-    });
+    let isUpdating = false;  // Flag para evitar loop ao atualizar os campos programaticamente
+    let cpfValidado = false;  // Flag para verificar se o CPF já foi validado antes
   
-    this.cpfSubject.pipe(
+    // Toda vez que o CPF for alterado, disparamos o valor.
+    this.form.get('cpf')?.valueChanges.pipe(
       debounceTime(300),
-      distinctUntilChanged(),
       switchMap(cpf => {
-        console.log('CPF digitado:', cpf);
-        return this.clientesService.buscarClientesComFiltros({ cpf });
+        // Verifica se o CPF tem 11 caracteres (formato válido)
+        if (cpf?.length === 11 && !cpfValidado) {
+          console.log('CPF atingiu 11 caracteres, disparando requisição:', cpf);
+          
+          // Marcamos que o CPF foi validado
+          cpfValidado = true;
+  
+          return this.clientesService.buscarClientesComFiltros({ cpf });
+        } else if (cpf?.length === 11) {
+          // Se o CPF já foi validado, não fazemos nada
+          return [];
+        } else {
+          // Se o CPF não tem 11 caracteres, retornamos um array vazio
+          return [];
+        }
       })
     ).subscribe(response => {
-      console.log('Resposta da API:', response);
-      if (response && response.content && response.content.length > 0) {
+      if (response?.content?.length > 0) {
         const cliente = response.content[0];
         this.existingUserId = cliente.id;
-        console.log('Usuário encontrado:', cliente);
-    
-        // Format the date to DDMMYYYY
+  
+        // Formatando a data de nascimento
         const datePipe = new DatePipe('en-US');
         const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
-    
+  
+        // Preenchendo os campos com os dados do cliente
+        isUpdating = true;  // Começa a atualização dos campos
         this.form.patchValue({
           nome: cliente.contato.nome,
           email: cliente.contato.email,
@@ -121,44 +109,60 @@ export class AddUsersModalComponent implements OnInit {
           parentesco: cliente.representante?.parentesco,
           representanteCpf: cliente.representante?.cpf,
           representanteRg: cliente.representante?.rg,
-          representanteDataNascimento: cliente.representante?.nascimento
+          representanteDataNascimento: cliente.representante?.nascimento,
         });
-    
-        console.log('Formulário preenchido:', this.form.value);
-    
-        // Desativar apenas os campos preenchidos pelo CPF
-        const fieldsToDisable = [
-          'nome', 'email', 'telefone', 'rg', 'dataNascimento', 
-          'cep', 'logradouro', 'complemento', 'bairro', 'cidade', 
-          'representanteNome', 'representanteEmail', 'representanteTelefone',
-          'parentesco', 'representanteCpf', 'representanteRg', 
-          'representanteDataNascimento',
-        ];
-    
-        fieldsToDisable.forEach(field => {
-          const control = this.form.get(field);
-          if (control) {
-            control.disable({ emitEvent: false }); // Desativa sem disparar eventos
+  
+        // Desabilitar campos que já estão preenchidos com dados de um cliente encontrado
+        Object.keys(this.form.controls).forEach(key => {
+          if (key !== 'cpf' && this.form.get(key)?.value) {
+            this.form.get(key)?.disable({ emitEvent: false });
           }
         });
-    
-        // Marcar todos os campos como tocados e atualizar a validade
-        Object.keys(this.form.controls).forEach(field => {
-          const control = this.form.get(field);
-          control?.markAsTouched({ onlySelf: true });
-          control?.updateValueAndValidity({ onlySelf: true });
-        });
+  
+        console.log('Formulário preenchido:', this.form.value);
+        isUpdating = false;  // Finaliza a atualização dos campos
       } else {
         this.existingUserId = null;
         console.log('Nenhum usuário encontrado com este CPF.');
       }
     });
+  
+    // Quando o CPF for apagado, limpar os campos e reativá-los
     this.form.get('cpf')?.valueChanges.subscribe(value => {
-      if (value.length === 11) {
-        this.cpfSubject.next(value);
+      if (!value) {
+        const fieldsToClear = [
+          'nome', 'email', 'telefone', 'rg', 'dataNascimento',
+          'cep', 'logradouro', 'complemento', 'bairro', 'cidade',
+          'representanteNome', 'representanteEmail', 'representanteTelefone',
+          'parentesco', 'representanteCpf', 'representanteRg',
+          'representanteDataNascimento',
+        ];
+  
+        fieldsToClear.forEach(field => {
+          const control = this.form.get(field);
+          if (control) {
+            control.reset();
+            control.enable({ emitEvent: false });
+          }
+        });
+  
+        this.existingUserId = null;
+        cpfValidado = false;  // Resetando a validação do CPF
+        console.log('Campos limpos, CPF apagado.');
       }
     });
+  
+    // Forçar a emissão da requisição ao inicializar (caso necessário)
+    this.form.get('cpf')?.updateValueAndValidity();
   }
+  
+  
+  
+  
+  
+  
+  
+  
 
   onCloseModal() {
     this.modalService.hide();
