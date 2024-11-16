@@ -97,11 +97,11 @@ export class AddUsersModalComponent implements OnInit {
         const cliente = response.content[0];
         this.existingUserId = cliente.id;
         console.log('Usuário encontrado:', cliente);
-  
+    
         // Format the date to DDMMYYYY
         const datePipe = new DatePipe('en-US');
         const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
-  
+    
         this.form.patchValue({
           nome: cliente.contato.nome,
           email: cliente.contato.email,
@@ -123,9 +123,26 @@ export class AddUsersModalComponent implements OnInit {
           representanteRg: cliente.representante?.rg,
           representanteDataNascimento: cliente.representante?.nascimento
         });
+    
         console.log('Formulário preenchido:', this.form.value);
-  
-        // Mark all fields as touched and update their validity
+    
+        // Desativar apenas os campos preenchidos pelo CPF
+        const fieldsToDisable = [
+          'nome', 'email', 'telefone', 'rg', 'dataNascimento', 
+          'cep', 'logradouro', 'complemento', 'bairro', 'cidade', 
+          'representanteNome', 'representanteEmail', 'representanteTelefone',
+          'parentesco', 'representanteCpf', 'representanteRg', 
+          'representanteDataNascimento',
+        ];
+    
+        fieldsToDisable.forEach(field => {
+          const control = this.form.get(field);
+          if (control) {
+            control.disable({ emitEvent: false }); // Desativa sem disparar eventos
+          }
+        });
+    
+        // Marcar todos os campos como tocados e atualizar a validade
         Object.keys(this.form.controls).forEach(field => {
           const control = this.form.get(field);
           control?.markAsTouched({ onlySelf: true });
@@ -136,7 +153,6 @@ export class AddUsersModalComponent implements OnInit {
         console.log('Nenhum usuário encontrado com este CPF.');
       }
     });
-  
     this.form.get('cpf')?.valueChanges.subscribe(value => {
       if (value.length === 11) {
         this.cpfSubject.next(value);
@@ -151,16 +167,26 @@ export class AddUsersModalComponent implements OnInit {
 
   onNextStep() {
     const stepControls = this.getStepControls(this.currentStep);
-    if (stepControls.every(control => this.form.get(control)?.valid)) {
+    
+    // Validar apenas os campos ativos (enabled)
+    const invalidControls = stepControls.filter(control => {
+      const formControl = this.form.get(control);
+      return formControl && formControl.enabled && formControl.invalid;
+    });
+  
+    if (invalidControls.length === 0) {
+      // Navegar para o próximo passo, pulando se necessário
       if (this.currentStep === 3 && this.form.get('temRepresentante')?.value === 'nao') {
         this.currentStep = 5; // Pular diretamente para "Benefícios"
       } else {
         this.currentStep++;
       }
     } else {
-      stepControls.forEach(control => this.form.get(control)?.markAsTouched());
+      // Marcar campos inválidos como "touched" para exibir erros
+      invalidControls.forEach(control => this.form.get(control)?.markAsTouched());
     }
   }
+  
 
   onPreviousStep() {
     if (this.currentStep > 1) {
@@ -197,8 +223,8 @@ export class AddUsersModalComponent implements OnInit {
 
   onSubmit() {
     this.isLoading = true;
-
-    const dados = this.form.value;
+  
+    const dados = this.form.getRawValue(); // Inclui campos desativados
     const payload = {
       contato: {
         nome: dados.nome,
@@ -228,10 +254,11 @@ export class AddUsersModalComponent implements OnInit {
       } : null,
       beneficios: dados.beneficios
     };
+  
     console.log('Payload:', payload);
-
+  
     if (this.existingUserId) {
-      // Update existing user
+      // Atualizar usuário existente
       this.clientesService.atualizarUsuario(this.existingUserId, payload).subscribe(
         (response) => {
           this.onCloseModal();
@@ -244,28 +271,12 @@ export class AddUsersModalComponent implements OnInit {
         }
       );
     } else {
-      // Add new user
+      // Adicionar novo usuário
       this.clientesService.adicionarUsuario(payload).subscribe(
         (response) => {
-          const clienteId = response.id;
-          const beneficioPayload = {
-            beneficio: dados.beneficios,
-            cliente: {
-              id: clienteId
-            }
-          };
-          this.clientesService.associarBeneficio(beneficioPayload).subscribe(
-            (beneficioResponse) => {
-              this.onCloseModal();
-              this.isLoading = false;
-              console.log('Benefício associado com sucesso!');
-              console.log('Benefício Response:', beneficioResponse);
-            },
-            (err) => {
-              this.isLoading = false;
-              console.error('Erro ao associar benefício:', err);
-            }
-          );
+          console.log('Usuário adicionado com sucesso!');
+          this.onCloseModal();
+          this.isLoading = false;
         },
         (err) => {
           this.isLoading = false;
@@ -274,6 +285,7 @@ export class AddUsersModalComponent implements OnInit {
       );
     }
   }
+  
 
   hasMaxLengthAndRequiredError(input: string): boolean {
     return this.customValidationService.hasMaxLengthAndRequiredError(this.form, input);
