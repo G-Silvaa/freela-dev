@@ -19,13 +19,16 @@
         formControlName="rg"
         mask="00.000.000-0"
         [clearIfNotMatch]="true"
+        [maxlength]="12"
         [hasError]="hasMaxLengthAndRequiredError('rg')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')">
+        
       </app-input>
 
       <app-input
         label="CPF:"
         mask="000.000.000-00"
+        [maxlength]="14"
         placeholder="Digite seu CPF:"
         formControlName="cpf"
         [clearIfNotMatch]="true"
@@ -39,7 +42,7 @@
         formControlName="dataNascimento"
         [clearIfNotMatch]="true"
         mask="00/00/0000"
-      
+        [maxlength]="10"
         [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')">
    
@@ -53,6 +56,7 @@
         label="Nome:"
         placeholder="Digite seu nome:"
         formControlName="nome"
+        [maxlength]="200"
         [hasError]="hasMaxLengthAndRequiredError('nome')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')">
       </app-input>
@@ -61,6 +65,7 @@
         label="E-mail:"
         placeholder="Digite seu email:"
         formControlName="email"
+        [maxlength]="200"
         [hasError]="hasMaxLengthAndRequiredError('email')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')">
       </app-input>
@@ -69,6 +74,7 @@
         placeholder="Digite seu telefone:"
         formControlName="telefone"
         mask="(00) 00000-0000"
+        [maxlength]="15"
         [clearIfNotMatch]="true"
         [hasError]="hasMaxLengthAndRequiredError('telefone')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')">
@@ -81,6 +87,7 @@
       <div class="teste1">
         <app-input
         mask="00000-000"
+        [maxlength]="10"
         label="CEP:"
         [clearIfNotMatch]="true"
         placeholder="Digite seu CEP:"
@@ -93,14 +100,17 @@
         label="Logradouro:"
         placeholder="Digite seu logradouro:"
         formControlName="logradouro"
+        [maxlength]="150"
         [hasError]="hasMaxLengthAndRequiredError('logradouro')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')">
+        
       </app-input>
     
       <app-input
         label="Complemento:"
         placeholder="Digite seu complemento:"
         formControlName="complemento"
+        [maxlength]="150"
         [hasError]="hasMaxLengthAndRequiredError('complemento')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')">
       </app-input>
@@ -111,12 +121,14 @@
       label="Bairro:"
       placeholder="Digite seu bairro:"
       formControlName="bairro"
+      [maxlength]="150"
       [hasError]="hasMaxLengthAndRequiredError('bairro')"
       [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')">
     </app-input>
 
     <app-input
       label="Cidade:"
+      [maxlength]="150"
       placeholder="Digite sua cidade:"
       formControlName="cidade"
       [hasError]="hasMaxLengthAndRequiredError('cidade')"
@@ -145,6 +157,7 @@
         label="Nome do Representante:"
         placeholder="Digite o nome do representante:"
         formControlName="representanteNome"
+        [maxlength]="200"
         [hasError]="hasMaxLengthAndRequiredError('representanteNome')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteNome')">
       </app-input>
@@ -154,7 +167,9 @@
         placeholder="Digite o e-mail do representante:"
         formControlName="representanteEmail"
         [hasError]="hasMaxLengthAndRequiredError('representanteEmail')"
+        [maxlength]="256"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteEmail')">
+        
       </app-input>
 
       <app-input
@@ -162,6 +177,7 @@
         placeholder="Digite o telefone do representante:"
         formControlName="representanteTelefone"
         mask="(00) 00000-0000"
+        [maxlength]="15"
         [clearIfNotMatch]="true"
         [hasError]="hasMaxLengthAndRequiredError('representanteTelefone')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteTelefone')">
@@ -175,7 +191,9 @@
         placeholder="Digite o parentesco:"
         formControlName="parentesco"
         [hasError]="hasMaxLengthAndRequiredError('parentesco')"
+        [maxlength]="30"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('parentesco')">
+        
       </app-input>
     
       <app-input
@@ -183,6 +201,7 @@
         placeholder="Digite o CPF:"
         formControlName="representanteCpf"
         mask="000.000.000-00"
+        [maxlength]="14"
         [clearIfNotMatch]="true"
         [hasError]="hasMaxLengthAndRequiredError('representanteCpf')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteCpf')">
@@ -191,6 +210,7 @@
         label="RG do Representante:"
         placeholder="Digite o RG:"
         mask="00.000.000-0"
+        [maxlength]="12"
         [clearIfNotMatch]="true"
         formControlName="representanteRg"
         [hasError]="hasMaxLengthAndRequiredError('representanteRg')"
@@ -203,6 +223,7 @@
       <app-input
       label="Data de Nascimento:"
       mask="00/00/0000"
+      [maxlength]="10"
       [clearIfNotMatch]="true"
       placeholder="Digite a data de nascimento:"
       formControlName="representanteDataNascimento"

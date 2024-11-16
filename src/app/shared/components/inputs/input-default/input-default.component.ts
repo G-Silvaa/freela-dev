@@ -33,6 +33,7 @@ export class InputDefaultComponent implements ControlValueAccessor {
   @Input() variant: string = ''; 
   @Input() mask: string = ''; 
   @Input() clearIfNotMatch: boolean | null = true;
+  @Input() maxlength: number | null = null;
   
 
   // Usando FormControl ao invés de value
