@@ -91,4 +91,13 @@ export class ClientesService {
   associarBeneficio(payload: any): Observable<any> {
     return this.http.post(`${this.API_URL}domain/contrato/add`, payload, this.createOptions());
   }
+
+  buscarClientePorId(id: number): Observable<any> {
+    return this.http.get(`${this.API_URL}domain/cliente`, {
+      params: new HttpParams().set('filter', `id eq ${id}`).set('fields', '*,representante'),
+      ...this.createOptions()
+    }).pipe(
+      map((response: any) => response.content[0]) 
+    );
+  }
 }

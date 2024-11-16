@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
 import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 
@@ -24,7 +24,8 @@ export class EditUsersModalComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    public bsModalRef: BsModalRef
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -39,34 +40,41 @@ export class EditUsersModalComponent implements OnInit {
       bairro: ['', Validators.required],
       cidade: ['', Validators.required],
       temRepresentante: ['', Validators.required],
-      parentesco: ['', Validators.required],
-      representanteCpf: ['', Validators.required],
-      representanteRg: ['', Validators.required],
-      representanteDataNascimento: ['', Validators.required]
+      representanteNome: [''],
+      representanteEmail: [''],
+      representanteTelefone: [''],
+      parentesco: [''],
+      representanteCpf: [''],
+      representanteRg: [''],
+      representanteDataNascimento: [''],
     });
   }
 
   ngOnInit(): void {
     if (this.data) {
       this.form.patchValue({
-        nome: this.data.Nome,
-        email: this.data['E-mail'],
-        telefone: this.data.telefone,
-        cpf: this.data.CPF,
-        rg: this.data.RG,
+        nome: this.data.contato.nome,
+        email: this.data.contato.email,
+        telefone: this.data.contato.telefone,
+        cpf: this.data.cpf,
+        rg: this.data.rg,
         dataNascimento: this.data.nascimento,
         cep: this.data.endereco.cep,
         logradouro: this.data.endereco.logradouro,
         complemento: this.data.endereco.complemento,
         bairro: this.data.endereco.bairro,
         cidade: this.data.endereco.cidade,
-        temRepresentante: this.data.representante ? 'sim' : 'nao',
+        temRepresentante:  this.temRepresentante(this.data.representante),
+        representanteNome: this.data.representante?.contato.nome,
+        representanteEmail: this.data.representante?.contato.email,
+        representanteTelefone: this.data.representante?.contato.telefone,
         parentesco: this.data.representante?.parentesco,
         representanteCpf: this.data.representante?.cpf,
         representanteRg: this.data.representante?.rg,
-        representanteDataNascimento: this.data.representante?.nascimento
+        representanteDataNascimento: this.data.representante?.nascimento,
       });
     }
+    console.log('Data:', this.data);
   }
 
   onCloseModal() {
@@ -127,15 +135,19 @@ export class EditUsersModalComponent implements OnInit {
       } : null,
     };
     console.log('Payload:', payload);
-    this.clientesService.adicionarUsuario(payload).subscribe(
-      (Response) => {
-        console.log('Usuário adicionado com sucesso!');
-        console.log('Response:', Response);
+    this.clientesService.atualizarUsuario(this.data.id, payload).subscribe(
+      (response) => {
+        console.log('Usuário atualizado com sucesso!');
+        console.log('Response:', response);
         this.onCloseModal();
       },
       (err) => {
-        console.error('Erro ao adicionar usuário:', err);
+        console.error('Erro ao atualizar usuário:', err);
       }
     );
+  }
+
+  temRepresentante(representante: any | null | undefined): string {
+    return representante && representante.id ? 'sim' : 'nao';
   }
 }

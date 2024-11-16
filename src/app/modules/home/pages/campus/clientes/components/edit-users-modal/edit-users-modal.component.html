@@ -1,3 +1,14 @@
+<div class="modal-header">
+  <div class="info-modal">
+    <h4 class="modal-title pull-left">Editar um usuario</h4>
+
+   
+  </div>
+  <button >
+    <i class="bi bi-x" style="font-size: 1.5rem" (click)="bsModalRef.hide()"></i>
+  </button>
+</div>
+
 <div class="progress-bar">
   <div class="step" [class.active]="currentStep >= 1">Contato</div>
   <div class="line" [class.active]="currentStep >= 2"></div>
@@ -99,30 +110,85 @@
     </div>
   </div>
 
-  <div class="pt4" *ngIf="currentStep === 4">
+  <div class="pt4" *ngIf="currentStep === 4 ">
     <div class="container-inputs">
+      <h4>Contato</h4>
+      <div class="container1">
+        <app-input
+        label="Nome do Representante:"
+        placeholder="Digite o nome do representante:"
+        formControlName="representanteNome"
+        [maxlength]="200"
+       >
+      </app-input>
+
       <app-input
+        label="E-mail do Representante:"
+        placeholder="Digite o e-mail do representante:"
+        formControlName="representanteEmail"
+       
+        [maxlength]="256"
+     >
+        
+      </app-input>
+
+      <app-input
+        label="Telefone do Representante:"
+        placeholder="Digite o telefone do representante:"
+        formControlName="representanteTelefone"
+        mask="(00) 00000-0000"
+        [maxlength]="15"
+        [clearIfNotMatch]="true"
+       >
+        
+      </app-input>
+      </div>
+      <h4>Dados do parentesco</h4>
+      <div class="container1">
+        <app-input
         label="Parentesco:"
         placeholder="Digite o parentesco:"
-        formControlName="parentesco">
+        formControlName="parentesco"
+        
+        [maxlength]="30"
+        >
+        
       </app-input>
     
       <app-input
         label="CPF do Representante:"
         placeholder="Digite o CPF:"
-        formControlName="representanteCpf">
+        formControlName="representanteCpf"
+        mask="000.000.000-00"
+        [maxlength]="14"
+        [clearIfNotMatch]="true"
+        >
       </app-input>
       <app-input
         label="RG do Representante:"
         placeholder="Digite o RG:"
-        formControlName="representanteRg">
+        mask="00.000.000-0"
+        [maxlength]="12"
+        [clearIfNotMatch]="true"
+        formControlName="representanteRg"
+       >
       </app-input>
 
+    
+      </div>
+      <div class="t">
       <app-input
-        label="Data de Nascimento:"
-        placeholder="Digite a data de nascimento:"
-        formControlName="representanteDataNascimento">
-      </app-input>
+      label="Data de Nascimento:"
+      mask="00/00/0000"
+      [maxlength]="10"
+      [clearIfNotMatch]="true"
+      placeholder="Digite a data de nascimento:"
+      formControlName="representanteDataNascimento"
+      >
+    </app-input>
+  </div>
+
+     
     </div>
   </div>
   

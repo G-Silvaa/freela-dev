@@ -105,12 +105,17 @@ export class ClientesComponent implements OnInit {
   }
 
   onEdit(item: any) {
-    const initialState = {
-      title: 'Editar um Cliente',
-      formTemplate: this.editar,
-      data: item
-    };
-    this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
+    this.usuarioService.buscarClientePorId(item.id).subscribe((cliente) => {
+      console.log('Cliente:', cliente);
+      const initialState = {
+        title: 'Editar um Cliente',
+        formTemplate: this.editar,
+        data: cliente
+      };
+      this.bsModalRef = this.modalService.show(EditUsersModalComponent, { initialState, class: 'modal-lg' });
+    }, (error) => {
+      console.error('Erro ao buscar cliente:', error);
+    });
   }
 
   onDelete(item: any) {
