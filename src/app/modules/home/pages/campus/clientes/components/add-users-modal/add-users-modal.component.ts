@@ -69,25 +69,28 @@ export class AddUsersModalComponent implements OnInit {
   ngOnInit() {
     let isUpdating = false;
     let cpfValidado = false;
-
+  
+    // Observe changes to the CPF input field
     this.form
       .get('cpf')
       ?.valueChanges.pipe(
         debounceTime(300),
         switchMap((cpf) => {
-          if (cpf?.length === 11 && !cpfValidado) {
-            console.log(
-              'CPF atingiu 11 caracteres, disparando requisição:',
-              cpf
-            );
-
+          // Remove the mask (remove non-numeric characters)
+          const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : ''; // Remove todos os caracteres não numéricos
+  
+          // Quando o CPF tem 11 caracteres e não foi validado
+          if (cpfLimpo.length === 11 && !cpfValidado) {
+            console.log('CPF atingiu 11 caracteres, disparando requisição:', cpfLimpo);
+  
             cpfValidado = true;
-
-            return this.clientesService.buscarClientesComFiltros({ cpf });
-          } else if (cpf?.length === 11) {
-            return [];
+  
+            // Fazer a requisição para buscar o cliente com o CPF limpo
+            return this.clientesService.buscarClientesComFiltros({ cpf: cpfLimpo });
+          } else if (cpfLimpo.length === 11) {
+            return []; // Já foi validado, retorna um array vazio
           } else {
-            return [];
+            return []; // CPF com menos de 11 dígitos não dispara a requisição
           }
         })
       )
@@ -95,19 +98,17 @@ export class AddUsersModalComponent implements OnInit {
         if (response?.content?.length > 0) {
           const cliente = response.content[0];
           this.existingUserId = cliente.id;
-
+  
           const datePipe = new DatePipe('en-US');
-          const formattedDate = datePipe.transform(
-            cliente.nascimento,
-            'ddMMyyyy'
-          );
-
+          const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
+  
           isUpdating = true;
+          // Preenche o formulário com os dados do cliente
           this.form.patchValue({
             nome: cliente.contato.nome,
             email: cliente.contato.email,
             telefone: cliente.contato.telefone,
-            cpf: cliente.cpf,
+            cpf: cliente.cpf,  // Mantém o CPF com a máscara, que é o formato esperado
             rg: cliente.rg,
             dataNascimento: formattedDate,
             cep: cliente.endereco.cep,
@@ -124,13 +125,14 @@ export class AddUsersModalComponent implements OnInit {
             representanteRg: cliente.representante?.rg,
             representanteDataNascimento: cliente.representante?.nascimento,
           });
-
+  
+          // Desabilita os campos após preencher, exceto o CPF
           Object.keys(this.form.controls).forEach((key) => {
             if (key !== 'cpf' && this.form.get(key)?.value) {
               this.form.get(key)?.disable({ emitEvent: false });
             }
           });
-
+  
           console.log('Formulário preenchido:', this.form.value);
           isUpdating = false;
         } else {
@@ -138,7 +140,8 @@ export class AddUsersModalComponent implements OnInit {
           console.log('Nenhum usuário encontrado com este CPF.');
         }
       });
-
+  
+    // Observe the CPF field changes to clear the other fields when CPF is deleted
     this.form.get('cpf')?.valueChanges.subscribe((value) => {
       if (!value) {
         const fieldsToClear = [
@@ -160,7 +163,8 @@ export class AddUsersModalComponent implements OnInit {
           'representanteRg',
           'representanteDataNascimento',
         ];
-
+  
+        // Limpa os campos e os habilita novamente
         fieldsToClear.forEach((field) => {
           const control = this.form.get(field);
           if (control) {
@@ -168,15 +172,16 @@ export class AddUsersModalComponent implements OnInit {
             control.enable({ emitEvent: false });
           }
         });
-
+  
         this.existingUserId = null;
         cpfValidado = false;
         console.log('Campos limpos, CPF apagado.');
       }
     });
-
+  
     this.form.get('cpf')?.updateValueAndValidity();
   }
+  
 
   onCloseModal() {
     this.modalService.hide();

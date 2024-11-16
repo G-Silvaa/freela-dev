@@ -6,8 +6,11 @@
     [placeholder]="placeholder"
     [disabled]="isDisable"
     class="form-control"
-    [value]="value"
+    [formControl]="formControl" 
     [ngClass]="{ 'is-invalid': hasError }"
+    mask="{{ mask }}"
+    [clearIfNotMatch]="clearIfNotMatch"
+  
   />
   <div class="invalid-feedback">
     {{ errorMsg }}
