@@ -53,7 +53,7 @@ export class ClientesService {
   adicionarUsuario(payload: any): Observable<any> {
     return this.http.post(`${this.API_URL}domain/cliente/add`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosUsuarios(); // Atualiza a lista após adicionar
+        this.carregarTodosUsuarios(); 
         return response;
       })
     );
@@ -62,7 +62,7 @@ export class ClientesService {
   atualizarUsuario(id: number, payload: any): Observable<any> {
     return this.http.patch(`${this.API_URL}domain/cliente/${id}`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosUsuarios(); // Atualiza a lista após atualizar
+        this.carregarTodosUsuarios(); 
         return response;
       })
     );
