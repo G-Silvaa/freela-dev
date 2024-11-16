@@ -4,7 +4,7 @@ import { InputDefaultComponent } from "../../../../../../../shared/components/in
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
 import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 
 @Component({
@@ -12,7 +12,8 @@ import { ClientesService } from '../../services/clientes.service';
   standalone: true,
   imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './edit-users-modal.component.html',
-  styleUrls: ['./edit-users-modal.component.scss']
+  styleUrls: ['./edit-users-modal.component.scss'],
+  providers: [DatePipe]
 })
 export class EditUsersModalComponent implements OnInit {
   @Input() data: any;
@@ -25,7 +26,8 @@ export class EditUsersModalComponent implements OnInit {
     private modalService: BsModalService,
     private fb: FormBuilder,
     private clientesService: ClientesService,
-    public bsModalRef: BsModalRef
+    public bsModalRef: BsModalRef,
+    private datePipe: DatePipe
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -52,26 +54,29 @@ export class EditUsersModalComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
+      const formattedDate = this.datePipe.transform(this.data.nascimento, 'ddMMyyyy');
+      const formattedRepDate = this.datePipe.transform(this.data.representante?.nascimento, 'ddMMyyyy');
+      
       this.form.patchValue({
         nome: this.data.contato.nome,
         email: this.data.contato.email,
         telefone: this.data.contato.telefone,
         cpf: this.data.cpf,
         rg: this.data.rg,
-        dataNascimento: this.data.nascimento,
+        dataNascimento: formattedDate,
         cep: this.data.endereco.cep,
         logradouro: this.data.endereco.logradouro,
         complemento: this.data.endereco.complemento,
         bairro: this.data.endereco.bairro,
         cidade: this.data.endereco.cidade,
-        temRepresentante:  this.temRepresentante(this.data.representante),
+        temRepresentante: this.temRepresentante(this.data.representante),
         representanteNome: this.data.representante?.contato.nome,
         representanteEmail: this.data.representante?.contato.email,
         representanteTelefone: this.data.representante?.contato.telefone,
         parentesco: this.data.representante?.parentesco,
         representanteCpf: this.data.representante?.cpf,
         representanteRg: this.data.representante?.rg,
-        representanteDataNascimento: this.data.representante?.nascimento,
+        representanteDataNascimento: formattedRepDate,
       });
     }
     console.log('Data:', this.data);
