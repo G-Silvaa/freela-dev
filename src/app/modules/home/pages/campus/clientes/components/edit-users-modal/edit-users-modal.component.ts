@@ -6,6 +6,7 @@ import { ButtonComponent } from "../../../../../../../shared/components/button/b
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
+import { CustomValidationService } from '../add-users-modal/utils/customvalidators';
 
 @Component({
   selector: 'app-edit-users-modal',
@@ -27,7 +28,8 @@ export class EditUsersModalComponent implements OnInit {
     private fb: FormBuilder,
     private clientesService: ClientesService,
     public bsModalRef: BsModalRef,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private customValidationService: CustomValidationService
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -155,4 +157,19 @@ export class EditUsersModalComponent implements OnInit {
   temRepresentante(representante: any | null | undefined): string {
     return representante && representante.id ? 'sim' : 'nao';
   }
+
+  hasMaxLengthAndRequiredError(input: string): boolean {
+    return this.customValidationService.hasMaxLengthAndRequiredError(
+      this.form,
+      input
+    );
+  }
+
+  getMaxLengthAndRequiredErrorMsg(input: string): string {
+    return this.customValidationService.getMaxLengthAndRequiredErrorMsg(
+      this.form,
+      input
+    );
+  }
+
 }

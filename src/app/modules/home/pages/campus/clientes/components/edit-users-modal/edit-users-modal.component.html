@@ -25,18 +25,32 @@
       <app-input
         label="Nome:"
         placeholder="Digite seu nome:"
-        formControlName="nome">
+        formControlName="nome"
+        [maxlength]="200"
+        [hasError]="hasMaxLengthAndRequiredError('nome')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')">
+        >
       </app-input>
     
       <app-input
         label="E-mail:"
         placeholder="Digite seu email:"
-        formControlName="email">
+        formControlName="email"
+        [maxlength]="200"
+        [hasError]="hasMaxLengthAndRequiredError('email')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')"
+        >
       </app-input>
       <app-input
         label="Telefone:"
         placeholder="Digite seu telefone:"
-        formControlName="telefone">
+        formControlName="telefone"
+        mask="(00) 00000-0000"
+        [maxlength]="15"
+        [clearIfNotMatch]="true"
+        [hasError]="hasMaxLengthAndRequiredError('telefone')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')">
+        >
       </app-input>
     </div>
   </div>
@@ -46,19 +60,35 @@
       <app-input
         label="RG:"
         placeholder="Digite seu RG:"
-        formControlName="rg">
+        formControlName="rg"
+        mask="00.000.000-0"
+        [clearIfNotMatch]="true"
+        [maxlength]="12"
+        [hasError]="hasMaxLengthAndRequiredError('rg')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')"
+        >
       </app-input>
 
       <app-input
-        label="CPF:"
-        placeholder="Digite seu CPF:"
-        formControlName="cpf">
+      label="CPF:"
+      mask="000.000.000-00"
+      [maxlength]="14"
+      placeholder="Digite seu CPF:"
+      formControlName="cpf"
+      [clearIfNotMatch]="true"
+      [hasError]="hasMaxLengthAndRequiredError('cpf')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')">
       </app-input>
 
       <app-input
-        label="Data De Nascimento:"
-        placeholder="Digite sua data de nascimento:"
-        formControlName="dataNascimento">
+      label="Data De Nascimento:"
+      placeholder="Digite sua data de nascimento:"
+      formControlName="dataNascimento"
+      [clearIfNotMatch]="true"
+      mask="00/00/0000"
+      [maxlength]="10"
+      [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')">
       </app-input>
     </div>
   </div>
@@ -67,21 +97,32 @@
     <div class="container-inputs">
       <div class="teste1">
         <app-input
+        mask="00000-000"
+        [maxlength]="10"
         label="CEP:"
+        [clearIfNotMatch]="true"
         placeholder="Digite seu CEP:"
-        formControlName="cep">
+        formControlName="cep"
+        [hasError]="hasMaxLengthAndRequiredError('cep')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cep')">
       </app-input>
 
       <app-input
-        label="Logradouro:"
-        placeholder="Digite seu logradouro:"
-        formControlName="logradouro">
+      label="Logradouro:"
+      placeholder="Digite seu logradouro:"
+      formControlName="logradouro"
+      [maxlength]="150"
+      [hasError]="hasMaxLengthAndRequiredError('logradouro')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')">
       </app-input>
     
       <app-input
-        label="Complemento:"
-        placeholder="Digite seu complemento:"
-        formControlName="complemento">
+      label="Complemento:"
+      placeholder="Digite seu complemento:"
+      formControlName="complemento"
+      [maxlength]="150"
+      [hasError]="hasMaxLengthAndRequiredError('complemento')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')">
       </app-input>
 
       </div>
@@ -89,13 +130,19 @@
       <app-input
       label="Bairro:"
       placeholder="Digite seu bairro:"
-      formControlName="bairro">
+      formControlName="bairro"
+      [maxlength]="150"
+      [hasError]="hasMaxLengthAndRequiredError('bairro')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')">
     </app-input>
 
     <app-input
-      label="Cidade:"
-      placeholder="Digite sua cidade:"
-      formControlName="cidade">
+    label="Cidade:"
+    [maxlength]="150"
+    placeholder="Digite sua cidade:"
+    formControlName="cidade"
+    [hasError]="hasMaxLengthAndRequiredError('cidade')"
+    [errorMsg]="getMaxLengthAndRequiredErrorMsg('cidade')">
     </app-input>
 
     <app-select-input 
