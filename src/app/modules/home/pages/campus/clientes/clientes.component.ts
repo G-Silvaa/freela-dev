@@ -160,6 +160,15 @@ export class ClientesComponent implements OnInit {
       this.isLoading = false;
     });
   }
+  limparFiltros() {
+    this.filtros = {
+      nome: '',
+      email: '',
+      rg: '',
+      cpf: ''
+    };
+    this.aplicarFiltros();
+  }
 
   temRepresentante(representante: IRepresentante | null | undefined): string {
     return representante && representante.id ? 'Sim' : 'Não';
