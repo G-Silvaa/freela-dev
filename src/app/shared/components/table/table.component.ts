@@ -16,17 +16,17 @@ export class TableComponent<T> {
   @Input() columns!: string[];
   @Input() data!: DataItem<T>[];
   @Input() showActions: boolean = true;
-  @Input() showDelete: boolean = true; 
-  @Input() itemsPerPage: number = 10; 
+  @Input() showDelete: boolean = true;
+  @Input() itemsPerPage: number = 10;
 
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
-  @Output() pageChange = new EventEmitter<number>(); 
+  @Output() pageChange = new EventEmitter<number>();
 
   currentPage: number = 1;
 
   get paginatedData(): DataItem<T>[] {
-    const start = (this.currentPage - 1) * this.itemsPerPage; 
+    const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     return this.data.slice(start, end);
   }
@@ -34,7 +34,7 @@ export class TableComponent<T> {
   get totalPages(): number {
     return Math.ceil(this.data.length / this.itemsPerPage);
   }
-  
+
 
   truncateText(column: string, item: any): string {
     const value = item[column];
@@ -78,7 +78,7 @@ export class TableComponent<T> {
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.pageChange.emit(this.currentPage); 
+      this.pageChange.emit(this.currentPage);
     }
   }
 

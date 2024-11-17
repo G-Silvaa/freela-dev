@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -31,7 +31,7 @@ interface IContratoData {
   templateUrl: "./edit-contrato-modal.component.html",
   styleUrls: ["./edit-contrato-modal.component.scss"],
 })
-export class EditContratoModalComponent {
+export class EditContratoModalComponent implements OnInit{
   private modalService = inject(BsModalService);
   private formBuilder = inject(FormBuilder);
 
@@ -40,13 +40,20 @@ export class EditContratoModalComponent {
   isLoading = false;
 
   form: FormGroup = this.formBuilder.group({
-    nome: ["", Validators.required],
-    cpf: ["", Validators.required],
-    status: ["", Validators.required],
-    beneficio: ["", Validators.required],
-    inicio: ["", Validators.required],
-    conclusao: ["", Validators.required],
+    Nome: ["", Validators.required],
+    Cpf: ["", Validators.required],
+    Status: ["", Validators.required],
+    Beneficio: ["", Validators.required],
+    Inicio: ["", Validators.required],
+    Conclusao: ["", Validators.required],
   });
+
+  ngOnInit(): void {
+    console.log(this.contratoData, "oi")
+    if (this.contratoData) {
+      this.form.patchValue(this.contratoData);
+    }
+  }
 
   onCloseModal() {
     this.modalService.hide();
