@@ -252,6 +252,8 @@ export class AddUsersModalComponent implements OnInit {
     this.isLoading = true;
 
     const dados = this.form.getRawValue();
+    
+  const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
     const payload = {
       contato: {
         nome: dados.nome,
@@ -262,7 +264,7 @@ export class AddUsersModalComponent implements OnInit {
       rg: dados.rg,
       nascimento: dados.dataNascimento,
       endereco: {
-        cep: dados.cep,
+        cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
         complemento: dados.complemento,
         bairro: dados.bairro,

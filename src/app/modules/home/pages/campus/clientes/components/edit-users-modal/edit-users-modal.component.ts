@@ -90,8 +90,12 @@ export class EditUsersModalComponent implements OnInit {
   }
 
   onNextStep() {
-    if (this.currentStep < 4) {
-      this.currentStep++;
+    if (this.form.valid) {
+      if (this.currentStep < 4) {
+        this.currentStep++;
+      }
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
@@ -112,7 +116,12 @@ export class EditUsersModalComponent implements OnInit {
   ];
 
   onSubmit() {
+    this.isLoading = true;
     const dados = this.form.value;
+  
+    // Remover caracteres especiais do CEP
+    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
+  
     const payload = {
       contato: {
         nome: dados.nome,
@@ -123,7 +132,7 @@ export class EditUsersModalComponent implements OnInit {
       rg: dados.rg,
       nascimento: dados.dataNascimento,
       endereco: {
-        cep: dados.cep,
+        cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
         complemento: dados.complemento,
         bairro: dados.bairro,
@@ -141,15 +150,18 @@ export class EditUsersModalComponent implements OnInit {
         nascimento: dados.representanteDataNascimento
       } : null,
     };
+  
     console.log('Payload:', payload);
     this.clientesService.atualizarUsuario(this.data.id, payload).subscribe(
       (response) => {
+        this.isLoading = false;
         console.log('Usuário atualizado com sucesso!');
         console.log('Response:', response);
         this.onCloseModal();
       },
       (err) => {
         console.error('Erro ao atualizar usuário:', err);
+        this.isLoading = false;
       }
     );
   }

@@ -164,4 +164,6 @@ export class ClientesComponent implements OnInit {
   temRepresentante(representante: IRepresentante | null | undefined): string {
     return representante && representante.id ? 'Sim' : 'Não';
   }
+
+  
 }
