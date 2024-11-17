@@ -15,6 +15,7 @@ import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from './utils/customvalidators'; // Importar o CustomValidationService
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-users-modal',
@@ -248,12 +249,16 @@ export class AddUsersModalComponent implements OnInit {
     { value: '80', label: 'Salário Maternidade' },
   ];
 
+  
+
   onSubmit() {
     this.isLoading = true;
-
+  
     const dados = this.form.getRawValue();
+    const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
+    const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
     
-  const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
+    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
     const payload = {
       contato: {
         nome: dados.nome,
@@ -262,7 +267,7 @@ export class AddUsersModalComponent implements OnInit {
       },
       cpf: dados.cpf,
       rg: dados.rg,
-      nascimento: dados.dataNascimento,
+      nascimento: dataNascimentoSemCaracteresEspeciais,
       endereco: {
         cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
@@ -281,14 +286,14 @@ export class AddUsersModalComponent implements OnInit {
               parentesco: dados.parentesco,
               cpf: dados.representanteCpf,
               rg: dados.representanteRg,
-              nascimento: dados.representanteDataNascimento,
+              nascimento: dataNascimentoSemCaracteresEspeciais2,
             }
           : null,
       beneficios: dados.beneficios,
     };
-
+  
     console.log('Payload:', payload);
-
+  
     if (this.existingUserId) {
       this.clientesService
         .atualizarUsuario(this.existingUserId, payload)
@@ -301,6 +306,12 @@ export class AddUsersModalComponent implements OnInit {
           (err) => {
             this.isLoading = false;
             console.error('Erro ao atualizar usuário:', err);
+            const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao atualizar o usuário.';
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro ao atualizar usuário',
+              text: errorMessage,
+            });
           }
         );
     } else {
@@ -313,11 +324,17 @@ export class AddUsersModalComponent implements OnInit {
         (err) => {
           this.isLoading = false;
           console.error('Erro ao adicionar usuário:', err);
+          const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao adicionar o usuário.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro ao adicionar usuário',
+            text: errorMessage,
+          });
         }
       );
     }
   }
-
+  
   hasMaxLengthAndRequiredError(input: string): boolean {
     return this.customValidationService.hasMaxLengthAndRequiredError(
       this.form,

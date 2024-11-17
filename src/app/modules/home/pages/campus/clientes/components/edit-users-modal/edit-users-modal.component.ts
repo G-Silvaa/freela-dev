@@ -7,6 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from '../add-users-modal/utils/customvalidators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-users-modal',
@@ -160,8 +161,14 @@ export class EditUsersModalComponent implements OnInit {
         this.onCloseModal();
       },
       (err) => {
-        console.error('Erro ao atualizar usuário:', err);
         this.isLoading = false;
+        console.error('Erro ao atualizar usuário:', err);
+        const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao atualizar o usuário.';
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao atualizar usuário',
+          text: errorMessage,
+        });
       }
     );
   }
