@@ -95,7 +95,6 @@ export class ClientesComponent implements OnInit {
 
     this.usuarioService.carregarTodosUsuarios(); // Carrega os dados iniciais
   }
-
   adicionarCliente() {
     const initialState = {
       title: 'Cadastrar um Cliente',
@@ -117,6 +116,7 @@ export class ClientesComponent implements OnInit {
       console.error('Erro ao buscar cliente:', error);
     });
   }
+
 
   onDelete(item: any) {
     Swal.fire({
@@ -160,6 +160,7 @@ export class ClientesComponent implements OnInit {
       this.isLoading = false;
     });
   }
+
   limparFiltros() {
     this.filtros = {
       nome: '',

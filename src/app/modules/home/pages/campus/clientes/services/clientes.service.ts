@@ -77,11 +77,13 @@ export class ClientesService {
   }
 
   buscarClientesComFiltros(filtros: any): Observable<any> {
-    let params = new HttpParams().set('fields', '*,representante');
-    if (filtros.nome) params = params.set('filter', `contato.nome ilike '${filtros.nome}'`);
-    if (filtros.email) params = params.set('filter', `contato.email ilike '${filtros.email}'`);
-    if (filtros.rg) params = params.set('filter', `rg like '${filtros.rg}'`);
-    if (filtros.cpf) params = params.set('filter', `cpf like '${filtros.cpf}'`);
+    let filterString = '';
+    if (filtros.nome) filterString += `contato.nome ilike '${filtros.nome}'`;
+    if (filtros.email) filterString += (filterString ? ' and ' : '') + `contato.email ilike '${filtros.email}'`;
+    if (filtros.rg) filterString += (filterString ? ' and ' : '') + `rg ilike '${filtros.rg}'`;
+    if (filtros.cpf) filterString += (filterString ? ' and ' : '') + `cpf ilike '${filtros.cpf}'`;
+
+    const params = new HttpParams().set('fields', '*,representante').set('filter', filterString);
 
     console.log('Parâmetros da requisição:', params.toString());
 
