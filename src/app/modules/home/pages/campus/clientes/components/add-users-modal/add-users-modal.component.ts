@@ -127,9 +127,22 @@ export class AddUsersModalComponent implements OnInit {
             representanteDataNascimento: cliente.representante?.nascimento,
           });
   
-          // Desabilita os campos após preencher, exceto o CPF
-          Object.keys(this.form.controls).forEach((key) => {
-            if (key !== 'cpf' && this.form.get(key)?.value) {
+          // Desabilita os campos após preencher, exceto os especificados
+          const fieldsToDisable = [
+            'nome',
+            'rg',
+            'dataNascimento',
+            'representanteNome',
+            'representanteEmail',
+            'representanteTelefone',
+            'parentesco',
+            'representanteCpf',
+            'representanteRg',
+            'representanteDataNascimento',
+          ];
+  
+          fieldsToDisable.forEach((key) => {
+            if (this.form.get(key)?.value) {
               this.form.get(key)?.disable({ emitEvent: false });
             }
           });
@@ -147,8 +160,6 @@ export class AddUsersModalComponent implements OnInit {
       if (!value) {
         const fieldsToClear = [
           'nome',
-          'email',
-          'telefone',
           'rg',
           'dataNascimento',
           'cep',
@@ -249,92 +260,96 @@ export class AddUsersModalComponent implements OnInit {
     { value: '80', label: 'Salário Maternidade' },
   ];
 
-  
 
-  onSubmit() {
-    this.isLoading = true;
-  
-    const dados = this.form.getRawValue();
-    const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
-    const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
-    
-    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
-    const payload = {
+ onSubmit() {
+  this.isLoading = true;
+
+  const dados = this.form.getRawValue();
+
+  // Remover caracteres especiais dos campos
+  const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
+  const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
+  const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
+  const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
+  const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
+  const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
+  const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
+  const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
+  const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
+
+  const payload = {
+    contato: {
+      nome: dados.nome,
+      email: dados.email,
+      telefone: telefoneSemCaracteresEspeciais,
+    },
+    cpf: cpfSemCaracteresEspeciais,
+    rg: rgSemCaracteresEspeciais,
+    nascimento: dataNascimentoSemCaracteresEspeciais,
+    endereco: {
+      cep: cepSemCaracteresEspeciais,
+      logradouro: dados.logradouro,
+      complemento: dados.complemento,
+      bairro: dados.bairro,
+      cidade: dados.cidade,
+    },
+    representante: dados.temRepresentante === 'sim' ? {
       contato: {
-        nome: dados.nome,
-        email: dados.email,
-        telefone: dados.telefone,
+        nome: dados.representanteNome,
+        email: dados.representanteEmail,
+        telefone: representanteTelefoneSemCaracteresEspeciais,
       },
-      cpf: dados.cpf,
-      rg: dados.rg,
-      nascimento: dataNascimentoSemCaracteresEspeciais,
-      endereco: {
-        cep: cepSemCaracteresEspeciais,
-        logradouro: dados.logradouro,
-        complemento: dados.complemento,
-        bairro: dados.bairro,
-        cidade: dados.cidade,
-      },
-      representante:
-        dados.temRepresentante === 'sim'
-          ? {
-              contato: {
-                nome: dados.representanteNome,
-                email: dados.representanteEmail,
-                telefone: dados.representanteTelefone,
-              },
-              parentesco: dados.parentesco,
-              cpf: dados.representanteCpf,
-              rg: dados.representanteRg,
-              nascimento: dataNascimentoSemCaracteresEspeciais2,
-            }
-          : null,
-      beneficios: dados.beneficios,
-    };
-  
-    console.log('Payload:', payload);
-  
-    if (this.existingUserId) {
-      this.clientesService
-        .atualizarUsuario(this.existingUserId, payload)
-        .subscribe(
-          (response) => {
-            this.onCloseModal();
-            this.isLoading = false;
-            console.log('Usuário atualizado com sucesso!');
-          },
-          (err) => {
-            this.isLoading = false;
-            console.error('Erro ao atualizar usuário:', err);
-            const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao atualizar o usuário.';
-            Swal.fire({
-              icon: 'error',
-              title: 'Erro ao atualizar usuário',
-              text: errorMessage,
-            });
-          }
-        );
-    } else {
-      this.clientesService.adicionarUsuario(payload).subscribe(
+      parentesco: dados.parentesco,
+      cpf: representanteCpfSemCaracteresEspeciais,
+      rg: representanteRgSemCaracteresEspeciais,
+      nascimento: dataNascimentoSemCaracteresEspeciais2,
+    } : null,
+    beneficios: dados.beneficios,
+  };
+
+  console.log('Payload:', payload);
+
+  if (this.existingUserId) {
+    this.clientesService
+      .atualizarUsuario(this.existingUserId, payload)
+      .subscribe(
         (response) => {
-          console.log('Usuário adicionado com sucesso!');
           this.onCloseModal();
           this.isLoading = false;
+          console.log('Usuário atualizado com sucesso!');
         },
         (err) => {
           this.isLoading = false;
-          console.error('Erro ao adicionar usuário:', err);
-          const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao adicionar o usuário.';
+          console.error('Erro ao atualizar usuário:', err);
+          const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao atualizar o usuário.';
           Swal.fire({
             icon: 'error',
-            title: 'Erro ao adicionar usuário',
+            title: 'Erro ao atualizar usuário',
             text: errorMessage,
           });
         }
       );
-    }
+  } else {
+    this.clientesService.adicionarUsuario(payload).subscribe(
+      (response) => {
+        console.log('Usuário adicionado com sucesso!');
+        this.onCloseModal();
+        this.isLoading = false;
+      },
+      (err) => {
+        this.isLoading = false;
+        console.error('Erro ao adicionar usuário:', err);
+        const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao adicionar o usuário.';
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao adicionar usuário',
+          text: errorMessage,
+        });
+      }
+    );
   }
-  
+}
+
   hasMaxLengthAndRequiredError(input: string): boolean {
     return this.customValidationService.hasMaxLengthAndRequiredError(
       this.form,
