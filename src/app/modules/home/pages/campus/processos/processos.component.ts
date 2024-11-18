@@ -1,42 +1,62 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
 import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { adicionarPessoasData, pessoasData, primeiroFiltro, ProcessosData, segundoFiltro, terceiroFiltro } from '../clientes/data/data';
+import { ProcessosService } from './services/processos.service';  // Importe o serviço correto
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '@shared/components/modal/modal.component';
-import { AddUsersModalComponent } from "../clientes/components/add-users-modal/add-users-modal.component";
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
 
-
-
 @Component({
-  selector: 'app-cursos',
+  selector: 'app-processos',
   standalone: true,
-  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddUsersModalComponent, TableComponent, AddprocessosModalComponent],
+  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent],
   templateUrl: './processos.component.html',
-  styleUrl: './processos.component.scss'
+  styleUrls: ['./processos.component.scss']
 })
-export class ProcessosComponent {
+export class ProcessosComponent implements OnInit {
   cadatrarUsuario = true;
-  pessoasData = ProcessosData;
-  adicionarPessoasData = adicionarPessoasData;
-  primeiroFiltro = primeiroFiltro;
-  segundoFiltro = segundoFiltro;
-  terceiroFiltro = terceiroFiltro;
+  pessoasData: any[] = [];  // Dados da tabela
   isLoading = false;
   bsModalRef?: BsModalRef;
 
-  @ViewChild('editTemplate') editTemplate!: TemplateRef<any>; 
+  @ViewChild('editTemplate') editTemplate!: TemplateRef<any>;
 
-  constructor(private modalService: BsModalService) {}
+  constructor(
+    private processosService: ProcessosService,  
+    private modalService: BsModalService
+  ) {}
+
+  ngOnInit() {
+    this.loadProcessos();  
+  }
+
+ 
+  loadProcessos() {
+    this.isLoading = true;  
+
+    this.processosService.carregarTodosProcessos(); 
+    this.processosService.processos$.subscribe((processos) => {
+     console.log('teste', processos)
+      this.pessoasData = processos.map((cliente: any) => ({
+        nome: cliente,
+       'Cessação': cliente.cessacao,
+       Status: cliente.status,
+       Nome: cliente.contrato.cliente.contato.nome,
+       CPF: cliente.contrato.cliente.cpf
+      }))
+      this.isLoading = false;  
+    }, (error) => {
+      console.error('Erro ao carregar processos:', error);
+      this.isLoading = false;
+    });
+  }
 
   onEdit(item: any) {
     const initialState = {
       title: 'Editar um Processo',
-      formTemplate: this.editTemplate, 
-      
+      formTemplate: this.editTemplate,
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
     this.bsModalRef.content.closeBtnName = 'Close';

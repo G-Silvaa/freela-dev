@@ -42,13 +42,14 @@
     </div>
 
     <app-table
-      [columns]="['Nome','CPF','Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo']"
-      [data]="pessoasData"
-      [showActions]="true"
-      [itemsPerPage]="10"
-      (edit)="onEdit($event)"
-      (delete)="onDelete($event)"
-    ></app-table>
+    [columns]="['Nome', 'CPF', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
+    [data]="pessoasData"
+    [showActions]="true"
+    [itemsPerPage]="10"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></app-table>
+  
 
   </div>
   <ng-template #editTemplate>
