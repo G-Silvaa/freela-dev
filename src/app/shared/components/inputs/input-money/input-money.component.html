@@ -12,8 +12,8 @@
         class="form-control"
         [formControl]="formControl" 
         [ngClass]="{ 'is-invalid': hasError }"
-        mask="separator.2"
-        [clearIfNotMatch]="clearIfNotMatch"
+      
+       
         [attr.maxlength]="maxlength" 
         prefix="R$"
       />
@@ -22,5 +22,5 @@
     <div class="invalid-feedback">
       {{ errorMsg }}
     </div>
-    
+
   </div>
