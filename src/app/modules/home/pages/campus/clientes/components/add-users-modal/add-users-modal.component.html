@@ -246,6 +246,12 @@
         [hasError]="hasMaxLengthAndRequiredError('beneficios')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('beneficios')">
       </app-select-input>
+      <app-input-money
+      label="Preço"
+      placeholder="Digite o preço"
+      formControlName="preco"
+      errorMsg="Preço é obrigatório"
+    ></app-input-money>
     </div>
   </div>
   

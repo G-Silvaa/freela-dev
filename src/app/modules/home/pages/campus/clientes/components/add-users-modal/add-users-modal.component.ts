@@ -16,6 +16,7 @@ import { CustomValidationService } from './utils/customvalidators'; // Importar 
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+import { InputMoneyComponent } from "../../../../../../../shared/components/inputs/input-money/input-money.component";
 
 @Component({
   selector: 'app-add-users-modal',
@@ -26,7 +27,8 @@ import Swal from 'sweetalert2';
     ButtonComponent,
     CommonModule,
     ReactiveFormsModule,
-  ],
+    InputMoneyComponent
+],
   templateUrl: './add-users-modal.component.html',
   styleUrls: ['./add-users-modal.component.scss'],
 })
@@ -65,6 +67,7 @@ export class AddUsersModalComponent implements OnInit {
       representanteRg: [''],
       representanteDataNascimento: [''],
       beneficios: ['', Validators.required],
+      preco: ['', Validators.required]
     });
   }
   ngOnInit() {
@@ -260,95 +263,117 @@ export class AddUsersModalComponent implements OnInit {
     { value: '80', label: 'Salário Maternidade' },
   ];
 
+ 
 
- onSubmit() {
-  this.isLoading = true;
 
-  const dados = this.form.getRawValue();
 
-  // Remover caracteres especiais dos campos
-  const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
-  const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
-  const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
-  const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
-  const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
-  const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
-  const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
-  const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
-  const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
-
-  const payload = {
-    contato: {
-      nome: dados.nome,
-      email: dados.email,
-      telefone: telefoneSemCaracteresEspeciais,
-    },
-    cpf: cpfSemCaracteresEspeciais,
-    rg: rgSemCaracteresEspeciais,
-    nascimento: dataNascimentoSemCaracteresEspeciais,
-    endereco: {
-      cep: cepSemCaracteresEspeciais,
-      logradouro: dados.logradouro,
-      complemento: dados.complemento,
-      bairro: dados.bairro,
-      cidade: dados.cidade,
-    },
-    representante: dados.temRepresentante === 'sim' ? {
+  onSubmit() {
+    this.isLoading = true;
+  
+    const dados = this.form.getRawValue();
+  
+    // Remover caracteres especiais dos campos
+    const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
+    const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
+    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
+    const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
+    const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
+    const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
+    const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
+    const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
+    const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
+  
+    const payload = {
       contato: {
-        nome: dados.representanteNome,
-        email: dados.representanteEmail,
-        telefone: representanteTelefoneSemCaracteresEspeciais,
+        nome: dados.nome,
+        email: dados.email,
+        telefone: telefoneSemCaracteresEspeciais,
       },
-      parentesco: dados.parentesco,
-      cpf: representanteCpfSemCaracteresEspeciais,
-      rg: representanteRgSemCaracteresEspeciais,
-      nascimento: dataNascimentoSemCaracteresEspeciais2,
-    } : null,
-    beneficios: dados.beneficios,
-  };
-
-  console.log('Payload:', payload);
-
-  if (this.existingUserId) {
-    this.clientesService
-      .atualizarUsuario(this.existingUserId, payload)
-      .subscribe(
-        (response) => {
+      cpf: cpfSemCaracteresEspeciais,
+      rg: rgSemCaracteresEspeciais,
+      nascimento: dataNascimentoSemCaracteresEspeciais,
+      endereco: {
+        cep: cepSemCaracteresEspeciais,
+        logradouro: dados.logradouro,
+        complemento: dados.complemento,
+        bairro: dados.bairro,
+        cidade: dados.cidade,
+      },
+      representante: dados.temRepresentante === 'sim' ? {
+        contato: {
+          nome: dados.representanteNome,
+          email: dados.representanteEmail,
+          telefone: representanteTelefoneSemCaracteresEspeciais,
+        },
+        parentesco: dados.parentesco,
+        cpf: representanteCpfSemCaracteresEspeciais,
+        rg: representanteRgSemCaracteresEspeciais,
+        nascimento: dataNascimentoSemCaracteresEspeciais2,
+      } : null,
+      beneficios: dados.beneficios,
+      valor: dados.preco
+    };
+  
+    console.log('Payload:', payload);
+  
+    const beneficioPayload = {
+      beneficio: dados.beneficios,
+      valor: dados.preco,
+      cliente: {
+        id: this.existingUserId
+      }
+    };
+  
+    if (this.existingUserId) {
+      // Update existing user
+      this.clientesService.atualizarUsuario(this.existingUserId, payload).pipe(
+        switchMap(() => this.clientesService.associarBeneficio(beneficioPayload))
+      ).subscribe(
+        (beneficioResponse) => {
           this.onCloseModal();
           this.isLoading = false;
-          console.log('Usuário atualizado com sucesso!');
+          console.log('Usuário atualizado e benefício associado com sucesso!');
+          console.log('Benefício Response:', beneficioResponse);
         },
         (err) => {
           this.isLoading = false;
-          console.error('Erro ao atualizar usuário:', err);
-          const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao atualizar o usuário.';
+          console.error('Erro ao atualizar usuário ou associar benefício:', err);
+          const errorMessage = err.error.detail || 'Ocorreu um erro ao atualizar usuário ou associar benefício.';
           Swal.fire({
             icon: 'error',
-            title: 'Erro ao atualizar usuário',
+            title: 'Erro',
             text: errorMessage,
           });
         }
       );
-  } else {
-    this.clientesService.adicionarUsuario(payload).subscribe(
-      (response) => {
-        console.log('Usuário adicionado com sucesso!');
-        this.onCloseModal();
-        this.isLoading = false;
-      },
-      (err) => {
-        this.isLoading = false;
-        console.error('Erro ao adicionar usuário:', err);
-        const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao adicionar o usuário.';
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro ao adicionar usuário',
-          text: errorMessage,
-        });
-      }
-    );
+    } else {
+      // Add new user
+      this.clientesService.adicionarUsuario(payload).pipe(
+        switchMap((response) => {
+          beneficioPayload.cliente.id = response.id;
+          return this.clientesService.associarBeneficio(beneficioPayload);
+        })
+      ).subscribe(
+        (beneficioResponse) => {
+          this.onCloseModal();
+          this.isLoading = false;
+          console.log('Usuário adicionado e benefício associado com sucesso!');
+          console.log('Benefício Response:', beneficioResponse);
+        },
+        (err) => {
+          this.isLoading = false;
+          console.error('Erro ao adicionar usuário ou associar benefício:', err);
+          const errorMessage = err.error.detail || 'Ocorreu um erro ao adicionar usuário ou associar benefício.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: errorMessage,
+          });
+        }
+      );
+    }
   }
-}
+
 
   hasMaxLengthAndRequiredError(input: string): boolean {
     return this.customValidationService.hasMaxLengthAndRequiredError(
