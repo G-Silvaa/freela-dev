@@ -4,7 +4,7 @@
   </div>
 
   <div class="filter">
-    <div>
+    <form [formGroup]="filterForm">
       <app-input
         label="Nome"
         type="text"
@@ -12,6 +12,7 @@
         [hasError]="false"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
+        formControlName="name"
       ></app-input>
       <app-input
         label="Cpf"
@@ -20,6 +21,7 @@
         [hasError]="false"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
+        formControlName="cpf"
       ></app-input>
       <app-input
         label="Status"
@@ -28,10 +30,10 @@
         [hasError]="false"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
+        formControlName="status"
       ></app-input>
-    </div>
-
-    <button class="lupa"></button>
+    </form>
+    <button class="lupa" (click)="submitFilter()"></button>
   </div>
 
   <app-table

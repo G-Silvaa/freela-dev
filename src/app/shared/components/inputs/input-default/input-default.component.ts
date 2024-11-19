@@ -6,11 +6,13 @@ import {
   ReactiveFormsModule,
   ControlValueAccessor,
 } from "@angular/forms";
+import { NgxMaskDirective } from "ngx-mask";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: "app-input",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxMaskDirective],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -29,32 +31,32 @@ export class InputDefaultComponent implements ControlValueAccessor {
   @Input() errorMsg: string = "";
   @Input() isDisable: boolean = false;
   @Input() variant: string = "";
-  @Input() readonly? = false;
+  @Input() mask: string = "";
+  @Input() clearIfNotMatch: boolean | null = true;
+  @Input() maxlength: number | null = null;
+  @Input() isReadonly?: boolean;
 
-  value: any;
+  // Usando FormControl ao invés de value
+  formControl: FormControl = new FormControl("");
 
-  onChange: any = () => {};
-  onTouched: any = () => {};
-
+  // ControlValueAccessor Methods
   writeValue(value: any): void {
-    this.value = value;
+    this.formControl.setValue(value);
   }
 
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this.formControl.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this.formControl.valueChanges.subscribe(fn);
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.isDisable = isDisabled;
+    isDisabled ? this.formControl.disable() : this.formControl.enable();
   }
 
   onInputChange(event: any) {
-    this.value = event.target.value;
-    this.onChange(this.value);
-    this.onTouched();
+    this.formControl.setValue(event.target.value);
   }
 }

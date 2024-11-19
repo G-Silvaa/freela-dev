@@ -2,5 +2,5 @@ export const environment = {
   production: false,
   env: "Local",
   apiUrl:
-    "https://37cf-2804-248-f6bf-9100-b97b-595d-eae7-7340.ngrok-free.app/liv-api/",
+    "https://92be-2804-248-f6bf-9100-4a51-a46e-9f46-8ae7.ngrok-free.app/liv-api/",
 };

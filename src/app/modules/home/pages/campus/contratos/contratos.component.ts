@@ -22,6 +22,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { EditContratoModalComponent } from "./components/edit-contrato-modal/edit-contrato-modal.component";
 import { ContratosService } from "./services/contratos.service";
 import { DatePipe } from "@angular/common";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-grupo-de-acesso",
@@ -34,6 +35,7 @@ import { DatePipe } from "@angular/common";
     AddUsersModalComponent,
     ButtonComponent,
     EditContratoModalComponent,
+    ReactiveFormsModule,
   ],
   providers: [DatePipe],
   templateUrl: "./contratos.component.html",
@@ -52,6 +54,13 @@ export class ContratosComponent implements OnInit {
   @ViewChild("editTemplate") editTemplate!: TemplateRef<any>;
   private contratosService = inject(ContratosService);
   private datePipe = inject(DatePipe);
+  protected formBuilder = inject(FormBuilder);
+
+  protected filterForm = this.formBuilder.group({
+    name: [""],
+    cpf: [""],
+    status: [""],
+  });
 
   constructor(private modalService: BsModalService) {}
 
@@ -65,6 +74,10 @@ export class ContratosComponent implements OnInit {
         console.error("Error:", error);
       },
     });
+  }
+
+  submitFilter() {
+    console.log(this.filterForm.value, "isso é o que tá vindo");
   }
 
   onEdit(item: any) {
@@ -90,7 +103,6 @@ export class ContratosComponent implements OnInit {
 
   dataTransform(data: any[]) {
     const teste = this.datePipe.transform(data[0].inicio, "dd/MM/yyyy");
-    console.log("transformado:", teste);
 
     return data.map((item: any) => {
       const dateTransformed = this.datePipe.transform(
@@ -101,10 +113,10 @@ export class ContratosComponent implements OnInit {
       const dataTransformed = {
         Nome: item.cliente.contato.nome,
         Cpf: item.cliente.cpf,
-        Beneficio: "valor fixo",
-        Status: "valor fixo",
+        Beneficio: item.beneficio,
+        Status: item.processos[0].status,
         Inicio: dateTransformed ? dateTransformed : "valor fixo",
-        Conclusao: item.conclusao ? item.conclusao : "valor fixo",
+        Conclusao: item.conclusao ? item.conclusao : "",
       };
       return dataTransformed;
     });
