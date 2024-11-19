@@ -115,4 +115,11 @@ export class ProcessosService {
       map((response: any) => response.content[0]) 
     );
   }
+
+  associarProcesso(userId: number, payload: any): Observable<any> {
+    return this.http.post(`${this.API_URL}/liv-api/domain/processo/${userId}`, payload, this.createOptions());
+  }
+  
 }
+
+
