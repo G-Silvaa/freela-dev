@@ -106,7 +106,11 @@ export class ProcessosComponent implements OnInit {
       title: 'Editar um Processo',
       formTemplate: this.editTemplate,
     };
-    this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
+  
+    this.bsModalRef = this.modalService.show(ModalComponent, {
+      initialState,
+    
+    });
     this.bsModalRef.content.closeBtnName = 'Close';
   }
 
