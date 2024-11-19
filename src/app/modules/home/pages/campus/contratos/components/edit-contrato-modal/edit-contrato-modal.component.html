@@ -1,13 +1,32 @@
+<div class="modal-header">
+  <div class="info-modal">
+    <h4 class="modal-title pull-left">{{ title }}</h4>
+  </div>
+  <button>
+    <i
+      class="bi bi-x"
+      style="font-size: 1.5rem"
+      (click)="bsModalRef.hide()"
+    ></i>
+  </button>
+</div>
+
 <form [formGroup]="form" action="javascript:void(0)">
   <div class="container-inputs">
     <app-input
       label="Nome:"
       placeholder="Digite o nome:"
       formControlName="Nome"
+      [readonly]="true"
     >
     </app-input>
 
-    <app-input label="Cpf:" placeholder="Digite o cpf:" formControlName="Cpf">
+    <app-input
+      label="Cpf:"
+      placeholder="Digite o cpf:"
+      formControlName="Cpf"
+      [readonly]="true"
+    >
     </app-input>
 
     <app-input

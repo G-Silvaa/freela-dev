@@ -1,7 +1,53 @@
+:host {
+  margin: 20px 10px;
+}
+
+.modal-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+
+  h4 {
+    font-size: 16px;
+
+    margin-right: 0.5rem;
+
+    color: #08024c;
+    font-weight: 600;
+  }
+
+  button {
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-secundary);
+
+    width: 2.5rem;
+    height: 2.5rem;
+
+    border-radius: 0.4375rem;
+    transition: 0.3s;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+
+  .info-modal {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+}
+
 form {
   width: 100%;
   height: 100%;
   position: relative;
+  padding-top: 1rem;
 
   .footer-modal {
     width: 100%;
@@ -15,12 +61,11 @@ form {
 
 .container-inputs {
   display: flex;
-  gap: 19px;
+  gap: 14px;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   margin-left: 17px;
-  
 }
 
 .ts {
@@ -39,6 +84,7 @@ form {
   flex-direction: row;
   align-items: center;
   margin-bottom: 20px;
+  margin-top: 24px;
 }
 
 .step {
@@ -49,7 +95,9 @@ form {
   background-color: #e0e0e0;
   color: #000;
   font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   font-size: 14px; /* Ajuste o tamanho da fonte */
 }
 
@@ -60,12 +108,23 @@ form {
   transition: background-color 0.3s;
 }
 
-.step.active, .line.active {
-  background-color: #08024C;
+.step.active,
+.line.active {
+  background-color: #08024c;
   color: #fff;
 }
 
 @media (max-width: 980px) {
+  .t {
+    margin: 0px !important;
+  }
+  .container1 {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
   .container-inputs {
     display: flex;
     gap: 19px;
@@ -75,5 +134,49 @@ form {
     flex-direction: column !important;
     width: 90% !important;
     align-items: stretch;
-}
   }
+  .teste1 {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+  }
+
+  .teste2 {
+    display: flex;
+    gap: 21px;
+    width: 100%;
+    margin-left: 0px !important;
+    flex-direction: column;
+  }
+}
+
+.teste1 {
+  display: flex;
+  gap: 20px;
+}
+
+.teste2 {
+  display: flex;
+  gap: 21px;
+  width: 100%;
+  margin-left: 48px;
+}
+
+.container1 {
+  width: 100%;
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+h4 {
+  font-size: 16px;
+  width: 100%;
+  margin: 0px;
+}
+
+.t {
+  margin-right: 448px;
+}

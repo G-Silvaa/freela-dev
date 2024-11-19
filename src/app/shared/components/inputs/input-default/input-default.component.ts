@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input } from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { Component, forwardRef, Input } from "@angular/core";
 import {
   FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
   ControlValueAccessor,
-} from '@angular/forms';
+} from "@angular/forms";
 
 @Component({
-  selector: 'app-input',
+  selector: "app-input",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [
@@ -18,17 +18,18 @@ import {
       multi: true,
     },
   ],
-  templateUrl: './input-default.component.html',
-  styleUrls: ['./input-default.component.scss'],
+  templateUrl: "./input-default.component.html",
+  styleUrls: ["./input-default.component.scss"],
 })
 export class InputDefaultComponent implements ControlValueAccessor {
-  @Input() label: string = '';
-  @Input() type: string = 'text';
+  @Input() label: string = "";
+  @Input() type: string = "text";
   @Input() hasError: boolean = false;
-  @Input() placeholder: string = '';
-  @Input() errorMsg: string = '';
+  @Input() placeholder: string = "";
+  @Input() errorMsg: string = "";
   @Input() isDisable: boolean = false;
-  @Input() variant: string = ''; 
+  @Input() variant: string = "";
+  @Input() readonly? = false;
 
   value: any;
 

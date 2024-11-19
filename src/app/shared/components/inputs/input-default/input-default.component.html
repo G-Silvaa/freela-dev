@@ -8,6 +8,7 @@
     class="form-control"
     [value]="value"
     [ngClass]="{ 'is-invalid': hasError }"
+    [attr.readonly]="readonly"
   />
   <div class="invalid-feedback">
     {{ errorMsg }}

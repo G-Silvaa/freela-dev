@@ -1,11 +1,18 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { CommonModule } from "@angular/common";
 import { InputDefaultComponent } from "@shared/components/inputs/input-default/input-default.component";
 import { ButtonComponent } from "@shared/components/button/button.component";
@@ -31,12 +38,14 @@ interface IContratoData {
   templateUrl: "./edit-contrato-modal.component.html",
   styleUrls: ["./edit-contrato-modal.component.scss"],
 })
-export class EditContratoModalComponent implements OnInit{
+export class EditContratoModalComponent implements OnInit {
   private modalService = inject(BsModalService);
   private formBuilder = inject(FormBuilder);
+  protected bsModalRef = inject(BsModalRef);
 
   @Output() closeModal = new EventEmitter<void>();
-  @Input() contratoData?: IContratoData;
+  @Input() title!: string;
+  @Input() contratoData!: any;
   isLoading = false;
 
   form: FormGroup = this.formBuilder.group({
@@ -49,7 +58,6 @@ export class EditContratoModalComponent implements OnInit{
   });
 
   ngOnInit(): void {
-    console.log(this.contratoData, "oi")
     if (this.contratoData) {
       this.form.patchValue(this.contratoData);
     }
