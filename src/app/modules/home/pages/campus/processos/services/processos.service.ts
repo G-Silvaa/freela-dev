@@ -78,21 +78,34 @@ export class ProcessosService {
 
   buscarProcessosComFiltros(filtros: any): Observable<any> {
     let filterString = '';
-    if (filtros.nome) filterString += `contato.nome ilike '${filtros.nome}'`;
-    if (filtros.email) filterString += (filterString ? ' and ' : '') + `contato.email ilike '${filtros.email}'`;
-    if (filtros.rg) filterString += (filterString ? ' and ' : '') + `rg ilike '${filtros.rg}'`;
-    if (filtros.cpf) filterString += (filterString ? ' and ' : '') + `cpf ilike '${filtros.cpf}'`;
-
-    const params = new HttpParams().set('fields', '*,contrato.cliente').set('filter', filterString);
-
-    console.log('Parâmetros da requisição:', params.toString());
-
-    return this.http.get(`${this.API_URL}/liv-api/domain/processo`, { params, ...this.createOptions() });
+  
+    if (filtros.Nome) {
+      filterString += `contrato.cliente.contato.nome ilike '${filtros.Nome}%'`; // '%': busca por prefixo
+    }
+    if (filtros.CPF) {
+      filterString += (filterString ? ' and ' : '') + `contrato.cliente.cpf ilike '${filtros.CPF}%'`; // '%': busca por prefixo
+    }
+    if (filtros.numeroProtocolo) {
+      filterString += (filterString ? ' and ' : '') + `numeroProtocolo ilike '${filtros.numeroProtocolo}%'`;
+    }
+    if (filtros.status) {
+      filterString += (filterString ? ' and ' : '') + `status eq '${filtros.status}'`;
+    }
+  
+    const params = new HttpParams()
+      .set('fields', '*,contrato.cliente')
+      .set('filter', filterString);
+  
+    console.log('Parâmetros da requisição:', params.toString()); // Log para depuração
+  
+    return this.http.get(`${this.API_URL}domain/processo`, { params, ...this.createOptions() });
   }
+  
+  
 
-  associarBeneficio(payload: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/liv-api/domain/contrato/add`, payload, this.createOptions());
-  }
+  // associarBeneficio(payload: any): Observable<any> {
+  //   return this.http.post(`${this.API_URL}/liv-api/domain/contrato/add`, payload, this.createOptions());
+  // }
 
   buscarProcessoPorId(id: number): Observable<any> {
     return this.http.get(`${this.API_URL}/liv-api/domain/processo`, {

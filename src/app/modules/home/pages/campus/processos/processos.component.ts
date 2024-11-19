@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
 import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProcessosService } from './services/processos.service';  // Importe o serviço correto
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '@shared/components/modal/modal.component';
@@ -11,13 +11,13 @@ import { AddprocessosModalComponent } from "./components/add-processos-modal/add
 @Component({
   selector: 'app-processos',
   standalone: true,
-  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent],
+  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent, FormsModule],
   templateUrl: './processos.component.html',
   styleUrls: ['./processos.component.scss']
 })
 export class ProcessosComponent implements OnInit {
   cadatrarUsuario = true;
-  pessoasData: any[] = [];  // Dados da tabela
+  pessoasData: any[] = [];  
   isLoading = false;
   bsModalRef?: BsModalRef;
 
@@ -30,6 +30,7 @@ export class ProcessosComponent implements OnInit {
 
   ngOnInit() {
     this.loadProcessos();  
+    this.aplicarFiltros();
   }
 
  
@@ -44,7 +45,10 @@ export class ProcessosComponent implements OnInit {
        'Cessação': cliente.cessacao,
        Status: cliente.status,
        Nome: cliente.contrato.cliente.contato.nome,
-       CPF: cliente.contrato.cliente.cpf
+       CPF: cliente.contrato.cliente.cpf,
+       'Perícia médica': cliente.enderecoPericiaMedica,
+       'Avaliação social': cliente.enderecoAvaliacaoSocial,
+       'Entrada do protocolo': cliente.entradaDoProtocolo,
       }))
       this.isLoading = false;  
     }, (error) => {
@@ -52,6 +56,50 @@ export class ProcessosComponent implements OnInit {
       this.isLoading = false;
     });
   }
+
+  filtros = {
+    Nome: '', 
+    CPF: '',
+    Status: '',
+  };
+
+  limparFiltros() {
+    this.filtros = {
+    
+      Status:'',
+      Nome: '',
+      CPF: ''
+    };
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    this.isLoading = true;
+    this.processosService.buscarProcessosComFiltros(this.filtros).subscribe(
+      (response) => {
+        if (Array.isArray(response.content)) {
+          this.pessoasData = response.content.map((cliente: any) => ({
+            Nome: cliente.contrato.cliente.contato.nome,
+            CPF: cliente.contrato.cliente.cpf,
+            'Cessação': cliente.cessacao,
+            Status: cliente.status,
+            'Perícia médica': cliente.enderecoPericiaMedica,
+            'Avaliação social': cliente.enderecoAvaliacaoSocial,
+            'Entrada do protocolo': cliente.entradaDoProtocolo,
+          }));
+        } else {
+          console.error('A resposta da API não é um array:', response);
+        }
+        console.log("Dados filtrados:", this.pessoasData);
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Erro ao aplicar filtros:', error);
+        this.isLoading = false;
+      }
+    );
+  }
+  
 
   onEdit(item: any) {
     const initialState = {

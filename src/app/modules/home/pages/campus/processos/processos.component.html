@@ -12,11 +12,13 @@
         type="text"
         placeholder="Digite o nome"
         [hasError]="false"
+        [(ngModel)]="filtros.Nome"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
         ></app-input>
         <app-input
         label="CPF"
+        [(ngModel)]="filtros.CPF "
         type="text"
         placeholder="Digite o nome"
         [hasError]="false"
@@ -38,7 +40,10 @@
       >
     </app-select-input>
   </div>
-      <button class="lupa"></button>
+  <div class="filtrosB">
+    <button class="lupa" (click)="aplicarFiltros()"></button>
+    <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
+  </div>
     </div>
 
     <app-table

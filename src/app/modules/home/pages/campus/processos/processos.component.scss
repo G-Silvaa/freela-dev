@@ -232,3 +232,19 @@
     justify-content: center;
     gap: 15px;
   }
+  .filtrosB{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  
+    .limpar{
+      border: 1px solid #08024C;
+      background: transparent;
+      color: #08024C;
+      padding: 9px;
+      height: 41px;
+      margin-top: 15px;
+      border-radius: 6px;
+    }
+  }
