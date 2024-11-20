@@ -38,7 +38,24 @@ export class AddprocessosModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('teste', this.processoId);
+    if (this.processoId) {
+      this.loadProcesso();
+    }
+  }
+
+  loadProcesso() {
+    this.isLoading = true;
+    this.processosService.buscarProcessoPorId(this.processoId).subscribe(
+      (processo) => {
+        console.log('Processo carregado:', processo);
+        this.form.patchValue(processo);
+        this.isLoading = false;
+      },
+      (err) => {
+        console.error('Erro ao carregar processo:', err);
+        this.isLoading = false;
+      }
+    );
   }
 
   onCloseModal() {

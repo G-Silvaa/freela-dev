@@ -112,7 +112,7 @@ export class ProcessosService {
   }
 
   buscarProcessoPorId(id: number): Observable<any> {
-    return this.http.get(`${this.API_URL}/liv-api/domain/processo`, {
+    return this.http.get(`${this.API_URL}domain/processo`, {
       params: new HttpParams().set('filter', `id eq ${id}`).set('fields', '*,contrato.cliente'),
       ...this.createOptions()
     }).pipe(
