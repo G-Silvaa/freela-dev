@@ -1,10 +1,8 @@
 <div class="modal-header">
   <div class="info-modal">
-    <h4 class="modal-title pull-left">Editar um usuario</h4>
-
-   
+    <h4 class="modal-title pull-left">Editar um usuário</h4>
   </div>
-  <button >
+  <button>
     <i class="bi bi-x" style="font-size: 1.5rem" (click)="bsModalRef.hide()"></i>
   </button>
 </div>
@@ -16,11 +14,11 @@
       formControlName="numeroProtocolo">
     </app-input>
 
-    <app-input
+    <app-data-input
       label="Entrada do Protocolo:"
       placeholder="Digite a entrada do protocolo:"
       formControlName="entradaDoProtocolo">
-    </app-input>
+    </app-data-input>
 
     <app-input
       label="Documentos Pendentes:"
@@ -28,11 +26,12 @@
       formControlName="documentosPendentes">
     </app-input>
 
-    <app-input
+    <app-data-input
       label="Perícia Médica:"
       placeholder="Digite a perícia médica:"
-      formControlName="periciaMedica">
-    </app-input>
+      formControlName="periciaMedica"
+      [withTimepicker]="true">
+    </app-data-input>
 
     <app-input
       label="Endereço Perícia Médica:"
@@ -40,11 +39,12 @@
       formControlName="enderecoPericiaMedica">
     </app-input>
 
-    <app-input
+    <app-data-input
       label="Avaliação Social:"
       placeholder="Digite a avaliação social:"
-      formControlName="avaliacaoSocial">
-    </app-input>
+      formControlName="avaliacaoSocial"
+      [withTimepicker]="true">
+    </app-data-input>
 
     <app-input
       label="Endereço Avaliação Social:"
@@ -52,17 +52,17 @@
       formControlName="enderecoAvaliacaoSocial">
     </app-input>
 
-    <app-input
+    <app-data-input
       label="Data de Concessão:"
       placeholder="Digite a data de concessão:"
       formControlName="dataConcessao">
-    </app-input>
+    </app-data-input>
 
-    <app-input
+    <app-data-input
       label="Cessação:"
       placeholder="Digite a data de cessação:"
       formControlName="cessacao">
-    </app-input>
+    </app-data-input>
 
     <app-select-input
       [label]="'Status:'"

@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
 import { ProcessosService } from '../../services/processos.service'; // Importe o serviço correto
 import Swal from 'sweetalert2';
+import { DataInputComponent } from "../../../../../../../shared/components/inputs/data-input/data-input.component";
 
 @Component({
   selector: 'app-add-process-modal',
   standalone: true,
-  imports: [InputDefaultComponent, ButtonComponent, CommonModule, ReactiveFormsModule, SelectInputComponent],
+  imports: [InputDefaultComponent, ButtonComponent, CommonModule, ReactiveFormsModule, SelectInputComponent, DataInputComponent],
   templateUrl: './add-processos-modal.component.html',
   styleUrls: ['./add-processos-modal.scss']
 })

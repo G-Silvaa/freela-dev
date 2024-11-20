@@ -17,6 +17,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { InputMoneyComponent } from "../../../../../../../shared/components/inputs/input-money/input-money.component";
+import { DataInputComponent } from "../../../../../../../shared/components/inputs/data-input/data-input.component";
 
 @Component({
   selector: 'app-add-users-modal',
@@ -27,7 +28,8 @@ import { InputMoneyComponent } from "../../../../../../../shared/components/inpu
     ButtonComponent,
     CommonModule,
     ReactiveFormsModule,
-    InputMoneyComponent
+    InputMoneyComponent,
+    DataInputComponent
 ],
   templateUrl: './add-users-modal.component.html',
   styleUrls: ['./add-users-modal.component.scss'],
