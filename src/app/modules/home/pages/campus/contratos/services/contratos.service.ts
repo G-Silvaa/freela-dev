@@ -24,9 +24,7 @@ export class ContratosService {
   }
 
   editContrato(data: any) {
-    console.log("chamou");
     const { id, ...editable } = data;
-    console.log(editable);
     return this.http.patch(
       `${this.API_URL}domain/contrato/${data.id}`,
       editable,
@@ -34,7 +32,6 @@ export class ContratosService {
   }
 
   filterContratos(filtros: any): Observable<any> {
-    console.log("filtros", filtros);
     let filterString = "";
 
     if (filtros.nome)
@@ -52,8 +49,6 @@ export class ContratosService {
     const params = new HttpParams()
       .set("fields", "*,cliente,processos")
       .set("filter", filterString);
-
-    console.log("Parâmetros da requisição:", params.toString());
 
     return this.http.get(`${this.API_URL}domain/contrato`, {
       params,

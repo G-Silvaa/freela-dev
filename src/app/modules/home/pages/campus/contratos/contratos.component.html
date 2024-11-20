@@ -33,8 +33,10 @@
         formControlName="status"
       ></app-input>
     </form>
-    <button class="lupa" (click)="submitFilter()"></button>
-    <button class="limpar" (click)="clearFilter()">Limpar filtro</button>
+    <div class="filtrosB">
+      <button class="lupa" (click)="submitFilter()"></button>
+      <button class="limpar" (click)="clearFilter()">Limpar filtro</button>
+    </div>
   </div>
 
   <app-table

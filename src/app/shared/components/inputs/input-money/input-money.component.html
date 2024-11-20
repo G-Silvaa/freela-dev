@@ -1,0 +1,26 @@
+<div class="box-input" [ngClass]="variant">
+    <label for="" class="form-label">{{ label }}</label>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">R$</span>
+      </div>
+      <input
+        type="text"
+        (input)="onInputChange($event)"
+        [placeholder]="placeholder"
+        [disabled]="isDisable"
+        class="form-control"
+        [formControl]="formControl" 
+        [ngClass]="{ 'is-invalid': hasError }"
+      
+       
+        [attr.maxlength]="maxlength" 
+        prefix="R$"
+      />
+      
+    </div>
+    <div class="invalid-feedback">
+      {{ errorMsg }}
+    </div>
+
+  </div>

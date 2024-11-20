@@ -95,7 +95,6 @@ export class ClientesComponent implements OnInit {
 
     this.usuarioService.carregarTodosUsuarios(); // Carrega os dados iniciais
   }
-
   adicionarCliente() {
     const initialState = {
       title: 'Cadastrar um Cliente',
@@ -105,13 +104,19 @@ export class ClientesComponent implements OnInit {
   }
 
   onEdit(item: any) {
-    const initialState = {
-      title: 'Editar um Cliente',
-      formTemplate: this.editar,
-      data: item
-    };
-    this.bsModalRef = this.modalService.show(ModalComponent, { initialState, class: 'modal-lg' });
+    this.usuarioService.buscarClientePorId(item.id).subscribe((cliente) => {
+      console.log('Cliente:', cliente);
+      const initialState = {
+        title: 'Editar um Cliente',
+        formTemplate: this.editar,
+        data: cliente
+      };
+      this.bsModalRef = this.modalService.show(EditUsersModalComponent, { initialState, class: 'modal-lg' });
+    }, (error) => {
+      console.error('Erro ao buscar cliente:', error);
+    });
   }
+
 
   onDelete(item: any) {
     Swal.fire({
@@ -156,7 +161,19 @@ export class ClientesComponent implements OnInit {
     });
   }
 
+  limparFiltros() {
+    this.filtros = {
+      nome: '',
+      email: '',
+      rg: '',
+      cpf: ''
+    };
+    this.aplicarFiltros();
+  }
+
   temRepresentante(representante: IRepresentante | null | undefined): string {
     return representante && representante.id ? 'Sim' : 'Não';
   }
+
+  
 }

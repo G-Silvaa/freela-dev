@@ -1,30 +1,85 @@
+<div class="modal-header">
+  <div class="info-modal">
+    <h4 class="modal-title pull-left">Editar um usuario</h4>
+
+   
+  </div>
+  <button >
+    <i class="bi bi-x" style="font-size: 1.5rem" (click)="bsModalRef.hide()"></i>
+  </button>
+</div>
 <form [formGroup]="form" action="javascript:void(0)">
   <div class="container-inputs">
     <app-input
-      label="Status:"
-      placeholder="Digite o status:"
-      formControlName="status">
+      label="Número do Protocolo:"
+      placeholder="Digite o número do protocolo:"
+      formControlName="numeroProtocolo">
     </app-input>
-    
+
+    <app-input
+      label="Entrada do Protocolo:"
+      placeholder="Digite a entrada do protocolo:"
+      formControlName="entradaDoProtocolo">
+    </app-input>
+
+    <app-input
+      label="Documentos Pendentes:"
+      placeholder="Digite os documentos pendentes:"
+      formControlName="documentosPendentes">
+    </app-input>
+
     <app-input
       label="Perícia Médica:"
       placeholder="Digite a perícia médica:"
       formControlName="periciaMedica">
     </app-input>
-    
+
+    <app-input
+      label="Endereço Perícia Médica:"
+      placeholder="Digite o endereço da perícia médica:"
+      formControlName="enderecoPericiaMedica">
+    </app-input>
+
     <app-input
       label="Avaliação Social:"
       placeholder="Digite a avaliação social:"
       formControlName="avaliacaoSocial">
     </app-input>
-    
+
     <app-input
-      label="Entrada Do Protocolo:"
-      placeholder="Digite a entrada do protocolo:"
-      formControlName="entradaProtocolo">
+      label="Endereço Avaliação Social:"
+      placeholder="Digite o endereço da avaliação social:"
+      formControlName="enderecoAvaliacaoSocial">
     </app-input>
+
+    <app-input
+      label="Data de Concessão:"
+      placeholder="Digite a data de concessão:"
+      formControlName="dataConcessao">
+    </app-input>
+
+    <app-input
+      label="Cessação:"
+      placeholder="Digite a data de cessação:"
+      formControlName="cessacao">
+    </app-input>
+
+    <app-select-input
+      [label]="'Status:'"
+      [options]="[
+        { value: 'AGUARDANDO', label: 'AGUARDANDO' },
+        { value: 'PENDENTE', label: 'Pendente' },
+        { value: 'ANALISE', label: 'Análise' },
+        { value: 'CUMPRIMENTO_EXIGENCIA', label: 'Cumprimento com Exigencia' },
+        { value: 'ANALISE_ADMINISTRATIVA', label: 'Analise Administrativa' },
+        { value: 'APROVADO', label: 'Aprovado' },
+        { value: 'REPROVADO', label: 'Reprovado' }
+      ]"
+      [placeholder]="'Selecione o status'"
+      formControlName="status"
+    ></app-select-input>
   </div>
-  
+
   <div class="footer-modal">
     <app-button variant="danger" width="100px" (click)="onCloseModal()">
       Fechar

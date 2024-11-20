@@ -1,3 +1,14 @@
+<div class="modal-header">
+  <div class="info-modal">
+    <h4 class="modal-title pull-left">Editar um usuario</h4>
+
+   
+  </div>
+  <button >
+    <i class="bi bi-x" style="font-size: 1.5rem" (click)="bsModalRef.hide()"></i>
+  </button>
+</div>
+
 <div class="progress-bar">
   <div class="step" [class.active]="currentStep >= 1">Contato</div>
   <div class="line" [class.active]="currentStep >= 2"></div>
@@ -14,18 +25,32 @@
       <app-input
         label="Nome:"
         placeholder="Digite seu nome:"
-        formControlName="nome">
+        formControlName="nome"
+        [maxlength]="200"
+        [hasError]="hasMaxLengthAndRequiredError('nome')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')">
+        >
       </app-input>
     
       <app-input
         label="E-mail:"
         placeholder="Digite seu email:"
-        formControlName="email">
+        formControlName="email"
+        [maxlength]="200"
+        [hasError]="hasMaxLengthAndRequiredError('email')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')"
+        >
       </app-input>
       <app-input
         label="Telefone:"
         placeholder="Digite seu telefone:"
-        formControlName="telefone">
+        formControlName="telefone"
+        mask="(00) 00000-0000"
+        [maxlength]="15"
+        [clearIfNotMatch]="true"
+        [hasError]="hasMaxLengthAndRequiredError('telefone')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')">
+        >
       </app-input>
     </div>
   </div>
@@ -35,19 +60,35 @@
       <app-input
         label="RG:"
         placeholder="Digite seu RG:"
-        formControlName="rg">
+        formControlName="rg"
+        mask="00.000.000-0"
+        [clearIfNotMatch]="true"
+        [maxlength]="12"
+        [hasError]="hasMaxLengthAndRequiredError('rg')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')"
+        >
       </app-input>
 
       <app-input
-        label="CPF:"
-        placeholder="Digite seu CPF:"
-        formControlName="cpf">
+      label="CPF:"
+      mask="000.000.000-00"
+      [maxlength]="14"
+      placeholder="Digite seu CPF:"
+      formControlName="cpf"
+      [clearIfNotMatch]="true"
+      [hasError]="hasMaxLengthAndRequiredError('cpf')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')">
       </app-input>
 
       <app-input
-        label="Data De Nascimento:"
-        placeholder="Digite sua data de nascimento:"
-        formControlName="dataNascimento">
+      label="Data De Nascimento:"
+      placeholder="Digite sua data de nascimento:"
+      formControlName="dataNascimento"
+      [clearIfNotMatch]="true"
+      mask="00/00/0000"
+      [maxlength]="10"
+      [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')">
       </app-input>
     </div>
   </div>
@@ -56,21 +97,32 @@
     <div class="container-inputs">
       <div class="teste1">
         <app-input
+        mask="00000-000"
+        [maxlength]="10"
         label="CEP:"
+        [clearIfNotMatch]="true"
         placeholder="Digite seu CEP:"
-        formControlName="cep">
+        formControlName="cep"
+        [hasError]="hasMaxLengthAndRequiredError('cep')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cep')">
       </app-input>
 
       <app-input
-        label="Logradouro:"
-        placeholder="Digite seu logradouro:"
-        formControlName="logradouro">
+      label="Logradouro:"
+      placeholder="Digite seu logradouro:"
+      formControlName="logradouro"
+      [maxlength]="150"
+      [hasError]="hasMaxLengthAndRequiredError('logradouro')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')">
       </app-input>
     
       <app-input
-        label="Complemento:"
-        placeholder="Digite seu complemento:"
-        formControlName="complemento">
+      label="Complemento:"
+      placeholder="Digite seu complemento:"
+      formControlName="complemento"
+      [maxlength]="150"
+      [hasError]="hasMaxLengthAndRequiredError('complemento')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')">
       </app-input>
 
       </div>
@@ -78,13 +130,19 @@
       <app-input
       label="Bairro:"
       placeholder="Digite seu bairro:"
-      formControlName="bairro">
+      formControlName="bairro"
+      [maxlength]="150"
+      [hasError]="hasMaxLengthAndRequiredError('bairro')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')">
     </app-input>
 
     <app-input
-      label="Cidade:"
-      placeholder="Digite sua cidade:"
-      formControlName="cidade">
+    label="Cidade:"
+    [maxlength]="150"
+    placeholder="Digite sua cidade:"
+    formControlName="cidade"
+    [hasError]="hasMaxLengthAndRequiredError('cidade')"
+    [errorMsg]="getMaxLengthAndRequiredErrorMsg('cidade')">
     </app-input>
 
     <app-select-input 
@@ -99,30 +157,85 @@
     </div>
   </div>
 
-  <div class="pt4" *ngIf="currentStep === 4">
+  <div class="pt4" *ngIf="currentStep === 4 ">
     <div class="container-inputs">
+      <h4>Contato</h4>
+      <div class="container1">
+        <app-input
+        label="Nome do Representante:"
+        placeholder="Digite o nome do representante:"
+        formControlName="representanteNome"
+        [maxlength]="200"
+       >
+      </app-input>
+
       <app-input
+        label="E-mail do Representante:"
+        placeholder="Digite o e-mail do representante:"
+        formControlName="representanteEmail"
+       
+        [maxlength]="256"
+     >
+        
+      </app-input>
+
+      <app-input
+        label="Telefone do Representante:"
+        placeholder="Digite o telefone do representante:"
+        formControlName="representanteTelefone"
+        mask="(00) 00000-0000"
+        [maxlength]="15"
+        [clearIfNotMatch]="true"
+       >
+        
+      </app-input>
+      </div>
+      <h4>Dados do parentesco</h4>
+      <div class="container1">
+        <app-input
         label="Parentesco:"
         placeholder="Digite o parentesco:"
-        formControlName="parentesco">
+        formControlName="parentesco"
+        
+        [maxlength]="30"
+        >
+        
       </app-input>
     
       <app-input
         label="CPF do Representante:"
         placeholder="Digite o CPF:"
-        formControlName="representanteCpf">
+        formControlName="representanteCpf"
+        mask="000.000.000-00"
+        [maxlength]="14"
+        [clearIfNotMatch]="true"
+        >
       </app-input>
       <app-input
         label="RG do Representante:"
         placeholder="Digite o RG:"
-        formControlName="representanteRg">
+        mask="00.000.000-0"
+        [maxlength]="12"
+        [clearIfNotMatch]="true"
+        formControlName="representanteRg"
+       >
       </app-input>
 
+    
+      </div>
+      <div class="t">
       <app-input
-        label="Data de Nascimento:"
-        placeholder="Digite a data de nascimento:"
-        formControlName="representanteDataNascimento">
-      </app-input>
+      label="Data de Nascimento:"
+      mask="00/00/0000"
+      [maxlength]="10"
+      [clearIfNotMatch]="true"
+      placeholder="Digite a data de nascimento:"
+      formControlName="representanteDataNascimento"
+      >
+    </app-input>
+  </div>
+
+     
     </div>
   </div>
   

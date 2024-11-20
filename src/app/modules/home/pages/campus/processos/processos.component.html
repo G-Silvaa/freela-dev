@@ -1,56 +1,59 @@
 <div class="container">
+  <div class="adicionar">
+    <h1>Processos</h1>
+  </div>
 
-    <div class="adicionar">
-      <h1>Processos</h1>
-
-    </div>
-
-    <div class="filter">
-      <div class="dividir">
+  <div class="filter">
+    <div class="dividir">
       <app-input
         label="Nome"
         type="text"
         placeholder="Digite o nome"
         [hasError]="false"
-        errorMsg="Nome é obrigatório"
-        [isDisable]="false"
-        ></app-input>
-        <app-input
-        label="CPF"
-        type="text"
-        placeholder="Digite o nome"
-        [hasError]="false"
+        [(ngModel)]="filtros.Nome"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
       ></app-input>
-     
+      <app-input
+        label="CPF"
+        [(ngModel)]="filtros.CPF"
+        type="text"
+        placeholder="Digite o CPF"
+        [hasError]="false"
+        errorMsg="CPF é obrigatório"
+        [isDisable]="false"
+      ></app-input>
       <app-select-input
-      [label]="'Status:'"
-      [options]="[
-        { value: '1', label: 'Pendente' },
-        { value: '2', label: 'Análise' },
-        { value: '3', label: 'Cumprimento com Exigencia' },
-        { value: '4', label: 'Analise Administrativa' },
-        { value: '5', label: 'Aprovado' },
-        { value: '6', label: 'Reprovado' },
-      ]"
-      [placeholder]="'Selecione o status'"
-      >
-    </app-select-input>
-  </div>
-      <button class="lupa"></button>
+        [label]="'Status:'"
+        [options]="[
+          { value: 'AGUARDANDO', label: 'AGUARDANDO' },
+          { value: 'PENDENTE', label: 'Pendente' },
+          { value: 'ANALISE', label: 'Análise' },
+          { value: 'CUMPRIMENTO_EXIGENCIA', label: 'Cumprimento com Exigencia' },
+          { value: 'ANALISE_ADMINISTRATIVA', label: 'Analise Administrativa' },
+          { value: 'APROVADO', label: 'Aprovado' },
+          { value: 'REPROVADO', label: 'Reprovado' }
+        ]"
+        [placeholder]="'Selecione o status'"
+        [(ngModel)]="filtros.Status"
+      ></app-select-input>
     </div>
-
-    <app-table
-      [columns]="['Nome','CPF','Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo']"
-      [data]="pessoasData"
-      [showActions]="true"
-      [itemsPerPage]="10"
-      (edit)="onEdit($event)"
-      (delete)="onDelete($event)"
-    ></app-table>
-
+    <div class="filtrosB">
+      <button class="lupa" (click)="aplicarFiltros()"></button>
+      <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
+    </div>
   </div>
-  <ng-template #editTemplate>
-    <app-add-process-modal/>
-  </ng-template>
+
+  <app-table
+    [columns]="['Nome', 'CPF', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
+    [data]="pessoasData"
+    [showActions]="true"
+    [itemsPerPage]="10"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></app-table>
+</div>
+
+<ng-template #editTemplate>
+  <app-add-process-modal [processoId]="selectedProcessoId!"></app-add-process-modal>
+</ng-template>

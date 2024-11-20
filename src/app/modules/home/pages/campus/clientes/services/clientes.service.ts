@@ -53,7 +53,7 @@ export class ClientesService {
   adicionarUsuario(payload: any): Observable<any> {
     return this.http.post(`${this.API_URL}domain/cliente/add`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosUsuarios(); // Atualiza a lista após adicionar
+        this.carregarTodosUsuarios(); 
         return response;
       })
     );
@@ -62,7 +62,7 @@ export class ClientesService {
   atualizarUsuario(id: number, payload: any): Observable<any> {
     return this.http.patch(`${this.API_URL}domain/cliente/${id}`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosUsuarios(); // Atualiza a lista após atualizar
+        this.carregarTodosUsuarios(); 
         return response;
       })
     );
@@ -77,11 +77,13 @@ export class ClientesService {
   }
 
   buscarClientesComFiltros(filtros: any): Observable<any> {
-    let params = new HttpParams().set('fields', '*,representante');
-    if (filtros.nome) params = params.set('filter', `contato.nome ilike '${filtros.nome}'`);
-    if (filtros.email) params = params.set('filter', `contato.email ilike '${filtros.email}'`);
-    if (filtros.rg) params = params.set('filter', `rg like '${filtros.rg}'`);
-    if (filtros.cpf) params = params.set('filter', `cpf like '${filtros.cpf}'`);
+    let filterString = '';
+    if (filtros.nome) filterString += `contato.nome ilike '${filtros.nome}'`;
+    if (filtros.email) filterString += (filterString ? ' and ' : '') + `contato.email ilike '${filtros.email}'`;
+    if (filtros.rg) filterString += (filterString ? ' and ' : '') + `rg ilike '${filtros.rg}'`;
+    if (filtros.cpf) filterString += (filterString ? ' and ' : '') + `cpf ilike '${filtros.cpf}'`;
+
+    const params = new HttpParams().set('fields', '*,representante').set('filter', filterString);
 
     console.log('Parâmetros da requisição:', params.toString());
 
@@ -90,5 +92,14 @@ export class ClientesService {
 
   associarBeneficio(payload: any): Observable<any> {
     return this.http.post(`${this.API_URL}domain/contrato/add`, payload, this.createOptions());
+  }
+
+  buscarClientePorId(id: number): Observable<any> {
+    return this.http.get(`${this.API_URL}domain/cliente`, {
+      params: new HttpParams().set('filter', `id eq ${id}`).set('fields', '*,representante'),
+      ...this.createOptions()
+    }).pipe(
+      map((response: any) => response.content[0]) 
+    );
   }
 }

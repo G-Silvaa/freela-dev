@@ -43,7 +43,10 @@
       errorMsg="CPF é obrigatório"
       [isDisable]="false"
     ></app-input>
-    <button class="lupa" (click)="aplicarFiltros()">Filtrar</button>
+    <div class="filtrosB">
+      <button class="lupa" (click)="aplicarFiltros()"></button>
+      <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
+    </div>
   </div>
 
   <app-table

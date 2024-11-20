@@ -3,16 +3,19 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
 import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { CommonModule } from '@angular/common';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
+import { CustomValidationService } from '../add-users-modal/utils/customvalidators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-users-modal',
   standalone: true,
   imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './edit-users-modal.component.html',
-  styleUrls: ['./edit-users-modal.component.scss']
+  styleUrls: ['./edit-users-modal.component.scss'],
+  providers: [DatePipe]
 })
 export class EditUsersModalComponent implements OnInit {
   @Input() data: any;
@@ -24,7 +27,10 @@ export class EditUsersModalComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    public bsModalRef: BsModalRef,
+    private datePipe: DatePipe,
+    private customValidationService: CustomValidationService
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -39,34 +45,44 @@ export class EditUsersModalComponent implements OnInit {
       bairro: ['', Validators.required],
       cidade: ['', Validators.required],
       temRepresentante: ['', Validators.required],
-      parentesco: ['', Validators.required],
-      representanteCpf: ['', Validators.required],
-      representanteRg: ['', Validators.required],
-      representanteDataNascimento: ['', Validators.required]
+      representanteNome: [''],
+      representanteEmail: [''],
+      representanteTelefone: [''],
+      parentesco: [''],
+      representanteCpf: [''],
+      representanteRg: [''],
+      representanteDataNascimento: [''],
     });
   }
 
   ngOnInit(): void {
     if (this.data) {
+      const formattedDate = this.datePipe.transform(this.data.nascimento, 'ddMMyyyy');
+      const formattedRepDate = this.datePipe.transform(this.data.representante?.nascimento, 'ddMMyyyy');
+      
       this.form.patchValue({
-        nome: this.data.Nome,
-        email: this.data['E-mail'],
-        telefone: this.data.telefone,
-        cpf: this.data.CPF,
-        rg: this.data.RG,
-        dataNascimento: this.data.nascimento,
+        nome: this.data.contato.nome,
+        email: this.data.contato.email,
+        telefone: this.data.contato.telefone,
+        cpf: this.data.cpf,
+        rg: this.data.rg,
+        dataNascimento: formattedDate,
         cep: this.data.endereco.cep,
         logradouro: this.data.endereco.logradouro,
         complemento: this.data.endereco.complemento,
         bairro: this.data.endereco.bairro,
         cidade: this.data.endereco.cidade,
-        temRepresentante: this.data.representante ? 'sim' : 'nao',
+        temRepresentante: this.temRepresentante(this.data.representante),
+        representanteNome: this.data.representante?.contato.nome,
+        representanteEmail: this.data.representante?.contato.email,
+        representanteTelefone: this.data.representante?.contato.telefone,
         parentesco: this.data.representante?.parentesco,
         representanteCpf: this.data.representante?.cpf,
         representanteRg: this.data.representante?.rg,
-        representanteDataNascimento: this.data.representante?.nascimento
+        representanteDataNascimento: formattedRepDate,
       });
     }
+    console.log('Data:', this.data);
   }
 
   onCloseModal() {
@@ -75,8 +91,12 @@ export class EditUsersModalComponent implements OnInit {
   }
 
   onNextStep() {
-    if (this.currentStep < 4) {
-      this.currentStep++;
+    if (this.form.valid) {
+      if (this.currentStep < 4) {
+        this.currentStep++;
+      }
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
@@ -97,7 +117,12 @@ export class EditUsersModalComponent implements OnInit {
   ];
 
   onSubmit() {
+    this.isLoading = true;
     const dados = this.form.value;
+  
+    // Remover caracteres especiais do CEP
+    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
+  
     const payload = {
       contato: {
         nome: dados.nome,
@@ -108,7 +133,7 @@ export class EditUsersModalComponent implements OnInit {
       rg: dados.rg,
       nascimento: dados.dataNascimento,
       endereco: {
-        cep: dados.cep,
+        cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
         complemento: dados.complemento,
         bairro: dados.bairro,
@@ -126,16 +151,44 @@ export class EditUsersModalComponent implements OnInit {
         nascimento: dados.representanteDataNascimento
       } : null,
     };
+  
     console.log('Payload:', payload);
-    this.clientesService.adicionarUsuario(payload).subscribe(
-      (Response) => {
-        console.log('Usuário adicionado com sucesso!');
-        console.log('Response:', Response);
+    this.clientesService.atualizarUsuario(this.data.id, payload).subscribe(
+      (response) => {
+        this.isLoading = false;
+        console.log('Usuário atualizado com sucesso!');
+        console.log('Response:', response);
         this.onCloseModal();
       },
       (err) => {
-        console.error('Erro ao adicionar usuário:', err);
+        this.isLoading = false;
+        console.error('Erro ao atualizar usuário:', err);
+        const errorMessage = err.error.details ? err.error.details.join(', ') : 'Ocorreu um erro ao atualizar o usuário.';
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao atualizar usuário',
+          text: errorMessage,
+        });
       }
     );
   }
+
+  temRepresentante(representante: any | null | undefined): string {
+    return representante && representante.id ? 'sim' : 'nao';
+  }
+
+  hasMaxLengthAndRequiredError(input: string): boolean {
+    return this.customValidationService.hasMaxLengthAndRequiredError(
+      this.form,
+      input
+    );
+  }
+
+  getMaxLengthAndRequiredErrorMsg(input: string): string {
+    return this.customValidationService.getMaxLengthAndRequiredErrorMsg(
+      this.form,
+      input
+    );
+  }
+
 }

@@ -1,22 +1,36 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
-import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
-import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { InputDefaultComponent } from '../../../../../../../shared/components/inputs/input-default/input-default.component';
+import { SelectInputComponent } from '../../../../../../../shared/components/inputs/select-input/select-input.component';
+import { ButtonComponent } from '../../../../../../../shared/components/button/button.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from './utils/customvalidators'; // Importar o CustomValidationService
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import Swal from 'sweetalert2';
+import { InputMoneyComponent } from "../../../../../../../shared/components/inputs/input-money/input-money.component";
 
 @Component({
   selector: 'app-add-users-modal',
   standalone: true,
-  imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule],
+  imports: [
+    InputDefaultComponent,
+    SelectInputComponent,
+    ButtonComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    InputMoneyComponent
+],
   templateUrl: './add-users-modal.component.html',
-  styleUrls: ['./add-users-modal.component.scss']
+  styleUrls: ['./add-users-modal.component.scss'],
 })
 export class AddUsersModalComponent implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
@@ -30,7 +44,7 @@ export class AddUsersModalComponent implements OnInit {
     private modalService: BsModalService,
     private fb: FormBuilder,
     private clientesService: ClientesService,
-    private customValidationService: CustomValidationService // Injetar o CustomValidationService
+    private customValidationService: CustomValidationService
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -52,97 +66,137 @@ export class AddUsersModalComponent implements OnInit {
       representanteCpf: [''],
       representanteRg: [''],
       representanteDataNascimento: [''],
-      beneficios: ['', Validators.required] // Adicionar campo de benefícios
+      beneficios: ['', Validators.required],
+      preco: ['', Validators.required]
     });
   }
-
   ngOnInit() {
-    this.form.get('temRepresentante')?.valueChanges.subscribe(value => {
-      if (value === 'sim') {
-        this.form.get('representanteNome')?.setValidators(Validators.required);
-        this.form.get('representanteEmail')?.setValidators([Validators.required, Validators.email]);
-        this.form.get('representanteTelefone')?.setValidators(Validators.required);
-        this.form.get('parentesco')?.setValidators(Validators.required);
-        this.form.get('representanteCpf')?.setValidators(Validators.required);
-        this.form.get('representanteRg')?.setValidators(Validators.required);
-        this.form.get('representanteDataNascimento')?.setValidators(Validators.required);
-      } else {
-        this.form.get('representanteNome')?.clearValidators();
-        this.form.get('representanteEmail')?.clearValidators();
-        this.form.get('representanteTelefone')?.clearValidators();
-        this.form.get('parentesco')?.clearValidators();
-        this.form.get('representanteCpf')?.clearValidators();
-        this.form.get('representanteRg')?.clearValidators();
-        this.form.get('representanteDataNascimento')?.clearValidators();
-      }
-      this.form.get('representanteNome')?.updateValueAndValidity();
-      this.form.get('representanteEmail')?.updateValueAndValidity();
-      this.form.get('representanteTelefone')?.updateValueAndValidity();
-      this.form.get('parentesco')?.updateValueAndValidity();
-      this.form.get('representanteCpf')?.updateValueAndValidity();
-      this.form.get('representanteRg')?.updateValueAndValidity();
-      this.form.get('representanteDataNascimento')?.updateValueAndValidity();
-    });
+    let isUpdating = false;
+    let cpfValidado = false;
   
-    this.cpfSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(cpf => {
-        console.log('CPF digitado:', cpf);
-        return this.clientesService.buscarClientesComFiltros({ cpf });
-      })
-    ).subscribe(response => {
-      console.log('Resposta da API:', response);
-      if (response && response.content && response.content.length > 0) {
-        const cliente = response.content[0];
-        this.existingUserId = cliente.id;
-        console.log('Usuário encontrado:', cliente);
+    // Observe changes to the CPF input field
+    this.form
+      .get('cpf')
+      ?.valueChanges.pipe(
+        debounceTime(300),
+        switchMap((cpf) => {
+          // Remove the mask (remove non-numeric characters)
+          const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : ''; // Remove todos os caracteres não numéricos
   
-        // Format the date to DDMMYYYY
-        const datePipe = new DatePipe('en-US');
-        const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
+          // Quando o CPF tem 11 caracteres e não foi validado
+          if (cpfLimpo.length === 11 && !cpfValidado) {
+            console.log('CPF atingiu 11 caracteres, disparando requisição:', cpfLimpo);
   
-        this.form.patchValue({
-          nome: cliente.contato.nome,
-          email: cliente.contato.email,
-          telefone: cliente.contato.telefone,
-          cpf: cliente.cpf,
-          rg: cliente.rg,
-          dataNascimento: formattedDate,
-          cep: cliente.endereco.cep,
-          logradouro: cliente.endereco.logradouro,
-          complemento: cliente.endereco.complemento,
-          bairro: cliente.endereco.bairro,
-          cidade: cliente.endereco.cidade,
-          temRepresentante: this.temRepresentante(cliente.representante),
-          representanteNome: cliente.representante?.contato.nome,
-          representanteEmail: cliente.representante?.contato.email,
-          representanteTelefone: cliente.representante?.contato.telefone,
-          parentesco: cliente.representante?.parentesco,
-          representanteCpf: cliente.representante?.cpf,
-          representanteRg: cliente.representante?.rg,
-          representanteDataNascimento: cliente.representante?.nascimento
-        });
-        console.log('Formulário preenchido:', this.form.value);
+            cpfValidado = true;
   
-        // Mark all fields as touched and update their validity
-        Object.keys(this.form.controls).forEach(field => {
+            // Fazer a requisição para buscar o cliente com o CPF limpo
+            return this.clientesService.buscarClientesComFiltros({ cpf: cpfLimpo });
+          } else if (cpfLimpo.length === 11) {
+            return []; // Já foi validado, retorna um array vazio
+          } else {
+            return []; // CPF com menos de 11 dígitos não dispara a requisição
+          }
+        })
+      )
+      .subscribe((response) => {
+        if (response?.content?.length > 0) {
+          const cliente = response.content[0];
+          this.existingUserId = cliente.id;
+  
+          const datePipe = new DatePipe('en-US');
+          const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
+  
+          isUpdating = true;
+          // Preenche o formulário com os dados do cliente
+          this.form.patchValue({
+            nome: cliente.contato.nome,
+            email: cliente.contato.email,
+            telefone: cliente.contato.telefone,
+            cpf: cliente.cpf,  // Mantém o CPF com a máscara, que é o formato esperado
+            rg: cliente.rg,
+            dataNascimento: formattedDate,
+            cep: cliente.endereco.cep,
+            logradouro: cliente.endereco.logradouro,
+            complemento: cliente.endereco.complemento,
+            bairro: cliente.endereco.bairro,
+            cidade: cliente.endereco.cidade,
+            temRepresentante: this.temRepresentante(cliente.representante),
+            representanteNome: cliente.representante?.contato.nome,
+            representanteEmail: cliente.representante?.contato.email,
+            representanteTelefone: cliente.representante?.contato.telefone,
+            parentesco: cliente.representante?.parentesco,
+            representanteCpf: cliente.representante?.cpf,
+            representanteRg: cliente.representante?.rg,
+            representanteDataNascimento: cliente.representante?.nascimento,
+          });
+  
+          // Desabilita os campos após preencher, exceto os especificados
+          const fieldsToDisable = [
+            'nome',
+            'rg',
+            'dataNascimento',
+            'representanteNome',
+            'representanteEmail',
+            'representanteTelefone',
+            'parentesco',
+            'representanteCpf',
+            'representanteRg',
+            'representanteDataNascimento',
+          ];
+  
+          fieldsToDisable.forEach((key) => {
+            if (this.form.get(key)?.value) {
+              this.form.get(key)?.disable({ emitEvent: false });
+            }
+          });
+  
+          console.log('Formulário preenchido:', this.form.value);
+          isUpdating = false;
+        } else {
+          this.existingUserId = null;
+          console.log('Nenhum usuário encontrado com este CPF.');
+        }
+      });
+  
+    // Observe the CPF field changes to clear the other fields when CPF is deleted
+    this.form.get('cpf')?.valueChanges.subscribe((value) => {
+      if (!value) {
+        const fieldsToClear = [
+          'nome',
+          'rg',
+          'dataNascimento',
+          'cep',
+          'logradouro',
+          'complemento',
+          'bairro',
+          'cidade',
+          'representanteNome',
+          'representanteEmail',
+          'representanteTelefone',
+          'parentesco',
+          'representanteCpf',
+          'representanteRg',
+          'representanteDataNascimento',
+        ];
+  
+        // Limpa os campos e os habilita novamente
+        fieldsToClear.forEach((field) => {
           const control = this.form.get(field);
-          control?.markAsTouched({ onlySelf: true });
-          control?.updateValueAndValidity({ onlySelf: true });
+          if (control) {
+            control.reset();
+            control.enable({ emitEvent: false });
+          }
         });
-      } else {
+  
         this.existingUserId = null;
-        console.log('Nenhum usuário encontrado com este CPF.');
+        cpfValidado = false;
+        console.log('Campos limpos, CPF apagado.');
       }
     });
   
-    this.form.get('cpf')?.valueChanges.subscribe(value => {
-      if (value.length === 11) {
-        this.cpfSubject.next(value);
-      }
-    });
+    this.form.get('cpf')?.updateValueAndValidity();
   }
+  
 
   onCloseModal() {
     this.modalService.hide();
@@ -151,21 +205,35 @@ export class AddUsersModalComponent implements OnInit {
 
   onNextStep() {
     const stepControls = this.getStepControls(this.currentStep);
-    if (stepControls.every(control => this.form.get(control)?.valid)) {
-      if (this.currentStep === 3 && this.form.get('temRepresentante')?.value === 'nao') {
-        this.currentStep = 5; // Pular diretamente para "Benefícios"
+
+    const invalidControls = stepControls.filter((control) => {
+      const formControl = this.form.get(control);
+      return formControl && formControl.enabled && formControl.invalid;
+    });
+
+    if (invalidControls.length === 0) {
+      if (
+        this.currentStep === 3 &&
+        this.form.get('temRepresentante')?.value === 'nao'
+      ) {
+        this.currentStep = 5;
       } else {
         this.currentStep++;
       }
     } else {
-      stepControls.forEach(control => this.form.get(control)?.markAsTouched());
+      invalidControls.forEach((control) =>
+        this.form.get(control)?.markAsTouched()
+      );
     }
   }
 
   onPreviousStep() {
     if (this.currentStep > 1) {
-      if (this.currentStep === 5 && this.form.get('temRepresentante')?.value === 'nao') {
-        this.currentStep = 3; // Voltar diretamente para "Endereço"
+      if (
+        this.currentStep === 5 &&
+        this.form.get('temRepresentante')?.value === 'nao'
+      ) {
+        this.currentStep = 3;
       } else {
         this.currentStep--;
       }
@@ -192,95 +260,133 @@ export class AddUsersModalComponent implements OnInit {
     { value: '25', label: 'Auxílio Reclusão' },
     { value: '31', label: 'Auxílio por Incapacidade Temporária' },
     { value: '36', label: 'Auxílio Acidente' },
-    { value: '80', label: 'Salário Maternidade' }
+    { value: '80', label: 'Salário Maternidade' },
   ];
+
+ 
+
+
 
   onSubmit() {
     this.isLoading = true;
-
-    const dados = this.form.value;
+  
+    const dados = this.form.getRawValue();
+  
+    // Remover caracteres especiais dos campos
+    const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
+    const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
+    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
+    const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
+    const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
+    const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
+    const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
+    const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
+    const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
+  
     const payload = {
       contato: {
         nome: dados.nome,
         email: dados.email,
-        telefone: dados.telefone
+        telefone: telefoneSemCaracteresEspeciais,
       },
-      cpf: dados.cpf,
-      rg: dados.rg,
-      nascimento: dados.dataNascimento,
+      cpf: cpfSemCaracteresEspeciais,
+      rg: rgSemCaracteresEspeciais,
+      nascimento: dataNascimentoSemCaracteresEspeciais,
       endereco: {
-        cep: dados.cep,
+        cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
         complemento: dados.complemento,
         bairro: dados.bairro,
-        cidade: dados.cidade
+        cidade: dados.cidade,
       },
       representante: dados.temRepresentante === 'sim' ? {
         contato: {
           nome: dados.representanteNome,
           email: dados.representanteEmail,
-          telefone: dados.representanteTelefone
+          telefone: representanteTelefoneSemCaracteresEspeciais,
         },
         parentesco: dados.parentesco,
-        cpf: dados.representanteCpf,
-        rg: dados.representanteRg,
-        nascimento: dados.representanteDataNascimento
+        cpf: representanteCpfSemCaracteresEspeciais,
+        rg: representanteRgSemCaracteresEspeciais,
+        nascimento: dataNascimentoSemCaracteresEspeciais2,
       } : null,
-      beneficios: dados.beneficios
+      beneficios: dados.beneficios,
+      valor: dados.preco
     };
+  
     console.log('Payload:', payload);
-
+  
+    const beneficioPayload = {
+      beneficio: dados.beneficios,
+      valor: dados.preco,
+      cliente: {
+        id: this.existingUserId
+      }
+    };
+  
     if (this.existingUserId) {
       // Update existing user
-      this.clientesService.atualizarUsuario(this.existingUserId, payload).subscribe(
-        (response) => {
+      this.clientesService.atualizarUsuario(this.existingUserId, payload).pipe(
+        switchMap(() => this.clientesService.associarBeneficio(beneficioPayload))
+      ).subscribe(
+        (beneficioResponse) => {
           this.onCloseModal();
           this.isLoading = false;
-          console.log('Usuário atualizado com sucesso!');
+          console.log('Usuário atualizado e benefício associado com sucesso!');
+          console.log('Benefício Response:', beneficioResponse);
         },
         (err) => {
           this.isLoading = false;
-          console.error('Erro ao atualizar usuário:', err);
+          console.error('Erro ao atualizar usuário ou associar benefício:', err);
+          const errorMessage = err.error.detail || 'Ocorreu um erro ao atualizar usuário ou associar benefício.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: errorMessage,
+          });
         }
       );
     } else {
       // Add new user
-      this.clientesService.adicionarUsuario(payload).subscribe(
-        (response) => {
-          const clienteId = response.id;
-          const beneficioPayload = {
-            beneficio: dados.beneficios,
-            cliente: {
-              id: clienteId
-            }
-          };
-          this.clientesService.associarBeneficio(beneficioPayload).subscribe(
-            (beneficioResponse) => {
-              this.onCloseModal();
-              this.isLoading = false;
-              console.log('Benefício associado com sucesso!');
-              console.log('Benefício Response:', beneficioResponse);
-            },
-            (err) => {
-              this.isLoading = false;
-              console.error('Erro ao associar benefício:', err);
-            }
-          );
+      this.clientesService.adicionarUsuario(payload).pipe(
+        switchMap((response) => {
+          beneficioPayload.cliente.id = response.id;
+          return this.clientesService.associarBeneficio(beneficioPayload);
+        })
+      ).subscribe(
+        (beneficioResponse) => {
+          this.onCloseModal();
+          this.isLoading = false;
+          console.log('Usuário adicionado e benefício associado com sucesso!');
+          console.log('Benefício Response:', beneficioResponse);
         },
         (err) => {
           this.isLoading = false;
-          console.error('Erro ao adicionar usuário:', err);
+          console.error('Erro ao adicionar usuário ou associar benefício:', err);
+          const errorMessage = err.error.detail || 'Ocorreu um erro ao adicionar usuário ou associar benefício.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: errorMessage,
+          });
         }
       );
     }
   }
 
+
   hasMaxLengthAndRequiredError(input: string): boolean {
-    return this.customValidationService.hasMaxLengthAndRequiredError(this.form, input);
+    return this.customValidationService.hasMaxLengthAndRequiredError(
+      this.form,
+      input
+    );
   }
 
   getMaxLengthAndRequiredErrorMsg(input: string): string {
-    return this.customValidationService.getMaxLengthAndRequiredErrorMsg(this.form, input);
+    return this.customValidationService.getMaxLengthAndRequiredErrorMsg(
+      this.form,
+      input
+    );
   }
 
   private getStepControls(step: number): string[] {
@@ -290,9 +396,24 @@ export class AddUsersModalComponent implements OnInit {
       case 2:
         return ['nome', 'email', 'telefone'];
       case 3:
-        return ['cep', 'logradouro', 'complemento', 'bairro', 'cidade', 'temRepresentante'];
+        return [
+          'cep',
+          'logradouro',
+          'complemento',
+          'bairro',
+          'cidade',
+          'temRepresentante',
+        ];
       case 4:
-        return ['representanteNome', 'representanteEmail', 'representanteTelefone', 'parentesco', 'representanteCpf', 'representanteRg', 'representanteDataNascimento'];
+        return [
+          'representanteNome',
+          'representanteEmail',
+          'representanteTelefone',
+          'parentesco',
+          'representanteCpf',
+          'representanteRg',
+          'representanteDataNascimento',
+        ];
       case 5:
         return ['beneficios'];
       default:

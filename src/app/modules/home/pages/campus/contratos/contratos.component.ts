@@ -89,7 +89,8 @@ export class ContratosComponent implements OnInit {
   }
 
   clearFilter() {
-    console.log("limpando filtro");
+    this.filterForm.reset()
+    this.submitFilter()
   }
 
   onEdit(item: any) {

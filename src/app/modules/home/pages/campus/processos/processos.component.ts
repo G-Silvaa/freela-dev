@@ -1,47 +1,132 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
 import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { adicionarPessoasData, pessoasData, primeiroFiltro, ProcessosData, segundoFiltro, terceiroFiltro } from '../clientes/data/data';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProcessosService } from './services/processos.service';  // Importe o serviço correto
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '@shared/components/modal/modal.component';
-import { AddUsersModalComponent } from "../clientes/components/add-users-modal/add-users-modal.component";
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
 
-
-
 @Component({
-  selector: 'app-cursos',
+  selector: 'app-processos',
   standalone: true,
-  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddUsersModalComponent, TableComponent, AddprocessosModalComponent],
+  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent, FormsModule],
   templateUrl: './processos.component.html',
-  styleUrl: './processos.component.scss'
+  styleUrls: ['./processos.component.scss']
 })
-export class ProcessosComponent {
+export class ProcessosComponent implements OnInit {
   cadatrarUsuario = true;
-  pessoasData = ProcessosData;
-  adicionarPessoasData = adicionarPessoasData;
-  primeiroFiltro = primeiroFiltro;
-  segundoFiltro = segundoFiltro;
-  terceiroFiltro = terceiroFiltro;
+  pessoasData: any[] = [];  
   isLoading = false;
   bsModalRef?: BsModalRef;
+  selectedProcessoId?: number;
 
-  @ViewChild('editTemplate') editTemplate!: TemplateRef<any>; 
+  @ViewChild('editTemplate') editTemplate!: TemplateRef<any>;
 
-  constructor(private modalService: BsModalService) {}
+  constructor(
+    private processosService: ProcessosService,  
+    private modalService: BsModalService
+  ) {}
 
-  onEdit(item: any) {
-    const initialState = {
-      title: 'Editar um Processo',
-      formTemplate: this.editTemplate, 
-      
-    };
-    this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
-    this.bsModalRef.content.closeBtnName = 'Close';
+  ngOnInit() {
+    this.loadProcessos();  
+    this.aplicarFiltros();
   }
 
+  loadProcessos() {
+    this.isLoading = true;  
+
+    this.processosService.carregarTodosProcessos(); 
+    this.processosService.processos$.subscribe((processos) => {
+     console.log('teste', processos)
+      this.pessoasData = processos.map((cliente: any) => ({
+        id: cliente.id, // Adicione o ID do cliente aqui
+        Nome: cliente.contrato.cliente.contato.nome,
+        CPF: cliente.contrato.cliente.cpf,
+        'Cessação': cliente.cessacao,
+        Status: cliente.status,
+        'Perícia médica': cliente.enderecoPericiaMedica,
+        'Avaliação social': cliente.enderecoAvaliacaoSocial,
+        'Entrada do protocolo': cliente.entradaDoProtocolo,
+      }))
+      this.isLoading = false;  
+    }, (error) => {
+      console.error('Erro ao carregar processos:', error);
+      this.isLoading = false;
+    });
+  }
+
+  filtros = {
+    Nome: '', 
+    CPF: '',
+    Status: '',
+  };
+
+  limparFiltros() {
+    this.filtros = {
+      Status:'',
+      Nome: '',
+      CPF: ''
+    };
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    this.isLoading = true;
+    const filtrosComLabel = {
+      ...this.filtros,
+      Status: this.filtros.Status // Use diretamente o valor do status
+    };
+    this.processosService.buscarProcessosComFiltros(filtrosComLabel).subscribe(
+      (response) => {
+        if (Array.isArray(response.content)) {
+          this.pessoasData = response.content.map((cliente: any) => ({
+            id: cliente.id, // Adicione o ID do cliente aqui
+            Nome: cliente.contrato.cliente.contato.nome,
+            CPF: cliente.contrato.cliente.cpf,
+            'Cessação': cliente.cessacao,
+            Status: cliente.status,
+            'Perícia médica': cliente.enderecoPericiaMedica,
+            'Avaliação social': cliente.enderecoAvaliacaoSocial,
+            'Entrada do protocolo': cliente.entradaDoProtocolo,
+          }));
+        } else {
+          console.error('A resposta da API não é um array:', response);
+        }
+        console.log("Dados filtrados:", this.pessoasData);
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Erro ao aplicar filtros:', error);
+        this.isLoading = false;
+      }
+    );
+  }
+
+  onEdit(item: any) {
+    // Verifique a estrutura do objeto item para garantir que a propriedade id está presente
+    const processoId = item.id || item.nome?.id;
+  
+    if (!processoId) {
+      console.error('ID do processo não encontrado:', item);
+      return;
+    }
+  
+    const initialState = {
+      title: 'Editar um Processo',
+      formTemplate: this.editTemplate,
+      processoId: processoId // Envia o processoId para o modal
+    };
+  
+    this.bsModalRef = this.modalService.show(AddprocessosModalComponent, {
+      initialState, // Passa o estado inicial ao modal
+    });
+    this.bsModalRef.content.closeBtnName = 'Close';
+  
+    console.log('Edit item:', processoId);
+  }
+  
   onDelete(item: any) {
     console.log('Delete item:', item);
   }
