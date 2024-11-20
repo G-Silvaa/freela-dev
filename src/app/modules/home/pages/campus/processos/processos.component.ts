@@ -41,14 +41,14 @@ export class ProcessosComponent implements OnInit {
     this.processosService.processos$.subscribe((processos) => {
      console.log('teste', processos)
       this.pessoasData = processos.map((cliente: any) => ({
-        nome: cliente,
-       'Cessação': cliente.cessacao,
-       Status: cliente.status,
-       Nome: cliente.contrato.cliente.contato.nome,
-       CPF: cliente.contrato.cliente.cpf,
-       'Perícia médica': cliente.enderecoPericiaMedica,
-       'Avaliação social': cliente.enderecoAvaliacaoSocial,
-       'Entrada do protocolo': cliente.entradaDoProtocolo,
+        id: cliente.id, // Adicione o ID do cliente aqui
+        Nome: cliente.contrato.cliente.contato.nome,
+        CPF: cliente.contrato.cliente.cpf,
+        'Cessação': cliente.cessacao,
+        Status: cliente.status,
+        'Perícia médica': cliente.enderecoPericiaMedica,
+        'Avaliação social': cliente.enderecoAvaliacaoSocial,
+        'Entrada do protocolo': cliente.entradaDoProtocolo,
       }))
       this.isLoading = false;  
     }, (error) => {

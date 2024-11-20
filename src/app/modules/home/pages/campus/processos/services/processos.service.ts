@@ -50,10 +50,14 @@ export class ProcessosService {
     ).subscribe(processos => this.processosSubject.next(processos));
   }
 
+  atualizarProcessos(): void {
+    this.carregarTodosProcessos();
+  }
+
   adicionarProcesso(payload: any): Observable<any> {
     return this.http.post(`${this.API_URL}domain/processo/add`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosProcessos(); 
+        this.atualizarProcessos(); 
         return response;
       })
     );
@@ -62,7 +66,7 @@ export class ProcessosService {
   atualizarProcesso(id: number, payload: any): Observable<any> {
     return this.http.patch(`${this.API_URL}domain/processo/${id}`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosProcessos(); 
+        this.atualizarProcessos(); 
         return response;
       })
     );
@@ -71,7 +75,7 @@ export class ProcessosService {
   deletarProcesso(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}domain/processo/${id}`).pipe(
       map(() => {
-        this.carregarTodosProcessos(); 
+        this.atualizarProcessos(); 
       })
     );
   }
@@ -100,12 +104,6 @@ export class ProcessosService {
   
     return this.http.get(`${this.API_URL}domain/processo`, { params, ...this.createOptions() });
   }
-  
-  
-
-  // associarBeneficio(payload: any): Observable<any> {
-  //   return this.http.post(`${this.API_URL}/liv-api/domain/contrato/add`, payload, this.createOptions());
-  // }
 
   buscarProcessoPorId(id: number): Observable<any> {
     return this.http.get(`${this.API_URL}/liv-api/domain/processo`, {
@@ -117,9 +115,11 @@ export class ProcessosService {
   }
 
   associarProcesso(userId: number, payload: any): Observable<any> {
-    return this.http.patch(`${this.API_URL}domain/processo/${userId}`, payload, this.createOptions());
+    return this.http.patch(`${this.API_URL}domain/processo/${userId}`, payload, this.createOptions()).pipe(
+      map((response: any) => {
+        this.atualizarProcessos(); 
+        return response;
+      })
+    );
   }
-  
 }
-
-
