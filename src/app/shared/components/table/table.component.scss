@@ -19,7 +19,6 @@
       margin: 0rem;
       display: flex;
       gap: 0.4375rem;
-   
 
       @media (max-width: 62rem) {
         width: 100%;
@@ -51,7 +50,7 @@
         font-weight: 500;
 
         &.active {
-          background-color: #08024C;
+          background-color:#08024C;
           color: var(--white);
         }
 
@@ -95,6 +94,10 @@
       color: var(--primary-text);
     }
 
+    th.actions-header {
+      width: 100px; /* Ajuste conforme necessário */
+    }
+
     tr {
       height: 3.125rem;
 
@@ -102,6 +105,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        max-height: 2rem;
+        overflow: hidden;
+        margin: 10px;
 
         button {
           width: 2rem;
@@ -121,11 +127,11 @@
           }
         }
 
-        button:first-child {
+        .btn-warning {
           background-color: var(--warning);
         }
 
-        button:last-child {
+        .btn-danger {
           background-color: var(--danger);
           margin-left: 8px;
         }
