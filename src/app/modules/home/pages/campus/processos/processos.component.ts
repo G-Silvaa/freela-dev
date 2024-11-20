@@ -8,6 +8,7 @@ import { ModalComponent } from '@shared/components/modal/modal.component';
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
 import { environment } from 'src/environments/environment.development';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-processos',
@@ -143,11 +144,29 @@ export class ProcessosComponent implements OnInit {
         console.log('Carta gerada com sucesso:', response);
       },
       (error) => {
-        console.error('Erro ao gerar carta:', error);
+        if (error.error instanceof Blob && error.error.type === 'application/problem+json') {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const errorResponse = JSON.parse(reader.result as string);
+            console.error('Erro ao gerar carta:', errorResponse);
+            Swal.fire({
+              icon: 'error',
+              title: errorResponse.title || 'error',
+              text: errorResponse.detail || 'Ocorreu um erro ao gerar a carta.',
+            });
+          };
+          reader.readAsText(error.error);
+        } else {
+          console.error('Erro ao gerar carta:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro ao gerar carta',
+            text: 'Ocorreu um erro ao gerar a carta.',
+          });
+        }
       }
     );
   }
-
 
 
   back() {
