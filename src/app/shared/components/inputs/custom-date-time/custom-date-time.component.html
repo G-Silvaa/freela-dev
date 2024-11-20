@@ -1,0 +1,17 @@
+<div class="box-input col-md-6"> <!-- Ajuste a largura usando classes do Bootstrap -->
+    <label for="" class="form-label">{{ label }}</label>
+    <div class="input-wrapper" [ngClass]="{ 'is-invalid': hasError }">
+      <input
+        type="datetime-local"
+        placeholder="{{ placeholder }}"
+        class="form-control"
+        [disabled]="isDisable"
+        (input)="onInputChange($event)"
+        [value]="value"
+        
+      />
+    </div>
+    <div *ngIf="hasError" class="invalid-feedback">
+      {{ errorMsg }}
+    </div>
+  </div>
