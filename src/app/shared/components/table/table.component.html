@@ -9,21 +9,41 @@
       <td *ngFor="let column of columns">
         {{ truncateText(column, item) }}
       </td>
-      <td *ngIf="showActions" class="actions-container">
+      <td
+        *ngIf="showActions"
+        class="actions-container"
+        [class.actions-container-relatorios]="showOpcoes"
+      >
         <button class="btn btn-warning" (click)="onEdit(item)">
           <i class="bi bi-pencil-fill"></i>
         </button>
-        <button *ngIf="showDelete" class="btn btn-danger" (click)="onDelete(item)">
+        <button
+          *ngIf="showDelete"
+          class="btn btn-danger"
+          (click)="onDelete(item)"
+        >
           <i class="bi bi-trash-fill"></i>
         </button>
         <div *ngIf="showOpcoes" class="dropdown">
-          <button class="btn btn-secondary dropdown-button" (click)="toggleDropdown(item['id'])">
+          <button
+            class="btn btn-secondary dropdown-button"
+            (click)="toggleDropdown(item['id'])"
+          >
             Relatorios
           </button>
-          <div class="dropdown-content" [ngClass]="{ 'show': dropdownOpen === item['id'] }">
-            <a class="it"  (click)="gerarCartas2(item['id'], 'pericia-medica')">Carta de Perícia Médica</a>
-            <a class="it"   (click)="gerarCartas2(item['id'], 'avaliacao-social')">Carta de Avaliação Social</a>
-            <a class="it" (click)="gerarCartas2(item['id'], 'concessao')">Carta de Concessão</a>
+          <div
+            class="dropdown-content"
+            [ngClass]="{ show: dropdownOpen === item['id'] }"
+          >
+            <a class="it" (click)="gerarCartas2(item['id'], 'pericia-medica')"
+              >Carta de Perícia Médica</a
+            >
+            <a class="it" (click)="gerarCartas2(item['id'], 'avaliacao-social')"
+              >Carta de Avaliação Social</a
+            >
+            <a class="it" (click)="gerarCartas2(item['id'], 'concessao')"
+              >Carta de Concessão</a
+            >
           </div>
         </div>
       </td>
