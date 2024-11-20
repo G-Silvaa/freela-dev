@@ -59,28 +59,28 @@ export class ContratosComponent implements OnInit {
   protected filterForm = this.formBuilder.group({
     nome: [""],
     cpf: [""],
-    status: [""],
+    beneficio: [""],
   });
 
   constructor(private modalService: BsModalService) {}
 
   ngOnInit(): void {
-    this.contratosService.getContratos$().subscribe({
-      next: (reponse) => {
-        const { content } = reponse;
-        this.pessoasContrato = this.dataTransform(content);
-      },
-      error: (error) => {
-        console.error("Error:", error);
-      },
+    this.contratosService.contratos$().subscribe((res) => {
+      this.pessoasContrato = this.dataTransform(res);
     });
+
+    this.contratosService.getContratos();
   }
 
   submitFilter() {
     this.contratosService.filterContratos(this.filterForm.value).subscribe({
       next: (res) => {
         const { content } = res;
-        this.pessoasContrato = this.dataTransform(content);
+        if (content.length) {
+          this.pessoasContrato = this.dataTransform(content);
+        } else {
+          this.pessoasContrato = [];
+        }
       },
       error: (err) => {
         console.log("erro", err);
@@ -89,8 +89,8 @@ export class ContratosComponent implements OnInit {
   }
 
   clearFilter() {
-    this.filterForm.reset()
-    this.submitFilter()
+    this.filterForm.reset();
+    this.submitFilter();
   }
 
   onEdit(item: any) {
@@ -115,8 +115,6 @@ export class ContratosComponent implements OnInit {
   }
 
   dataTransform(data: any[]) {
-    const teste = this.datePipe.transform(data[0].inicio, "dd/MM/yyyy");
-
     return data.map((item: any) => {
       const beginningDateTransformed = this.datePipe.transform(
         item.inicio,

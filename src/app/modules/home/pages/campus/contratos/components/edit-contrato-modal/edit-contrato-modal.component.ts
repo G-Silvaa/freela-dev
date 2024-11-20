@@ -17,6 +17,7 @@ import { CommonModule } from "@angular/common";
 import { InputDefaultComponent } from "@shared/components/inputs/input-default/input-default.component";
 import { ButtonComponent } from "@shared/components/button/button.component";
 import { ContratosService } from "../../services/contratos.service";
+import Swal from "sweetalert2";
 
 interface IContratoData {
   nome: string;
@@ -52,10 +53,6 @@ export class EditContratoModalComponent implements OnInit {
 
   form: FormGroup = this.formBuilder.group({
     Id: [""],
-    Nome: [""],
-    Cpf: [""],
-    Numero: [0],
-    Beneficio: [""],
     Inicio: [""],
     Conclusao: [""],
     Indicacao: [""],
@@ -75,17 +72,34 @@ export class EditContratoModalComponent implements OnInit {
 
   onSave() {
     const formValue = this.form.value;
+    console.log("entrou assim", formValue);
 
     const result = {
-      id: formValue.Id,
-      inicio: this.transformToISODate(formValue.Inicio),
-      conclusao: this.transformToISODate(formValue.Conclusao),
-      indicacao: formValue.Indicacao,
-      valor: formValue.Valor,
+      id: formValue.Id ? formValue.Id : null,
+      inicio: this.transformToISODate(formValue.Inicio)
+        ? this.transformToISODate(formValue.Inicio)
+        : "",
+      conclusao: this.transformToISODate(formValue.Conclusao)
+        ? this.transformToISODate(formValue.Conclusao)
+        : "",
+      indicacao: formValue.Indicacao ? formValue.Indicacao : "",
+      valor: formValue.Valor ? formValue.Valor : "",
     };
+    console.log(result, "resultado");
     this.contratoService.editContrato(result).subscribe({
       next: (res) => {
         console.log("deu certo", res);
+        this.contratoService.getContratos();
+        this.onCloseModal();
+      },
+      error: (err) => {
+        console.log(err);
+        const { error } = err;
+        Swal.fire({
+          icon: "error",
+          title: error.title || "error",
+          text: error.detail || "Ocorreu um erro ao editar contrato.",
+        });
       },
     });
   }

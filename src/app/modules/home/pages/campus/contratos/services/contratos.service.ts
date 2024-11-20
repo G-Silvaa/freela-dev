@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { environment } from "src/environments/environment.development";
 
 @Injectable({
@@ -11,16 +11,29 @@ export class ContratosService {
 
   constructor(private http: HttpClient) {}
 
-  getContratos$(): Observable<any> {
+  private contratosSubject = new BehaviorSubject<any[]>([]);
+
+  contratos$(): Observable<any[]> {
+    return this.contratosSubject.asObservable();
+  }
+
+  getContratos(): void {
     const params = new HttpParams().set(
       "fields",
       "*,cliente,beneficio,processos",
     );
 
-    return this.http.get(`${this.API_URL}domain/contrato`, {
-      params,
-      ...this.createOptions(),
-    });
+    this.http
+      .get(`${this.API_URL}domain/contrato`, {
+        params,
+        ...this.createOptions(),
+      })
+      .subscribe({
+        next: (data: any) => {
+          const { content } = data;
+          this.contratosSubject.next(content);
+        },
+      });
   }
 
   editContrato(data: any) {
@@ -42,9 +55,6 @@ export class ContratosService {
     if (filtros.beneficio)
       filterString +=
         (filterString ? " and " : "") + `beneficio eq '${filtros.beneficio}'`;
-    if (filtros.status)
-      filterString +=
-        (filterString ? " and " : "") + `status ilike '${filtros.status}'`;
 
     const params = new HttpParams()
       .set("fields", "*,cliente,processos")

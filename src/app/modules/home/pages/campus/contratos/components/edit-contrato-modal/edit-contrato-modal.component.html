@@ -14,39 +14,6 @@
 <form [formGroup]="form" action="javascript:void(0)">
   <div class="container-inputs">
     <app-input
-      label="Nome:"
-      placeholder="Digite o nome:"
-      formControlName="Nome"
-      [isReadonly]="true"
-    >
-    </app-input>
-
-    <app-input
-      label="Cpf:"
-      mask="000.000.000-00"
-      placeholder="Digite o cpf:"
-      formControlName="Cpf"
-      [isReadonly]="true"
-    >
-    </app-input>
-
-    <app-input
-      label="N° Contrato"
-      placeholder="Digite o Numero do contrato:"
-      formControlName="Numero"
-      [isReadonly]="true"
-    >
-    </app-input>
-
-    <app-input
-      label="Beneficio"
-      placeholder="Digite o benefício:"
-      formControlName="Beneficio"
-      [isReadonly]="true"
-    >
-    </app-input>
-
-    <app-input
       label="Inicio"
       [maxlength]="10"
       mask="00/00/0000"
@@ -77,8 +44,6 @@
       label="Valor"
       placeholder="Digite o valor:"
       formControlName="Valor"
-      mask="000.000.000,00"
-      [clearIfNotMatch]="true"
     >
     </app-input>
   </div>
