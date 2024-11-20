@@ -171,9 +171,10 @@ export class ProcessosService {
     return statusMap[status] || status;
   }
 
-  gerarCarta(url: string): Observable<Blob> {
+  gerarCarta(url: string): Observable<any> {
     return this.http.patch(url, {}, {
-      responseType: 'blob',
+      responseType: 'blob' as 'json',
+      observe: 'response',
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': '1',

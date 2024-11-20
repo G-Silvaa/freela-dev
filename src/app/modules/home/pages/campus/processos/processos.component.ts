@@ -138,9 +138,16 @@ export class ProcessosComponent implements OnInit {
     }
     this.processosService.gerarCarta(url).subscribe(
       (response) => {
-        const blob = new Blob([response], { type: 'application/pdf' });
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition ? contentDisposition.split('filename=')[1] : 'download.pdf';
+        const blob = new Blob([response.body], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
-        window.open(url);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         console.log('Carta gerada com sucesso:', response);
       },
       (error) => {
