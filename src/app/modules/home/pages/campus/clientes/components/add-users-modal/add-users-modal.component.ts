@@ -271,12 +271,18 @@ export class AddUsersModalComponent implements OnInit {
 
   onSubmit() {
     this.isLoading = true;
-  
+
     const dados = this.form.getRawValue();
   
-    // Remover caracteres especiais dos campos
-    const dataNascimentoSemCaracteresEspeciais = dados.dataNascimento.replace(/\D/g, '');
-    const dataNascimentoSemCaracteresEspeciais2 = dados.representanteDataNascimento ? dados.representanteDataNascimento.replace(/\D/g, '') : null;
+    // Função para converter data do formato brasileiro para o formato americano
+    const converterDataParaAmericano = (data: string) => {
+      const [dia, mes, ano] = data.split('/');
+      return `${ano}-${mes}-${dia}`;
+    };
+  
+    // Remover caracteres especiais dos campos e converter datas
+    const dataNascimentoAmericano = converterDataParaAmericano(dados.dataNascimento);
+    const representanteDataNascimentoAmericano = dados.representanteDataNascimento ? converterDataParaAmericano(dados.representanteDataNascimento) : null;
     const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
     const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
     const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
@@ -293,7 +299,7 @@ export class AddUsersModalComponent implements OnInit {
       },
       cpf: cpfSemCaracteresEspeciais,
       rg: rgSemCaracteresEspeciais,
-      nascimento: dataNascimentoSemCaracteresEspeciais,
+      nascimento: dataNascimentoAmericano,
       endereco: {
         cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
@@ -310,14 +316,14 @@ export class AddUsersModalComponent implements OnInit {
         parentesco: dados.parentesco,
         cpf: representanteCpfSemCaracteresEspeciais,
         rg: representanteRgSemCaracteresEspeciais,
-        nascimento: dataNascimentoSemCaracteresEspeciais2,
+        nascimento: representanteDataNascimentoAmericano,
       } : null,
       beneficios: dados.beneficios,
       valor: dados.preco
     };
   
     console.log('Payload:', payload);
-  
+    
     const beneficioPayload = {
       beneficio: dados.beneficios,
       valor: dados.preco,
