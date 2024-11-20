@@ -7,6 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '@shared/components/modal/modal.component';
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-processos',
@@ -21,6 +22,7 @@ export class ProcessosComponent implements OnInit {
   isLoading = false;
   bsModalRef?: BsModalRef;
   selectedProcessoId?: number;
+  private API_URL = environment.apiUrl;
 
   @ViewChild('editTemplate') editTemplate!: TemplateRef<any>;
 
@@ -117,6 +119,36 @@ export class ProcessosComponent implements OnInit {
   onDelete(item: any) {
     console.log('Delete item:', item);
   }
+
+  gerarCarta(event: { id: any, tipo: any }) {
+    const { id, tipo } = event;
+    let url = '';
+
+    switch (tipo) {
+      case 'pericia-medica':
+        url = `${this.API_URL}domain/processo/${id}/carta-de-pericia-medica`;
+        break;
+      case 'avaliacao-social':
+        url = `${this.API_URL}domain/processo/${id}/carta-de-avaliacao-social`;
+        break;
+      case 'concessao':
+        url = `${this.API_URL}domain/processo/${id}/carta-de-concessao`;
+        break;
+    }
+    this.processosService.gerarCarta(url).subscribe(
+      (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        console.log('Carta gerada com sucesso:', response);
+      },
+      (error) => {
+        console.error('Erro ao gerar carta:', error);
+      }
+    );
+  }
+
+
 
   back() {
     this.cadatrarUsuario = true;

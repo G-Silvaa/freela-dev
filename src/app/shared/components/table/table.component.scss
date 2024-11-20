@@ -104,7 +104,7 @@
       .actions-container {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: end;
         max-height: 2rem;
         overflow: hidden;
         margin: 10px;
@@ -134,6 +134,45 @@
         .btn-danger {
           background-color: var(--danger);
           margin-left: 8px;
+        }
+
+        .dropdown {
+          position: absolute;
+          display: inline-block;
+          right: 246px;
+          background: transparent;
+
+          .dropdown-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+          }
+
+          .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+
+            a {
+              color: black;
+              padding: 12px 16px;
+              text-decoration: none;
+              display: block;
+
+              &:hover {
+                background-color: #f1f1f1;
+              }
+            }
+
+            &.show {
+              display: block;
+            }
+          }
         }
       }
     }

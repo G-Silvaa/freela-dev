@@ -51,10 +51,14 @@
     [itemsPerPage]="10"
     (edit)="onEdit($event)"
     (delete)="onDelete($event)"
+    (gerarCartas)="gerarCarta($event)"
     [showDelete]="false"
+    [showOpcoes]="true"
   ></app-table>
 </div>
 
 <ng-template #editTemplate>
   <app-add-process-modal [processoId]="selectedProcessoId!"></app-add-process-modal>
 </ng-template>
+
+

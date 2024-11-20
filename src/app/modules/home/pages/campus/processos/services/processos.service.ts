@@ -170,4 +170,14 @@ export class ProcessosService {
     };
     return statusMap[status] || status;
   }
+
+  gerarCarta(url: string): Observable<Blob> {
+    return this.http.patch(url, {}, {
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1',
+      })
+    });
+  }
 }

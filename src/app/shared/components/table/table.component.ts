@@ -17,13 +17,16 @@ export class TableComponent<T> {
   @Input() data!: DataItem<T>[];
   @Input() showActions: boolean = true;
   @Input() showDelete: boolean = true;
+  @Input() showOpcoes: boolean = false;
   @Input() itemsPerPage: number = 10;
 
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
   @Output() pageChange = new EventEmitter<number>();
+  @Output() gerarCartas = new EventEmitter<{ id: any, tipo: any }>();
 
   currentPage: number = 1;
+  dropdownOpen: any = null;
 
   get paginatedData(): DataItem<T>[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -34,7 +37,6 @@ export class TableComponent<T> {
   get totalPages(): number {
     return Math.ceil(this.data.length / this.itemsPerPage);
   }
-
 
   truncateText(column: string, item: any): string {
     const value = item[column];
@@ -50,6 +52,14 @@ export class TableComponent<T> {
 
   onDelete(item: any) {
     this.delete.emit(item);
+  }
+
+  gerarCartas2(id: any, tipo: any) {
+    this.gerarCartas.emit({ id, tipo });
+  }
+
+  toggleDropdown(id: any) {
+    this.dropdownOpen = this.dropdownOpen === id ? null : id;
   }
 
   get visiblePages(): number[] {
