@@ -39,17 +39,8 @@ export class ProcessosComponent implements OnInit {
 
     this.processosService.carregarTodosProcessos(); 
     this.processosService.processos$.subscribe((processos) => {
-     console.log('teste', processos)
-      this.pessoasData = processos.map((cliente: any) => ({
-        id: cliente.id, // Adicione o ID do cliente aqui
-        Nome: cliente.contrato.cliente.contato.nome,
-        CPF: cliente.contrato.cliente.cpf,
-        'Cessação': cliente.cessacao,
-        Status: cliente.status,
-        'Perícia médica': cliente.enderecoPericiaMedica,
-        'Avaliação social': cliente.enderecoAvaliacaoSocial,
-        'Entrada do protocolo': cliente.entradaDoProtocolo,
-      }))
+      console.log('teste', processos);
+      this.pessoasData = processos;
       this.isLoading = false;  
     }, (error) => {
       console.error('Erro ao carregar processos:', error);
@@ -81,16 +72,7 @@ export class ProcessosComponent implements OnInit {
     this.processosService.buscarProcessosComFiltros(filtrosComLabel).subscribe(
       (response) => {
         if (Array.isArray(response.content)) {
-          this.pessoasData = response.content.map((cliente: any) => ({
-            id: cliente.id, // Adicione o ID do cliente aqui
-            Nome: cliente.contrato.cliente.contato.nome,
-            CPF: cliente.contrato.cliente.cpf,
-            'Cessação': cliente.cessacao,
-            Status: cliente.status,
-            'Perícia médica': cliente.enderecoPericiaMedica,
-            'Avaliação social': cliente.enderecoAvaliacaoSocial,
-            'Entrada do protocolo': cliente.entradaDoProtocolo,
-          }));
+          this.pessoasData = response.content;
         } else {
           console.error('A resposta da API não é um array:', response);
         }
