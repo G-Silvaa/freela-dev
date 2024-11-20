@@ -67,6 +67,7 @@ export class ProcessosComponent implements OnInit {
     this.isLoading = true;
     const filtrosComLabel = {
       ...this.filtros,
+      CPF: this.limparCPF(this.filtros.CPF), // Limpar caracteres especiais do CPF
       Status: this.filtros.Status // Use diretamente o valor do status
     };
     this.processosService.buscarProcessosComFiltros(filtrosComLabel).subscribe(
@@ -84,6 +85,10 @@ export class ProcessosComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  limparCPF(cpf: string): string {
+    return cpf.replace(/\D/g, '');
   }
 
   onEdit(item: any) {
