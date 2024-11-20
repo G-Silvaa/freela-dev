@@ -76,7 +76,7 @@ export class ProcessosComponent implements OnInit {
     this.isLoading = true;
     const filtrosComLabel = {
       ...this.filtros,
-      Status: this.getStatusLabel(this.filtros.Status)
+      Status: this.filtros.Status // Use diretamente o valor do status
     };
     this.processosService.buscarProcessosComFiltros(filtrosComLabel).subscribe(
       (response) => {
@@ -102,19 +102,6 @@ export class ProcessosComponent implements OnInit {
         this.isLoading = false;
       }
     );
-  }
-
-  getStatusLabel(status: string): string {
-    const statusOptions = [
-      { value: '1', label: 'Pendente' },
-      { value: '2', label: 'Análise' },
-      { value: '3', label: 'Cumprimento com Exigencia' },
-      { value: '4', label: 'Analise Administrativa' },
-      { value: '5', label: 'Aprovado' },
-      { value: '6', label: 'Reprovado' }
-    ];
-    const selectedStatus = statusOptions.find(option => option.value === status);
-    return selectedStatus ? selectedStatus.label : '';
   }
 
   onEdit(item: any) {
