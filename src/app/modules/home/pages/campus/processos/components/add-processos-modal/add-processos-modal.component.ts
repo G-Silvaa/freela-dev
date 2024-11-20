@@ -38,6 +38,7 @@ export class AddprocessosModalComponent implements OnInit {
 
   ngOnInit() {
     console.log('teste', this.processoId);
+    this.processoId
   }
 
   onCloseModal() {

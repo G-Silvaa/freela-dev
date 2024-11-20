@@ -34,7 +34,6 @@ export class ProcessosComponent implements OnInit {
     this.aplicarFiltros();
   }
 
- 
   loadProcessos() {
     this.isLoading = true;  
 
@@ -66,7 +65,6 @@ export class ProcessosComponent implements OnInit {
 
   limparFiltros() {
     this.filtros = {
-    
       Status:'',
       Nome: '',
       CPF: ''
@@ -76,10 +74,15 @@ export class ProcessosComponent implements OnInit {
 
   aplicarFiltros() {
     this.isLoading = true;
-    this.processosService.buscarProcessosComFiltros(this.filtros).subscribe(
+    const filtrosComLabel = {
+      ...this.filtros,
+      Status: this.getStatusLabel(this.filtros.Status)
+    };
+    this.processosService.buscarProcessosComFiltros(filtrosComLabel).subscribe(
       (response) => {
         if (Array.isArray(response.content)) {
           this.pessoasData = response.content.map((cliente: any) => ({
+            id: cliente.id, // Adicione o ID do cliente aqui
             Nome: cliente.contrato.cliente.contato.nome,
             CPF: cliente.contrato.cliente.cpf,
             'Cessação': cliente.cessacao,
@@ -100,13 +103,33 @@ export class ProcessosComponent implements OnInit {
       }
     );
   }
-  
+
+  getStatusLabel(status: string): string {
+    const statusOptions = [
+      { value: '1', label: 'Pendente' },
+      { value: '2', label: 'Análise' },
+      { value: '3', label: 'Cumprimento com Exigencia' },
+      { value: '4', label: 'Analise Administrativa' },
+      { value: '5', label: 'Aprovado' },
+      { value: '6', label: 'Reprovado' }
+    ];
+    const selectedStatus = statusOptions.find(option => option.value === status);
+    return selectedStatus ? selectedStatus.label : '';
+  }
 
   onEdit(item: any) {
+    // Verifique a estrutura do objeto item para garantir que a propriedade id está presente
+    const processoId = item.id || item.nome?.id;
+  
+    if (!processoId) {
+      console.error('ID do processo não encontrado:', item);
+      return;
+    }
+  
     const initialState = {
       title: 'Editar um Processo',
       formTemplate: this.editTemplate,
-      processoId: item.nome.id // Envia o processoId para o modal
+      processoId: processoId // Envia o processoId para o modal
     };
   
     this.bsModalRef = this.modalService.show(AddprocessosModalComponent, {
@@ -114,7 +137,7 @@ export class ProcessosComponent implements OnInit {
     });
     this.bsModalRef.content.closeBtnName = 'Close';
   
-    console.log('Edit item:', item.nome.id);
+    console.log('Edit item:', processoId);
   }
   
   onDelete(item: any) {

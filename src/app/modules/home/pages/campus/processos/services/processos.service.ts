@@ -88,8 +88,8 @@ export class ProcessosService {
     if (filtros.numeroProtocolo) {
       filterString += (filterString ? ' and ' : '') + `numeroProtocolo ilike '${filtros.numeroProtocolo}%'`;
     }
-    if (filtros.status) {
-      filterString += (filterString ? ' and ' : '') + `status eq '${filtros.status}'`;
+    if (filtros.Status) {
+      filterString += (filterString ? ' and ' : '') + `status eq '${filtros.Status}'`;
     }
   
     const params = new HttpParams()
