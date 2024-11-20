@@ -43,7 +43,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 })
 export class ContratosComponent implements OnInit {
   cadatrarUsuario = true;
-  pessoasContrato = pessoasContrato;
+  pessoasContrato = <any>[];
   adicionarPessoasData = adicionarPessoasData;
   primeiroFiltro = primeiroFiltro;
   segundoFiltro = segundoFiltro;
@@ -57,7 +57,7 @@ export class ContratosComponent implements OnInit {
   protected formBuilder = inject(FormBuilder);
 
   protected filterForm = this.formBuilder.group({
-    name: [""],
+    nome: [""],
     cpf: [""],
     status: [""],
   });
@@ -77,7 +77,19 @@ export class ContratosComponent implements OnInit {
   }
 
   submitFilter() {
-    console.log(this.filterForm.value, "isso é o que tá vindo");
+    this.contratosService.filterContratos(this.filterForm.value).subscribe({
+      next: (res) => {
+        const { content } = res;
+        this.pessoasContrato = this.dataTransform(content);
+      },
+      error: (err) => {
+        console.log("erro", err);
+      },
+    });
+  }
+
+  clearFilter() {
+    console.log("limpando filtro");
   }
 
   onEdit(item: any) {
@@ -105,18 +117,26 @@ export class ContratosComponent implements OnInit {
     const teste = this.datePipe.transform(data[0].inicio, "dd/MM/yyyy");
 
     return data.map((item: any) => {
-      const dateTransformed = this.datePipe.transform(
+      const beginningDateTransformed = this.datePipe.transform(
         item.inicio,
         "dd/MM/yyyy",
       );
 
+      const conclusionDateTransformed = this.datePipe.transform(
+        item.conclusao,
+        "dd/MM/yyyy",
+      );
+
       const dataTransformed = {
+        Id: item.id,
         Nome: item.cliente.contato.nome,
         Cpf: item.cliente.cpf,
         Beneficio: item.beneficio,
-        Status: item.processos[0].status,
-        Inicio: dateTransformed ? dateTransformed : "valor fixo",
-        Conclusao: item.conclusao ? item.conclusao : "",
+        Numero: item.numero,
+        Inicio: beginningDateTransformed ? beginningDateTransformed : "",
+        Conclusao: conclusionDateTransformed ? conclusionDateTransformed : "",
+        Indicacao: item.indicacao ? item.indicacao : "",
+        Valor: item.valor ? item.valor : 0,
       };
       return dataTransformed;
     });

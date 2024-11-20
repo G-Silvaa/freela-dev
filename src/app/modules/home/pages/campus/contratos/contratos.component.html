@@ -12,7 +12,7 @@
         [hasError]="false"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
-        formControlName="name"
+        formControlName="nome"
       ></app-input>
       <app-input
         label="Cpf"
@@ -34,10 +34,11 @@
       ></app-input>
     </form>
     <button class="lupa" (click)="submitFilter()"></button>
+    <button class="limpar" (click)="clearFilter()">Limpar filtro</button>
   </div>
 
   <app-table
-    [columns]="['Nome', 'Cpf', 'Status', 'Beneficio', 'Inicio', 'Conclusao']"
+    [columns]="['Nome', 'Cpf', 'Numero', 'Beneficio', 'Inicio', 'Conclusao']"
     [data]="pessoasContrato"
     [showActions]="true"
     [itemsPerPage]="10"

@@ -23,6 +23,7 @@
 
     <app-input
       label="Cpf:"
+      mask="000.000.000-00"
       placeholder="Digite o cpf:"
       formControlName="Cpf"
       [isReadonly]="true"
@@ -30,9 +31,10 @@
     </app-input>
 
     <app-input
-      label="Status"
-      placeholder="Digite o status:"
-      formControlName="Status"
+      label="N° Contrato"
+      placeholder="Digite o Numero do contrato:"
+      formControlName="Numero"
+      [isReadonly]="true"
     >
     </app-input>
 
@@ -40,20 +42,43 @@
       label="Beneficio"
       placeholder="Digite o benefício:"
       formControlName="Beneficio"
+      [isReadonly]="true"
     >
     </app-input>
 
     <app-input
       label="Inicio"
+      [maxlength]="10"
+      mask="00/00/0000"
       placeholder="Digite a data de início:"
       formControlName="Inicio"
+      [clearIfNotMatch]="true"
     >
     </app-input>
 
     <app-input
       label="Conclusão"
+      [maxlength]="10"
+      mask="00/00/0000"
+      [clearIfNotMatch]="true"
       placeholder="Digite a data de conclusão:"
       formControlName="Conclusao"
+    >
+    </app-input>
+
+    <app-input
+      label="Indicação"
+      placeholder="Digite quem indicou:"
+      formControlName="Indicacao"
+    >
+    </app-input>
+
+    <app-input
+      label="Valor"
+      placeholder="Digite o valor:"
+      formControlName="Valor"
+      mask="000.000.000,00"
+      [clearIfNotMatch]="true"
     >
     </app-input>
   </div>
