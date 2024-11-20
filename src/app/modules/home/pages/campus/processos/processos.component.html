@@ -1,12 +1,10 @@
 <div class="container">
+  <div class="adicionar">
+    <h1>Processos</h1>
+  </div>
 
-    <div class="adicionar">
-      <h1>Processos</h1>
-
-    </div>
-
-    <div class="filter">
-      <div class="dividir">
+  <div class="filter">
+    <div class="dividir">
       <app-input
         label="Nome"
         type="text"
@@ -15,39 +13,37 @@
         [(ngModel)]="filtros.Nome"
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
-        ></app-input>
-        <app-input
+      ></app-input>
+      <app-input
         label="CPF"
-        [(ngModel)]="filtros.CPF "
+        [(ngModel)]="filtros.CPF"
         type="text"
-        placeholder="Digite o nome"
+        placeholder="Digite o CPF"
         [hasError]="false"
-        errorMsg="Nome é obrigatório"
+        errorMsg="CPF é obrigatório"
         [isDisable]="false"
       ></app-input>
-     
       <app-select-input
-      [label]="'Status:'"
-      [options]="[
-        { value: '1', label: 'Pendente' },
-        { value: '2', label: 'Análise' },
-        { value: '3', label: 'Cumprimento com Exigencia' },
-        { value: '4', label: 'Analise Administrativa' },
-        { value: '5', label: 'Aprovado' },
-        { value: '6', label: 'Reprovado' },
-      ]"
-      [placeholder]="'Selecione o status'"
-      [(ngModel)]="filtros.Status"
-      >
-    </app-select-input>
-  </div>
-  <div class="filtrosB">
-    <button class="lupa" (click)="aplicarFiltros()"></button>
-    <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
-  </div>
+        [label]="'Status:'"
+        [options]="[
+          { value: '1', label: 'Pendente' },
+          { value: '2', label: 'Análise' },
+          { value: '3', label: 'Cumprimento com Exigencia' },
+          { value: '4', label: 'Analise Administrativa' },
+          { value: '5', label: 'Aprovado' },
+          { value: '6', label: 'Reprovado' }
+        ]"
+        [placeholder]="'Selecione o status'"
+        [(ngModel)]="filtros.Status"
+      ></app-select-input>
     </div>
+    <div class="filtrosB">
+      <button class="lupa" (click)="aplicarFiltros()"></button>
+      <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
+    </div>
+  </div>
 
-    <app-table
+  <app-table
     [columns]="['Nome', 'CPF', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
     [data]="pessoasData"
     [showActions]="true"
@@ -55,9 +51,8 @@
     (edit)="onEdit($event)"
     (delete)="onDelete($event)"
   ></app-table>
-  
+</div>
 
-  </div>
-  <ng-template #editTemplate>
-    <app-add-process-modal/>
-  </ng-template>
+<ng-template #editTemplate>
+  <app-add-process-modal [processoId]="selectedProcessoId!"></app-add-process-modal>
+</ng-template>

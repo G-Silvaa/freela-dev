@@ -117,7 +117,7 @@ export class ProcessosService {
   }
 
   associarProcesso(userId: number, payload: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/liv-api/domain/processo/${userId}`, payload, this.createOptions());
+    return this.http.patch(`${this.API_URL}domain/processo/${userId}`, payload, this.createOptions());
   }
   
 }

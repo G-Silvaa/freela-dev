@@ -20,6 +20,7 @@ export class ProcessosComponent implements OnInit {
   pessoasData: any[] = [];  
   isLoading = false;
   bsModalRef?: BsModalRef;
+  selectedProcessoId?: number;
 
   @ViewChild('editTemplate') editTemplate!: TemplateRef<any>;
 
@@ -105,15 +106,17 @@ export class ProcessosComponent implements OnInit {
     const initialState = {
       title: 'Editar um Processo',
       formTemplate: this.editTemplate,
+      processoId: item.nome.id // Envia o processoId para o modal
     };
   
-    this.bsModalRef = this.modalService.show(ModalComponent, {
-      initialState,
-    
+    this.bsModalRef = this.modalService.show(AddprocessosModalComponent, {
+      initialState, // Passa o estado inicial ao modal
     });
     this.bsModalRef.content.closeBtnName = 'Close';
+  
+    console.log('Edit item:', item.nome.id);
   }
-
+  
   onDelete(item: any) {
     console.log('Delete item:', item);
   }
