@@ -11,49 +11,11 @@
     margin: 0px;
   }
 
-  select {
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    &:focus {
-      border-color: #0f057c;
-      box-shadow: 0 0 0 0.1rem #0f057c;
-      outline: none;
-    }
-
-    &.is-invalid:focus {
-      border-color: #ff0000 !important;
-      box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25) !important;
-    }
-
-    &.is-invalid {
-      border-color: #ff0000;
-    }
-  }
-
-  .invalid-feedback {
-    font-weight: 500;
-    color: #ff0000;
-  }
-
-  option {
-    border-radius: 10px;
-  }
-
   .custom-select {
     position: relative;
     cursor: pointer;
     user-select: none;
+    width: 100%; /* Defina a largura para ocupar todo o espaço disponível */
 
     .selected-value {
       display: flex;
@@ -67,6 +29,8 @@
       border: 1px solid #ced4da;
       border-radius: 0.25rem;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      width: 100%; /* Defina a largura para ocupar todo o espaço disponível */
+      box-sizing: border-box; /* Inclua o padding e a borda no tamanho total */
 
       &.is-invalid {
         border-color: #ff0000;
@@ -127,6 +91,11 @@
         }
       }
     }
+  }
+
+  .invalid-feedback {
+    font-weight: 500;
+    color: #ff0000;
   }
 
   &.is-disabled {
