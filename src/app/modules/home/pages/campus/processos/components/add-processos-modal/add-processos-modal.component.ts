@@ -65,9 +65,10 @@ export class AddprocessosModalComponent implements OnInit {
           this.isLoading = false;
           console.log('Erro ao atualizar o processo:', err);
           const errorMessage = err.error.detail || 'Ocorreu um erro ao atualizar o processo.';
+          const titleMessage = err.error.title || 'Ocorreu um erro ao atualizar o processo.';
           Swal.fire({
             icon: 'error',
-            title: 'Erro',
+            title: titleMessage,
             text: errorMessage,
           });
         }

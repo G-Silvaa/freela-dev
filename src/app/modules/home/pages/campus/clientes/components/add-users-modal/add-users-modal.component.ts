@@ -323,7 +323,7 @@ export class AddUsersModalComponent implements OnInit {
     };
   
     console.log('Payload:', payload);
-    
+
     const beneficioPayload = {
       beneficio: dados.beneficios,
       valor: dados.preco,
@@ -347,6 +347,7 @@ export class AddUsersModalComponent implements OnInit {
           this.isLoading = false;
           console.error('Erro ao atualizar usuário ou associar benefício:', err);
           const errorMessage = err.error.detail || 'Ocorreu um erro ao atualizar usuário ou associar benefício.';
+          const titleMessage = err.error.title || 'Error.';
           Swal.fire({
             icon: 'error',
             title: 'Erro',
@@ -372,9 +373,10 @@ export class AddUsersModalComponent implements OnInit {
           this.isLoading = false;
           console.error('Erro ao adicionar usuário ou associar benefício:', err);
           const errorMessage = err.error.detail || 'Ocorreu um erro ao adicionar usuário ou associar benefício.';
+          const titleMessage = err.error.title || 'Error.';
           Swal.fire({
             icon: 'error',
-            title: 'Erro',
+            title: titleMessage,
             text: errorMessage,
           });
         }
