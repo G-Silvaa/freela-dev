@@ -21,9 +21,9 @@
             Relatorios
           </button>
           <div class="dropdown-content" [ngClass]="{ 'show': dropdownOpen === item['id'] }">
-            <a  (click)="gerarCartas2(item['id'], 'pericia-medica')">Carta de Perícia Médica</a>
-            <a  (click)="gerarCartas2(item['id'], 'avaliacao-social')">Carta de Avaliação Social</a>
-            <a (click)="gerarCartas2(item['id'], 'concessao')">Carta de Concessão</a>
+            <a class="it"  (click)="gerarCartas2(item['id'], 'pericia-medica')">Carta de Perícia Médica</a>
+            <a class="it"   (click)="gerarCartas2(item['id'], 'avaliacao-social')">Carta de Avaliação Social</a>
+            <a class="it" (click)="gerarCartas2(item['id'], 'concessao')">Carta de Concessão</a>
           </div>
         </div>
       </td>
