@@ -51,6 +51,7 @@ export class AddprocessosModalComponent implements OnInit {
         console.log('Processo carregado:', processo);
         this.form.patchValue({
           ...processo,
+          entradaDoProtocolo: this.formatarData(processo.entradaDoProtocolo),
           dataConcessao: this.formatarData(processo.dataConcessao),
           cessacao: this.formatarData(processo.cessacao)
         });
