@@ -21,24 +21,23 @@ export class AddprocessosModalComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
 
-  constructor(private modalService: BsModalService, private fb: FormBuilder, private processosService: ProcessosService,  public bsModalRef: BsModalRef,) {
+  constructor(private modalService: BsModalService, private fb: FormBuilder, private processosService: ProcessosService, public bsModalRef: BsModalRef) {
     this.form = this.fb.group({
-      status: ['',],
-      numeroProtocolo: ['', ],
-      entradaDoProtocolo: ['', ],
+      status: [''],
+      numeroProtocolo: [''],
+      entradaDoProtocolo: [''],
       documentosPendentes: [''],
-      periciaMedica: ['', ],
+      periciaMedica: [''],
       enderecoPericiaMedica: [''],
-      avaliacaoSocial: ['', ],
+      avaliacaoSocial: [''],
       enderecoAvaliacaoSocial: [''],
-      dataConcessao: ['', ],
-      cessacao: ['', ]
+      dataConcessao: [''],
+      cessacao: ['']
     });
   }
 
   ngOnInit() {
     console.log('teste', this.processoId);
-    this.processoId
   }
 
   onCloseModal() {
@@ -48,11 +47,7 @@ export class AddprocessosModalComponent implements OnInit {
   onSave() {
     if (this.form.valid) {
       this.isLoading = true;
-      const payload = {
-        ...this.form.value,
-        statusLabel: this.getStatusLabel(this.form.value.status),
-        cessacaoLabel: 'Cessação'
-      };
+      const payload = this.createPayloadWithNulls(this.form.value);
       console.log('payload', payload);
       this.processosService.associarProcesso(this.processoId, payload).subscribe(
         (response) => {
@@ -81,16 +76,14 @@ export class AddprocessosModalComponent implements OnInit {
     }
   }
 
-  getStatusLabel(status: string): string {
-    const statusOptions = [
-      { value: '1', label: 'Pendente' },
-      { value: '2', label: 'Análise' },
-      { value: '3', label: 'Cumprimento com Exigencia' },
-      { value: '4', label: 'Analise Administrativa' },
-      { value: '5', label: 'Aprovado' },
-      { value: '6', label: 'Reprovado' }
-    ];
-    const selectedStatus = statusOptions.find(option => option.value === status);
-    return selectedStatus ? selectedStatus.label : '';
+  createPayloadWithNulls(formValue: any): any {
+    const payload: any = {};
+    for (const key in formValue) {
+      if (formValue.hasOwnProperty(key)) {
+        payload[key] = formValue[key] === '' ? null : formValue[key];
+      }
+    }
+    payload.cessacaoLabel = 'Cessação';
+    return payload;
   }
 }

@@ -67,12 +67,13 @@
     <app-select-input
       [label]="'Status:'"
       [options]="[
-        { value: '1', label: 'Pendente' },
-        { value: '2', label: 'Análise' },
-        { value: '3', label: 'Cumprimento com Exigencia' },
-        { value: '4', label: 'Analise Administrativa' },
-        { value: '5', label: 'Aprovado' },
-        { value: '6', label: 'Reprovado' }
+        { value: 'AGUARDANDO', label: 'AGUARDANDO' },
+        { value: 'PENDENTE', label: 'Pendente' },
+        { value: 'ANALISE', label: 'Análise' },
+        { value: 'CUMPRIMENTO_EXIGENCIA', label: 'Cumprimento com Exigencia' },
+        { value: 'ANALISE_ADMINISTRATIVA', label: 'Analise Administrativa' },
+        { value: 'APROVADO', label: 'Aprovado' },
+        { value: 'REPROVADO', label: 'Reprovado' }
       ]"
       [placeholder]="'Selecione o status'"
       formControlName="status"
