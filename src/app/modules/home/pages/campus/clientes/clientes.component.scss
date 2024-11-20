@@ -180,6 +180,11 @@
   .dados{
     padding-left: 0px !important;
   }
+  .limpar{
+    margin-top: 0px !important;
+    margin-bottom: 3px;
+
+  }
   .container-dados-gerais {
     flex-direction: column;
   }
@@ -222,7 +227,12 @@
     margin-bottom: 20px;
   }
 
-  
+  .resp{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch !important;
+  }
 }
 .filtrosB{
   display: flex;
@@ -239,4 +249,10 @@
     margin-top: 15px;
     border-radius: 6px;
   }
+}
+
+.resp{
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }

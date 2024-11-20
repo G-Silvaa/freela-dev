@@ -237,7 +237,7 @@
   </div>
 
   <div class="pt5" *ngIf="currentStep === 5">
-    <div class="container-inputs">
+    <div class="container-inputs repon">
       <app-select-input 
         [label]="'Benefícios'" 
         [options]="beneficiosOptions" 
@@ -251,6 +251,8 @@
       placeholder="Digite o preço"
       formControlName="preco"
       errorMsg="Preço é obrigatório"
+      [hasError]="hasMaxLengthAndRequiredError('preco')"
+      [errorMsg]="getMaxLengthAndRequiredErrorMsg('preco')">
     ></app-input-money>
     </div>
   </div>

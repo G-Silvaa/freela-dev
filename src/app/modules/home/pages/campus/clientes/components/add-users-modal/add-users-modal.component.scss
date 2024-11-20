@@ -133,3 +133,15 @@ form {
   .t{
     margin-right: 448px;
   }
+  .repon{
+    display: flex;
+   
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  app-input-money{
+    width: 250px;
+    margin-top: 15px;
+  }

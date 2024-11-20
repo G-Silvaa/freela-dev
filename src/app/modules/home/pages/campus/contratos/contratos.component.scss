@@ -194,6 +194,19 @@
 }
 
 @media (max-width: 980px) {
+  form{
+   
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: stretch !important;
+  
+  }
+  .limpar{
+    margin-top: 0px !important;
+    margin-bottom: 3px;
+
+  }
   .dados {
     padding-left: 0px !important;
   }

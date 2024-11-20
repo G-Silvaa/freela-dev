@@ -7,6 +7,7 @@
   </div>
 
   <div class="filter">
+    <div class="resp">
     <app-input
       label="Nome"
       type="text"
@@ -35,6 +36,7 @@
       errorMsg="CPF é obrigatório"
       [isDisable]="false"
     ></app-input>
+  </div>
     <div class="filtrosB">
       <button class="lupa" (click)="aplicarFiltros()"></button>
       <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
