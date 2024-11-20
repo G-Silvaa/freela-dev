@@ -41,6 +41,7 @@ export class AddprocessosModalComponent implements OnInit {
     if (this.processoId) {
       this.loadProcesso();
     }
+    console.log('formulario:', this.form.value);
   }
 
   loadProcesso() {
@@ -48,7 +49,11 @@ export class AddprocessosModalComponent implements OnInit {
     this.processosService.buscarProcessoPorId(this.processoId).subscribe(
       (processo) => {
         console.log('Processo carregado:', processo);
-        this.form.patchValue(processo);
+        this.form.patchValue({
+          ...processo,
+          dataConcessao: this.formatarData(processo.dataConcessao),
+          cessacao: this.formatarData(processo.cessacao)
+        });
         this.isLoading = false;
       },
       (err) => {
@@ -56,6 +61,12 @@ export class AddprocessosModalComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  formatarData(data: string): string {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('T')[0].split('-');
+    return `${ano}-${mes}-${dia}`;
   }
 
   onCloseModal() {
