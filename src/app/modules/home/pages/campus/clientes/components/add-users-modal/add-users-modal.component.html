@@ -19,7 +19,7 @@
         formControlName="rg"
        
         [clearIfNotMatch]="true"
-        [maxlength]="12"
+        [maxlength]="30"
         [hasError]="hasMaxLengthAndRequiredError('rg')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')">
         
@@ -209,8 +209,8 @@
       <app-input
         label="RG do Representante:"
         placeholder="Digite o RG:"
-        mask="00.000.000-0"
-        [maxlength]="12"
+   
+        [maxlength]="30"
         [clearIfNotMatch]="true"
         formControlName="representanteRg"
         [hasError]="hasMaxLengthAndRequiredError('representanteRg')"
