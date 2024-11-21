@@ -39,9 +39,11 @@
     [columns]="['Nome', 'Cpf', 'Numero', 'Beneficio', 'Inicio', 'Conclusao']"
     [data]="pessoasContrato"
     [showActions]="true"
+    [showRenew]="true"
     [itemsPerPage]="10"
     (edit)="onEdit($event)"
     (delete)="onDelete($event)"
+    (renewContract)="onEmitRenewContractId($event)"
   ></app-table>
 </div>
 <ng-template #editTemplate>

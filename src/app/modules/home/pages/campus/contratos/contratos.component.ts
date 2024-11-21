@@ -24,6 +24,7 @@ import { ContratosService } from "./services/contratos.service";
 import { DatePipe } from "@angular/common";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { beneficiosOptions } from "@core/consts/benenficios.const";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-grupo-de-acesso",
@@ -147,6 +148,23 @@ export class ContratosComponent implements OnInit {
         Valor: item.valor ? item.valor : 0,
       };
       return dataTransformed;
+    });
+  }
+
+  onEmitRenewContractId(item: { id: any }) {
+    Swal.fire({
+      title: "Cuidado!",
+      text: `Tem certeza que deseja renovar este contrato?`,
+      icon: "warning",
+      confirmButtonColor: "#2F9E41",
+      confirmButtonText: "Renovar",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    }).then((resultado: any) => {
+      if (!resultado.dismiss) {
+        this.contratosService.renewContract(item.id);
+      }
     });
   }
 

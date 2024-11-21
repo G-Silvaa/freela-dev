@@ -14,6 +14,13 @@
         class="actions-container"
         [class.actions-container-relatorios]="showOpcoes"
       >
+        <button
+          *ngIf="showRenew"
+          class="btn renew-button"
+          (click)="emitRenewContractId(item)"
+        >
+          Renovar
+        </button>
         <button class="btn btn-warning" (click)="onEdit(item)">
           <i class="bi bi-pencil-fill"></i>
         </button>

@@ -1,16 +1,16 @@
-import { CommonModule, TitleCasePipe } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule, TitleCasePipe } from "@angular/common";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 interface DataItem<T> {
   [key: string]: T;
 }
 
 @Component({
-  selector: 'app-table',
+  selector: "app-table",
   standalone: true,
   imports: [TitleCasePipe, CommonModule],
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss'],
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.scss"],
 })
 export class TableComponent<T> {
   @Input() columns!: string[];
@@ -18,12 +18,14 @@ export class TableComponent<T> {
   @Input() showActions: boolean = true;
   @Input() showDelete: boolean = true;
   @Input() showOpcoes: boolean = false;
+  @Input() showRenew?: boolean = false;
   @Input() itemsPerPage: number = 10;
 
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();
   @Output() pageChange = new EventEmitter<number>();
-  @Output() gerarCartas = new EventEmitter<{ id: any, tipo: any }>();
+  @Output() gerarCartas = new EventEmitter<{ id: any; tipo: any }>();
+  @Output() renewContract = new EventEmitter<{ id: any }>();
 
   currentPage: number = 1;
   dropdownOpen: any = null;
@@ -40,8 +42,8 @@ export class TableComponent<T> {
 
   truncateText(column: string, item: any): string {
     const value = item[column];
-    if (typeof value === 'string' && value.length > 30) {
-      return value.slice(0, 30) + '...';
+    if (typeof value === "string" && value.length > 30) {
+      return value.slice(0, 30) + "...";
     }
     return value;
   }
@@ -62,6 +64,10 @@ export class TableComponent<T> {
     this.dropdownOpen = this.dropdownOpen === id ? null : id;
   }
 
+  emitRenewContractId(item: any) {
+    this.renewContract.emit({ id: item.Id });
+  }
+
   get visiblePages(): number[] {
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
@@ -77,9 +83,25 @@ export class TableComponent<T> {
     if (currentPage <= 4) {
       visiblePages.push(...firstPages, 4, 5, -1, ...lastPages);
     } else if (currentPage >= totalPages - 3) {
-      visiblePages.push(...firstPages, -1, totalPages - 4, totalPages - 3, ...lastPages);
+      visiblePages.push(
+        ...firstPages,
+        -1,
+        totalPages - 4,
+        totalPages - 3,
+        ...lastPages,
+      );
     } else {
-      visiblePages.push(1, 2, -1, currentPage - 1, currentPage, currentPage + 1, -1, totalPages - 1, totalPages);
+      visiblePages.push(
+        1,
+        2,
+        -1,
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        -1,
+        totalPages - 1,
+        totalPages,
+      );
     }
 
     return visiblePages;
