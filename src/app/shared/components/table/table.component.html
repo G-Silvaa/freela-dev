@@ -20,7 +20,7 @@
           (click)="emitRenewContractId(item)"
           title="Renovar contrato"
         >
-          <img src="renew-contract-removebg-preview.png" alt="">
+          <img class="ct" src="renew-contract-removebg-preview.png" alt="">
         </button>
         <button class="btn btn-warning" (click)="onEdit(item)" title="Editar contrato">
           <i class="bi bi-pencil-fill"></i>
@@ -35,10 +35,11 @@
         </button>
         <div *ngIf="showOpcoes" class="dropdown">
           <button
+          title="Baixar cartas"
             class="btn btn-secondary dropdown-button"
             (click)="toggleDropdown(item['id'])"
           >
-            Cartas
+           <img src="cartas.png" alt="">
           </button>
           <div
             class="dropdown-content"

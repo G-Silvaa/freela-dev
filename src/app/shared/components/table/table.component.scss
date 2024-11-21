@@ -211,3 +211,10 @@
 .it {
   cursor: pointer;
 }
+
+img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1) brightness(2);
+  object-fit: contain;
+}
