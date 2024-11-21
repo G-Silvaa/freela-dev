@@ -23,6 +23,7 @@ import { EditContratoModalComponent } from "./components/edit-contrato-modal/edi
 import { ContratosService } from "./services/contratos.service";
 import { DatePipe } from "@angular/common";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { beneficiosOptions } from "@core/consts/benenficios.const";
 
 @Component({
   selector: "app-grupo-de-acesso",
@@ -48,6 +49,7 @@ export class ContratosComponent implements OnInit {
   primeiroFiltro = primeiroFiltro;
   segundoFiltro = segundoFiltro;
   terceiroFiltro = terceiroFiltro;
+  beneficiosOptions = beneficiosOptions;
   isLoading = false;
   bsModalRef?: BsModalRef;
 
@@ -73,7 +75,14 @@ export class ContratosComponent implements OnInit {
   }
 
   submitFilter() {
-    this.contratosService.filterContratos(this.filterForm.value).subscribe({
+    const formValue = this.filterForm.value;
+    const filteredCpfForm = {
+      nome: formValue.nome,
+      cpf: formValue.cpf ? this.removeSpecialCharacters(formValue.cpf) : "",
+      beneficio: formValue.beneficio,
+    };
+
+    this.contratosService.filterContratos(filteredCpfForm).subscribe({
       next: (res) => {
         const { content } = res;
         if (content.length) {
@@ -129,7 +138,7 @@ export class ContratosComponent implements OnInit {
       const dataTransformed = {
         Id: item.id,
         Nome: item.cliente.contato.nome,
-        Cpf: item.cliente.cpf,
+        Cpf: this.addSpecialCharacters(item.cliente.cpf),
         Beneficio: item.beneficio,
         Numero: item.numero,
         Inicio: beginningDateTransformed ? beginningDateTransformed : "",
@@ -139,5 +148,14 @@ export class ContratosComponent implements OnInit {
       };
       return dataTransformed;
     });
+  }
+
+  removeSpecialCharacters(input: string): string {
+    return input.replace(/[.-]/g, "");
+  }
+
+  addSpecialCharacters(cpf: string): string {
+    // Formata o CPF usando substrings
+    return `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}`;
   }
 }

@@ -18,6 +18,7 @@ import { InputDefaultComponent } from "@shared/components/inputs/input-default/i
 import { ButtonComponent } from "@shared/components/button/button.component";
 import { ContratosService } from "../../services/contratos.service";
 import Swal from "sweetalert2";
+import { DataInputComponent } from "@shared/components/inputs/data-input/data-input.component";
 
 interface IContratoData {
   nome: string;
@@ -36,6 +37,7 @@ interface IContratoData {
     ButtonComponent,
     CommonModule,
     ReactiveFormsModule,
+    DataInputComponent,
   ],
   templateUrl: "./edit-contrato-modal.component.html",
   styleUrls: ["./edit-contrato-modal.component.scss"],
@@ -60,9 +62,17 @@ export class EditContratoModalComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    console.log(this.contratoData, "oi");
     if (this.contratoData) {
-      this.form.patchValue(this.contratoData);
+      const transformedData = {
+        Id: this.contratoData.Id,
+        Inicio: this.euaDateFormat(this.contratoData.Inicio),
+        Conclusao: this.contratoData.Conclusao
+          ? this.euaDateFormat(this.contratoData.Conclusao)
+          : "",
+        Indicacao: this.contratoData.Indicacao,
+        Valor: this.contratoData.Valor,
+      };
+      this.form.patchValue(transformedData);
     }
   }
 
@@ -72,28 +82,20 @@ export class EditContratoModalComponent implements OnInit {
 
   onSave() {
     const formValue = this.form.value;
-    console.log("entrou assim", formValue);
 
     const result = {
       id: formValue.Id ? formValue.Id : null,
-      inicio: this.transformToISODate(formValue.Inicio)
-        ? this.transformToISODate(formValue.Inicio)
-        : "",
-      conclusao: this.transformToISODate(formValue.Conclusao)
-        ? this.transformToISODate(formValue.Conclusao)
-        : "",
+      inicio: formValue.Inicio ? formValue.Inicio : "",
+      conclusao: formValue.Conclusao ? formValue.Conclusao : "",
       indicacao: formValue.Indicacao ? formValue.Indicacao : "",
       valor: formValue.Valor ? formValue.Valor : "",
     };
-    console.log(result, "resultado");
     this.contratoService.editContrato(result).subscribe({
       next: (res) => {
-        console.log("deu certo", res);
         this.contratoService.getContratos();
         this.onCloseModal();
       },
       error: (err) => {
-        console.log(err);
         const { error } = err;
         Swal.fire({
           icon: "error",
@@ -104,12 +106,8 @@ export class EditContratoModalComponent implements OnInit {
     });
   }
 
-  transformToISODate(date: string): string {
-    if (!date) return ""; // Retorna vazio se o valor for nulo ou indefinido
-
-    const [day, month, year] = date.split("/"); // Divide a data com base nas barras "/"
-
-    // Retorna a data no formato ISO "yyyy-mm-dd"
-    return `${year}-${month}-${day}`;
+  euaDateFormat(data: string): string {
+    const [dia, mes, ano] = data.split("/");
+    return `${ano}-${mes}-${dia}`;
   }
 }

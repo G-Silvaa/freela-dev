@@ -13,25 +13,19 @@
 
 <form [formGroup]="form" action="javascript:void(0)">
   <div class="container-inputs">
-    <app-input
+    <app-data-input
       label="Inicio"
-      [maxlength]="10"
-      mask="00/00/0000"
       placeholder="Digite a data de início:"
       formControlName="Inicio"
-      [clearIfNotMatch]="true"
     >
-    </app-input>
+    </app-data-input>
 
-    <app-input
+    <app-data-input
       label="Conclusão"
-      [maxlength]="10"
-      mask="00/00/0000"
-      [clearIfNotMatch]="true"
       placeholder="Digite a data de conclusão:"
       formControlName="Conclusao"
     >
-    </app-input>
+    </app-data-input>
 
     <app-input
       label="Indicação"

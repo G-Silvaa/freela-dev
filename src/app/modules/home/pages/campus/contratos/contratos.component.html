@@ -21,14 +21,13 @@
         [isDisable]="false"
         formControlName="cpf"
       ></app-input>
-      <app-input
+      <app-select-input
         label="Beneficio"
-        type="text"
-        placeholder="Digite o beneficio"
-        [hasError]="false"
-        [isDisable]="false"
+        [options]="beneficiosOptions"
+        placeholder="Selecione um beneficio"
         formControlName="beneficio"
-      ></app-input>
+      >
+      </app-select-input>
     </form>
     <div class="filtrosB">
       <button class="lupa" (click)="submitFilter()"></button>
