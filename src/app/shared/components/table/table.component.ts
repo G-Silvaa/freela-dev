@@ -1,5 +1,5 @@
 import { CommonModule, TitleCasePipe } from "@angular/common";
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter, HostListener, OnInit, OnDestroy } from "@angular/core";
 
 interface DataItem<T> {
   [key: string]: T;
@@ -12,7 +12,7 @@ interface DataItem<T> {
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
 })
-export class TableComponent<T> {
+export class TableComponent<T> implements OnInit, OnDestroy {
   @Input() columns!: string[];
   @Input() data!: DataItem<T>[];
   @Input() showActions: boolean = true;
@@ -29,6 +29,21 @@ export class TableComponent<T> {
 
   currentPage: number = 1;
   dropdownOpen: any = null;
+
+  ngOnInit() {
+    document.addEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.dropdownOpen = null;
+    }
+  }
 
   get paginatedData(): DataItem<T>[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;

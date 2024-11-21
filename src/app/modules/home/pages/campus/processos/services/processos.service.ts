@@ -47,7 +47,7 @@ export class ProcessosService {
         return forkJoin(requests);
       }),
       map((responses: any[]) => responses.flatMap(response => response.content)),
-      map((processos: any[]) => this.formatarDados(processos)) // Formatar os dados antes de atualizá-los no BehaviorSubject
+      map((processos: any[]) => this.formatarDados(processos)) 
     ).subscribe(processos => this.processosSubject.next(processos));
   }
 
