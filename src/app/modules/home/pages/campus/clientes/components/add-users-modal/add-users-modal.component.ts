@@ -299,7 +299,7 @@ export class AddUsersModalComponent implements OnInit {
       },
       cpf: cpfSemCaracteresEspeciais,
       rg: rgSemCaracteresEspeciais,
-      nascimento: dataNascimentoAmericano,
+      nascimento: dados.dataNascimento,
       endereco: {
         cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
@@ -316,7 +316,7 @@ export class AddUsersModalComponent implements OnInit {
         parentesco: dados.parentesco,
         cpf: representanteCpfSemCaracteresEspeciais,
         rg: representanteRgSemCaracteresEspeciais,
-        nascimento: representanteDataNascimentoAmericano,
+        nascimento: dados.representanteDataNascimento,
       } : null,
       beneficios: dados.beneficios,
       valor: dados.preco
@@ -429,6 +429,13 @@ export class AddUsersModalComponent implements OnInit {
       default:
         return [];
     }
+  }
+
+
+  formatarData(data: string): string {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('T')[0].split('-');
+    return `${ano}-${mes}-${dia}`;
   }
 
   shouldShowStep(step: number): boolean {

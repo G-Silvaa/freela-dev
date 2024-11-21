@@ -8,11 +8,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from '../add-users-modal/utils/customvalidators';
 import Swal from 'sweetalert2';
+import { DataInputComponent } from "../../../../../../../shared/components/inputs/data-input/data-input.component";
 
 @Component({
   selector: 'app-edit-users-modal',
   standalone: true,
-  imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule],
+  imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule, DataInputComponent],
   templateUrl: './edit-users-modal.component.html',
   styleUrls: ['./edit-users-modal.component.scss'],
   providers: [DatePipe]
@@ -66,7 +67,7 @@ export class EditUsersModalComponent implements OnInit {
         telefone: this.data.contato.telefone,
         cpf: this.data.cpf,
         rg: this.data.rg,
-        dataNascimento: formattedDate,
+        dataNascimento: this.formatarData(this.data.nascimento),
         cep: this.data.endereco.cep,
         logradouro: this.data.endereco.logradouro,
         complemento: this.data.endereco.complemento,
@@ -79,10 +80,16 @@ export class EditUsersModalComponent implements OnInit {
         parentesco: this.data.representante?.parentesco,
         representanteCpf: this.data.representante?.cpf,
         representanteRg: this.data.representante?.rg,
-        representanteDataNascimento: formattedRepDate,
+        representanteDataNascimento: this.formatarData(this.data.representante?.nascimento),
       });
     }
     console.log('Data:', this.data);
+  }
+
+  formatarData(data: string): string {
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('T')[0].split('-');
+    return `${ano}-${mes}-${dia}`;
   }
 
   onCloseModal() {

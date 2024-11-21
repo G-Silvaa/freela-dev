@@ -1,11 +1,13 @@
 <div class="modal-header">
   <div class="info-modal">
     <h4 class="modal-title pull-left">Editar um usuario</h4>
-
-   
   </div>
-  <button >
-    <i class="bi bi-x" style="font-size: 1.5rem" (click)="bsModalRef.hide()"></i>
+  <button>
+    <i
+      class="bi bi-x"
+      style="font-size: 1.5rem"
+      (click)="bsModalRef.hide()"
+    ></i>
   </button>
 </div>
 
@@ -19,7 +21,7 @@
   <div class="step" [class.active]="currentStep >= 4">Representante</div>
 </div>
 
-<form [formGroup]="form" >
+<form [formGroup]="form">
   <div class="pt1" *ngIf="currentStep === 1">
     <div class="container-inputs">
       <app-input
@@ -28,10 +30,11 @@
         formControlName="nome"
         [maxlength]="200"
         [hasError]="hasMaxLengthAndRequiredError('nome')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')">
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')"
+      >
         >
       </app-input>
-    
+
       <app-input
         label="E-mail:"
         placeholder="Digite seu email:"
@@ -39,7 +42,7 @@
         [maxlength]="200"
         [hasError]="hasMaxLengthAndRequiredError('email')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')"
-        >
+      >
       </app-input>
       <app-input
         label="Telefone:"
@@ -49,7 +52,8 @@
         [maxlength]="15"
         [clearIfNotMatch]="true"
         [hasError]="hasMaxLengthAndRequiredError('telefone')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')">
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')"
+      >
         >
       </app-input>
     </div>
@@ -61,35 +65,33 @@
         label="RG:"
         placeholder="Digite seu RG:"
         formControlName="rg"
-       
         [clearIfNotMatch]="true"
         [maxlength]="12"
         [hasError]="hasMaxLengthAndRequiredError('rg')"
         [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')"
-        >
+      >
       </app-input>
 
       <app-input
-      label="CPF:"
-      mask="000.000.000-00"
-      [maxlength]="14"
-      placeholder="Digite seu CPF:"
-      formControlName="cpf"
-      [clearIfNotMatch]="true"
-      [hasError]="hasMaxLengthAndRequiredError('cpf')"
-      [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')">
+        label="CPF:"
+        mask="000.000.000-00"
+        [maxlength]="14"
+        placeholder="Digite seu CPF:"
+        formControlName="cpf"
+        [clearIfNotMatch]="true"
+        [hasError]="hasMaxLengthAndRequiredError('cpf')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')"
+      >
       </app-input>
 
-      <app-input
-      label="Data De Nascimento:"
-      placeholder="Digite sua data de nascimento:"
-      formControlName="dataNascimento"
-      [clearIfNotMatch]="true"
-      mask="00/00/0000"
-      [maxlength]="10"
-      [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
-      [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')">
-      </app-input>
+      <app-data-input
+      label="Data de nascimento"
+        formControlName="dataNascimento"
+        [maxlength]="10"
+        [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
+        [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')"
+      >
+      </app-data-input>
     </div>
   </div>
 
@@ -97,148 +99,140 @@
     <div class="container-inputs">
       <div class="teste1">
         <app-input
-        mask="00000-000"
-        [maxlength]="10"
-        label="CEP:"
-        [clearIfNotMatch]="true"
-        placeholder="Digite seu CEP:"
-        formControlName="cep"
-        [hasError]="hasMaxLengthAndRequiredError('cep')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cep')">
-      </app-input>
+          mask="00000-000"
+          [maxlength]="10"
+          label="CEP:"
+          [clearIfNotMatch]="true"
+          placeholder="Digite seu CEP:"
+          formControlName="cep"
+          [hasError]="hasMaxLengthAndRequiredError('cep')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('cep')"
+        >
+        </app-input>
 
-      <app-input
-      label="Logradouro:"
-      placeholder="Digite seu logradouro:"
-      formControlName="logradouro"
-      [maxlength]="150"
-      [hasError]="hasMaxLengthAndRequiredError('logradouro')"
-      [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')">
-      </app-input>
-    
-      <app-input
-      label="Complemento:"
-      placeholder="Digite seu complemento:"
-      formControlName="complemento"
-      [maxlength]="150"
-      [hasError]="hasMaxLengthAndRequiredError('complemento')"
-      [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')">
-      </app-input>
+        <app-input
+          label="Logradouro:"
+          placeholder="Digite seu logradouro:"
+          formControlName="logradouro"
+          [maxlength]="150"
+          [hasError]="hasMaxLengthAndRequiredError('logradouro')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')"
+        >
+        </app-input>
 
+        <app-input
+          label="Complemento:"
+          placeholder="Digite seu complemento:"
+          formControlName="complemento"
+          [maxlength]="150"
+          [hasError]="hasMaxLengthAndRequiredError('complemento')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')"
+        >
+        </app-input>
       </div>
-     <div class="teste2">
-      <app-input
-      label="Bairro:"
-      placeholder="Digite seu bairro:"
-      formControlName="bairro"
-      [maxlength]="150"
-      [hasError]="hasMaxLengthAndRequiredError('bairro')"
-      [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')">
-    </app-input>
+      <div class="teste2">
+        <app-input
+          label="Bairro:"
+          placeholder="Digite seu bairro:"
+          formControlName="bairro"
+          [maxlength]="150"
+          [hasError]="hasMaxLengthAndRequiredError('bairro')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')"
+        >
+        </app-input>
 
-    <app-input
-    label="Cidade:"
-    [maxlength]="150"
-    placeholder="Digite sua cidade:"
-    formControlName="cidade"
-    [hasError]="hasMaxLengthAndRequiredError('cidade')"
-    [errorMsg]="getMaxLengthAndRequiredErrorMsg('cidade')">
-    </app-input>
+        <app-input
+          label="Cidade:"
+          [maxlength]="150"
+          placeholder="Digite sua cidade:"
+          formControlName="cidade"
+          [hasError]="hasMaxLengthAndRequiredError('cidade')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('cidade')"
+        >
+        </app-input>
 
-    <app-select-input 
-      [label]="'Tem representante?'" 
-      [options]="selectOptions" 
-      [placeholder]="'Escolha uma opção'"
-      formControlName="temRepresentante"
-      (change)="onRepresentativeChange($event)">
-    </app-select-input>
-     </div>
-     
+        <app-select-input
+          [label]="'Tem representante?'"
+          [options]="selectOptions"
+          [placeholder]="'Escolha uma opção'"
+          formControlName="temRepresentante"
+          (change)="onRepresentativeChange($event)"
+        >
+        </app-select-input>
+      </div>
     </div>
   </div>
 
-  <div class="pt4" *ngIf="currentStep === 4 ">
+  <div class="pt4" *ngIf="currentStep === 4">
     <div class="container-inputs">
       <h4>Contato</h4>
       <div class="container1">
         <app-input
-        label="Nome do Representante:"
-        placeholder="Digite o nome do representante:"
-        formControlName="representanteNome"
-        [maxlength]="200"
-       >
-      </app-input>
+          label="Nome do Representante:"
+          placeholder="Digite o nome do representante:"
+          formControlName="representanteNome"
+          [maxlength]="200"
+        >
+        </app-input>
 
-      <app-input
-        label="E-mail do Representante:"
-        placeholder="Digite o e-mail do representante:"
-        formControlName="representanteEmail"
-       
-        [maxlength]="256"
-     >
-        
-      </app-input>
+        <app-input
+          label="E-mail do Representante:"
+          placeholder="Digite o e-mail do representante:"
+          formControlName="representanteEmail"
+          [maxlength]="256"
+        >
+        </app-input>
 
-      <app-input
-        label="Telefone do Representante:"
-        placeholder="Digite o telefone do representante:"
-        formControlName="representanteTelefone"
-        mask="(00) 00000-0000"
-        [maxlength]="15"
-        [clearIfNotMatch]="true"
-       >
-        
-      </app-input>
+        <app-input
+          label="Telefone do Representante:"
+          placeholder="Digite o telefone do representante:"
+          formControlName="representanteTelefone"
+          mask="(00) 00000-0000"
+          [maxlength]="15"
+          [clearIfNotMatch]="true"
+        >
+        </app-input>
       </div>
       <h4>Dados do parentesco</h4>
       <div class="container1">
         <app-input
-        label="Parentesco:"
-        placeholder="Digite o parentesco:"
-        formControlName="parentesco"
-        
-        [maxlength]="30"
+          label="Parentesco:"
+          placeholder="Digite o parentesco:"
+          formControlName="parentesco"
+          [maxlength]="30"
         >
-        
-      </app-input>
-    
-      <app-input
-        label="CPF do Representante:"
-        placeholder="Digite o CPF:"
-        formControlName="representanteCpf"
-        mask="000.000.000-00"
-        [maxlength]="14"
-        [clearIfNotMatch]="true"
-        >
-      </app-input>
-      <app-input
-        label="RG do Representante:"
-        placeholder="Digite o RG:"
-       
-        [maxlength]="30"
-        [clearIfNotMatch]="true"
-        formControlName="representanteRg"
-       >
-      </app-input>
+        </app-input>
 
-    
+        <app-input
+          label="CPF do Representante:"
+          placeholder="Digite o CPF:"
+          formControlName="representanteCpf"
+          mask="000.000.000-00"
+          [maxlength]="14"
+          [clearIfNotMatch]="true"
+        >
+        </app-input>
+        <app-input
+          label="RG do Representante:"
+          placeholder="Digite o RG:"
+          [maxlength]="30"
+          [clearIfNotMatch]="true"
+          formControlName="representanteRg"
+        >
+        </app-input>
       </div>
       <div class="t">
-      <app-input
-      label="Data de Nascimento:"
-      mask="00/00/0000"
-      [maxlength]="10"
-      [clearIfNotMatch]="true"
-      placeholder="Digite a data de nascimento:"
-      formControlName="representanteDataNascimento"
-      >
-    </app-input>
-  </div>
-
-     
+        <app-data-input
+        label="Data de nascimento"
+          [maxlength]="10"
+          placeholder="Digite a data de nascimento:"
+          formControlName="representanteDataNascimento"
+        >
+        </app-data-input>
+      </div>
     </div>
   </div>
-  
+
   <div class="footer-modal">
     <app-button variant="danger" width="100px" (click)="onCloseModal()">
       Fechar
@@ -246,21 +240,30 @@
     <app-button
       width="100px"
       *ngIf="currentStep > 1"
-      (click)="onPreviousStep()">
+      (click)="onPreviousStep()"
+    >
       Voltar
     </app-button>
     <app-button
       width="100px"
-      *ngIf="currentStep < 4 && (currentStep !== 3 || form.get('temRepresentante')?.value === 'sim')"
-      (click)="onNextStep()">
+      *ngIf="
+        currentStep < 4 &&
+        (currentStep !== 3 || form.get('temRepresentante')?.value === 'sim')
+      "
+      (click)="onNextStep()"
+    >
       Próximo
     </app-button>
     <app-button
-    width="100px"
-    *ngIf="currentStep === 4 || (currentStep === 3 && form.get('temRepresentante')?.value === 'nao')"
-    [isLoading]="isLoading"
-    (click)="onSubmit()">
-    Salvar
-  </app-button>
+      width="100px"
+      *ngIf="
+        currentStep === 4 ||
+        (currentStep === 3 && form.get('temRepresentante')?.value === 'nao')
+      "
+      [isLoading]="isLoading"
+      (click)="onSubmit()"
+    >
+      Salvar
+    </app-button>
   </div>
 </form>

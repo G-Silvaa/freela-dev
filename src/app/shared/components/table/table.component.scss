@@ -107,9 +107,11 @@
         justify-content: end;
         max-height: 2rem;
         margin: 10px;
+        position: relative;
 
         &.actions-container-relatorios {
           flex-direction: row-reverse;
+          position:-ms-page;
         }
 
         button {
@@ -140,6 +142,7 @@
         }
 
         .dropdown {
+          position: relative;
           display: inline-block;
           background: transparent;
 
@@ -158,6 +161,8 @@
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+            right: 0; /* Align to the right edge of the button */
+            top: 100%; /* Position below the button */
 
             a {
               color: black;
