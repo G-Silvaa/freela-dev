@@ -178,8 +178,13 @@
 
         .renew-button {
           background-color: #6c757d;
-          min-width: 80px;
           margin-right: 8px;
+
+          img {
+            width: 35px;
+            height: 35px;
+            filter: invert(1) brightness(2);
+          }
         }
       }
     }

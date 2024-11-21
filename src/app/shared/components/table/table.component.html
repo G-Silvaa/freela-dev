@@ -18,16 +18,18 @@
           *ngIf="showRenew"
           class="btn renew-button"
           (click)="emitRenewContractId(item)"
+          title="Renovar contrato"
         >
-          Renovar
+          <img src="renew-contract-removebg-preview.png" alt="">
         </button>
-        <button class="btn btn-warning" (click)="onEdit(item)">
+        <button class="btn btn-warning" (click)="onEdit(item)" title="Editar contrato">
           <i class="bi bi-pencil-fill"></i>
         </button>
         <button
           *ngIf="showDelete"
           class="btn btn-danger"
           (click)="onDelete(item)"
+          title="Deletar contrato"
         >
           <i class="bi bi-trash-fill"></i>
         </button>
