@@ -33,9 +33,6 @@ import Swal from "sweetalert2";
     TableComponent,
     InputDefaultComponent,
     SelectInputComponent,
-    ModalComponent,
-    AddUsersModalComponent,
-    ButtonComponent,
     EditContratoModalComponent,
     ReactiveFormsModule,
   ],
@@ -52,6 +49,7 @@ export class ContratosComponent implements OnInit {
   terceiroFiltro = terceiroFiltro;
   beneficiosOptions = beneficiosOptions;
   isLoading = false;
+  protected lastfilter = {};
   bsModalRef?: BsModalRef;
 
   @ViewChild("editTemplate") editTemplate!: TemplateRef<any>;
@@ -77,6 +75,12 @@ export class ContratosComponent implements OnInit {
 
   submitFilter() {
     const formValue = this.filterForm.value;
+    if(this.lastfilter === formValue) {
+      return;
+    }
+    if (!formValue.nome && !formValue.cpf && !formValue.beneficio && (this.lastfilter === formValue)) {
+      return;
+    }
     const filteredCpfForm = {
       nome: formValue.nome,
       cpf: formValue.cpf ? this.removeSpecialCharacters(formValue.cpf) : "",
@@ -96,11 +100,14 @@ export class ContratosComponent implements OnInit {
         console.log("erro", err);
       },
     });
+    this.lastfilter = formValue;
   }
 
   clearFilter() {
-    this.filterForm.reset();
-    this.submitFilter();
+    if(this.filterForm.value.nome || this.filterForm.value.cpf || this.filterForm.value.beneficio) {
+      this.filterForm.reset();
+      this.submitFilter();
+    }
   }
 
   onEdit(item: any) {
