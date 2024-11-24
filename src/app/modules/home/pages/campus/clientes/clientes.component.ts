@@ -141,7 +141,12 @@ export class ClientesComponent implements OnInit {
 
   aplicarFiltros() {
     this.isLoading = true;
-    this.usuarioService.buscarClientesComFiltros(this.filtros).subscribe((response) => {
+    const filtrosComCpfLimpo = {
+      ...this.filtros,
+      cpf: this.limparCPF(this.filtros.cpf)
+    };
+    console.log('Filtros aplicados:', filtrosComCpfLimpo);
+    this.usuarioService.buscarClientesComFiltros(filtrosComCpfLimpo).subscribe((response) => {
       if (Array.isArray(response.content)) {
         this.pessoasData = response.content.map((cliente: ICliente) => ({
           id: cliente.id,
@@ -159,6 +164,11 @@ export class ClientesComponent implements OnInit {
       console.error('Erro ao aplicar filtros:', error);
       this.isLoading = false;
     });
+  }
+
+
+  limparCPF(cpf: string): string {
+    return cpf.replace(/\D/g, '');
   }
 
   limparFiltros() {
