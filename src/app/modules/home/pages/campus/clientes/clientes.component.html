@@ -17,7 +17,15 @@
       errorMsg="Nome é obrigatório"
       [isDisable]="false"
     ></app-input>
-   
+    <app-input
+    label="CPF"
+    type="text"
+    placeholder="Digite o CPF"
+    [(ngModel)]="filtros.cpf"
+    [hasError]="false"
+    errorMsg="CPF é obrigatório"
+    [isDisable]="false"
+  ></app-input>
     <app-input
       label="RG"
       type="text"
@@ -27,15 +35,7 @@
       errorMsg="RG é obrigatório"
       [isDisable]="false"
     ></app-input>
-    <app-input
-      label="CPF"
-      type="text"
-      placeholder="Digite o CPF"
-      [(ngModel)]="filtros.cpf"
-      [hasError]="false"
-      errorMsg="CPF é obrigatório"
-      [isDisable]="false"
-    ></app-input>
+ 
   </div>
     <div class="filtrosB">
       <button class="lupa" (click)="aplicarFiltros()"></button>
