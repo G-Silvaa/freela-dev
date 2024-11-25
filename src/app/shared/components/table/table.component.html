@@ -14,6 +14,14 @@
         class="actions-container"
         [class.actions-container-relatorios]="showOpcoes"
       >
+      <button
+          *ngIf="showBaixarContrato"
+          class="btn download-button"
+          (click)="emitRenewContractId(item)"
+          title="Baixar contrato"
+        >
+          <img class="download" src="download.svg" alt="">
+        </button>
         <button
           *ngIf="showRenew"
           class="btn renew-button"

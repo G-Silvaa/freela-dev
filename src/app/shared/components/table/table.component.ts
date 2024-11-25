@@ -19,6 +19,7 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   @Input() showDelete: boolean = true;
   @Input() showOpcoes: boolean = false;
   @Input() showRenew?: boolean = false;
+  @Input() showBaixarContrato?: boolean = false;
   @Input() itemsPerPage: number = 10;
 
   @Output() edit = new EventEmitter<T>();

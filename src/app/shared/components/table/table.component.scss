@@ -5,7 +5,7 @@
   border-radius: 0.4375rem;
   text-align: center;
   justify-content: flex-end;
- 
+
 
   nav {
     width: 100%;
@@ -189,6 +189,15 @@
             width: 35px;
             height: 35px;
             filter: invert(1) brightness(2);
+          }
+        }
+
+        .download-button {
+          background-color: #007700;
+          color: white;
+          margin-right: 8px;
+          .download {
+            filter: invert(0) brightness(2);
           }
         }
       }
