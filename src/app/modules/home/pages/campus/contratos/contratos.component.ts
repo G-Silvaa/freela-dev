@@ -125,6 +125,21 @@ export class ContratosComponent implements OnInit {
 
   onDelete(item: any) {
     console.log("Delete item:", item);
+    Swal.fire({
+      title: "Aviso!",
+      text: `Deseja mesmo deletar este contrato? Esta ação é irreversível.`,
+      icon: "warning",
+      confirmButtonColor: "#2F9E41",
+      confirmButtonText: "Substituir",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    }).then((resultado) => {
+      if (!resultado.dismiss) {
+        this.contratosService.deleteContrato(item.Id);
+      }
+    });
+
   }
 
   back() {

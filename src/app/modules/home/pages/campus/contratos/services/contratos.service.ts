@@ -45,6 +45,14 @@ export class ContratosService {
     );
   }
 
+  deleteContrato(id: any) {
+    this.http.delete(`${this.API_URL}domain/contrato/${id}`).subscribe({
+      next: (res) => {
+        this.getContratos();
+      }
+    })
+  }
+
   filterContratos(filtros: any): Observable<any> {
     let filterString = "";
 

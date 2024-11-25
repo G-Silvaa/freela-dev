@@ -53,10 +53,7 @@ export interface IRepresentante {
     FormsModule,
     TableComponent,
     InputDefaultComponent,
-    SelectInputComponent,
-    ModalComponent,
     AddUsersModalComponent,
-    ButtonComponent,
     EditUsersModalComponent
   ],
   templateUrl: './clientes.component.html',
@@ -185,5 +182,5 @@ export class ClientesComponent implements OnInit {
     return representante && representante.id ? 'Sim' : 'Não';
   }
 
-  
+
 }
