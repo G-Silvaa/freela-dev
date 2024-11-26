@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GraficosService } from '@modules/home/pages/initial-page/services/initial.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
@@ -8,10 +9,15 @@ import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.scss']
 })
-export class GraficosComponent {
+export class GraficosComponent implements OnInit {
   view: [number, number] = [700, 400]; // Tamanho do gráfico
 
-  // Dados do gráfico
+
+  ngOnInit(): void {
+    this.getdads();
+  }
+  
+  constructor(private readonly initialService: GraficosService) {}
   data = [
     {
       "name": "Processos",
@@ -27,19 +33,23 @@ export class GraficosComponent {
     },
   ];
 
-  // Opções de personalização
+  getdads(): void {
+    this.initialService.getDados().subscribe((data) => {
+      console.log(data);
+    });
+  }
+ 
   showXAxis = true;
   showYAxis = true;
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Categorias'; // Nome customizado do eixo X
+  xAxisLabel = 'Categorias'; 
   showYAxisLabel = true;
-  yAxisLabel = 'Total de Registros'; // Nome customizado do eixo Y
+  yAxisLabel = 'Total de Registros';
 
-  // Customização da formatação dos números do eixo Y
   yAxisTickFormatting = (value: number) => {
-    // Aqui você pode definir os valores customizados que aparecerão no gráfico
+    
    
     if (value === 2000000) return 60;
     if (value === 4000000) return 200;
@@ -48,8 +58,8 @@ export class GraficosComponent {
     return value;
   };
 
-  // Controlar o valor máximo do eixo Y para ajustar o gráfico ao novo intervalo
-  yScaleMax = 1000; // Altere para o valor máximo desejado
+  
+  yScaleMax = 1000; 
 
   colorScheme: Color = {
     name: 'custom',
