@@ -9,3 +9,22 @@ ngx-charts-legend-title {
     font-size: 16px;
   }
   
+
+  .month-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+  
+    button {
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+  
+    span {
+      margin: 0 10px;
+      font-size: 1.2em;
+    }
+  }

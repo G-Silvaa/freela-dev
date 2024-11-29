@@ -1,3 +1,9 @@
+<div class="month-selector">
+  <button (click)="previousMonth()">&#9664;</button>
+  <span>Dados do mês de {{ currentMonth }}</span>
+  <button (click)="nextMonth()">&#9654;</button>
+</div>
+
 <h3>Quantidade Total</h3>
 <ngx-charts-bar-vertical
   [view]="view"

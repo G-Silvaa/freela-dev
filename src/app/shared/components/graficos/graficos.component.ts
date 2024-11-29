@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GraficosService } from '@modules/home/pages/initial-page/services/initial.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { Observable } from 'rxjs';
 
 export interface IDados {
   name: string,
@@ -9,6 +10,8 @@ export interface IDados {
 
 interface IDadosResponse {
   content: {
+    ano: number;
+    mes: string;
     totalBeneficiosAguardando: number;
     totalBeneficiosConcedidos: number;
     totalContratos: number;
@@ -45,6 +48,11 @@ export class GraficosComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
 
+  currentMonthIndex: number = 0;
+  months: string[] = [];
+  currentMonth: string = '';
+  apiData: any;
+
   constructor(private readonly initialService: GraficosService) {}
 
   ngOnInit(): void {
@@ -53,36 +61,50 @@ export class GraficosComponent implements OnInit {
 
   getdads(): void {
     this.initialService.getDados().subscribe((data: IDadosResponse) => {
-      console.log(data);
+      console.log('Raw data from API:', data);
 
       if (data.content && Array.isArray(data.content) && data.content.length > 0) {
-        this.datagrafico = data.content.map((item: any) => ({
-          name: 'Benefícios Aguardando', 
-          value: item.totalBeneficiosAguardando,
-        }));
-
-        this.datagrafico.push(
-          {
-            name: 'Benefícios Concedidos',
-            value: data.content[0].totalBeneficiosConcedidos,
-          },
-          {
-            name: 'Contratos',
-            value: data.content[0].totalContratos,
-          },
-          {
-            name: 'Dados de Entrada',
-            value: data.content[0].dadoEntrada,
-          }
-        );
-
-        // Calcular o valor máximo entre os valores de 'value'
-        this.yScaleMax = Math.max(...this.datagrafico.map(d => d.value));
+        this.apiData = data.content;
+        this.months = data.content.map(item => item.mes);
+        this.currentMonthIndex = 0;
+        this.currentMonth = this.months[this.currentMonthIndex];
+        this.updateChartData(this.apiData[this.currentMonthIndex]);
       }
-
-      console.log('Dados do gráfico:', this.datagrafico);
-      console.log('yScaleMax:', this.yScaleMax);
     });
+  }
+
+  updateChartData(data: any): void {
+    this.datagrafico = [
+      { name: 'Benefícios Aguardando', value: this.ensureValidNumber(data.totalBeneficiosAguardando) },
+      { name: 'Benefícios Concedidos', value: this.ensureValidNumber(data.totalBeneficiosConcedidos) },
+      { name: 'Contratos', value: this.ensureValidNumber(data.totalContratos) },
+      { name: 'Dados de Entrada', value: this.ensureValidNumber(data.dadoEntrada) }
+    ];
+  
+    console.log('Dados do gráfico:', this.datagrafico);
+  
+    this.yScaleMax = Math.max(...this.datagrafico.map(d => d.value));
+    console.log('yScaleMax:', this.yScaleMax);
+  }
+
+  ensureValidNumber(value: any): number {
+    return isNaN(value) || value < 0 ? 0 : value;
+  }
+
+  previousMonth(): void {
+    if (this.currentMonthIndex > 0) {
+      this.currentMonthIndex--;
+      this.currentMonth = this.months[this.currentMonthIndex];
+      this.updateChartData(this.apiData[this.currentMonthIndex]);
+    }
+  }
+
+  nextMonth(): void {
+    if (this.currentMonthIndex < this.months.length - 1) {
+      this.currentMonthIndex++;
+      this.currentMonth = this.months[this.currentMonthIndex];
+      this.updateChartData(this.apiData[this.currentMonthIndex]);
+    }
   }
 
   yAxisTickFormatting = (value: number) => {
