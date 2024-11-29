@@ -74,6 +74,7 @@ export class GraficosComponent implements OnInit {
   }
 
   updateChartData(data: any): void {
+    console.log('Data to update chart:', data);
     this.datagrafico = [
       { name: 'Benefícios Aguardando', value: this.ensureValidNumber(data.totalBeneficiosAguardando) },
       { name: 'Benefícios Concedidos', value: this.ensureValidNumber(data.totalBeneficiosConcedidos) },
@@ -88,7 +89,9 @@ export class GraficosComponent implements OnInit {
   }
 
   ensureValidNumber(value: any): number {
-    return isNaN(value) || value < 0 ? 0 : value;
+    const validNumber = isNaN(value) || value < 0 ? 0 : value;
+    console.log(`Ensuring valid number: ${value} -> ${validNumber}`);
+    return validNumber;
   }
 
   previousMonth(): void {
