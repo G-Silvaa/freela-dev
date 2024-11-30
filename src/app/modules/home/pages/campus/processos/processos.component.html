@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <app-table
+  <app-tablescroll
     [columns]="['Nome', 'CPF', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
     [data]="pessoasData"
     [showActions]="true"
@@ -54,7 +54,7 @@
     (gerarCartas)="gerarCarta($event)"
     [showDelete]="false"
     [showOpcoes]="true"
-  ></app-table>
+  ></app-tablescroll>
 </div>
 
 <ng-template #editTemplate>
