@@ -2,7 +2,7 @@
   <table class="table table-bordered table-hover">
     <tr>
       <th *ngFor="let column of columns">{{ column | titlecase }}</th>
-      <th *ngIf="showActions">Ações</th>
+      <th *ngIf="showActions && showAllActions">Ações</th>
     </tr>
 
     <tr *ngFor="let item of paginatedData">
@@ -10,11 +10,11 @@
         {{ truncateText(column, item) }}
       </td>
       <td
-        *ngIf="showActions"
+        *ngIf="showActions && showAllActions"
         class="actions-container"
         [class.actions-container-relatorios]="showOpcoes"
       >
-      <button
+        <button
           *ngIf="showBaixarContrato"
           class="btn download-button"
           (click)="emitRenewContractId(item)"
@@ -43,11 +43,11 @@
         </button>
         <div *ngIf="showOpcoes" class="dropdown">
           <button
-          title="Baixar cartas"
+            title="Baixar cartas"
             class="btn btn-secondary dropdown-button"
             (click)="toggleDropdown(item['id'])"
           >
-           <img src="cartas.png" alt="">
+            <img src="cartas.png" alt="">
           </button>
           <div
             class="dropdown-content"

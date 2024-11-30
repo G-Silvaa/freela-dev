@@ -1,5 +1,5 @@
 import { CommonModule, TitleCasePipe } from "@angular/common";
-import { Component, Input, Output, EventEmitter, HostListener, OnInit, OnDestroy } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
 
 interface DataItem<T> {
   [key: string]: T;
@@ -21,6 +21,7 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   @Input() showRenew?: boolean = false;
   @Input() showBaixarContrato?: boolean = false;
   @Input() itemsPerPage: number = 10;
+  @Input() showAllActions: boolean = true;
 
   @Output() edit = new EventEmitter<T>();
   @Output() delete = new EventEmitter<T>();

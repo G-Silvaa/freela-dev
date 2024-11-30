@@ -21,4 +21,15 @@ export class GraficosService {
 
     return this.http.get(`${this.API_URL}domain/relatorio/query/recentes`, { headers, params });
   }
+
+  getDadosDaTabela(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': '1',
+    });
+
+    
+
+    return this.http.get(`${this.API_URL}processo/cessacao`, { headers });
+  }
 }

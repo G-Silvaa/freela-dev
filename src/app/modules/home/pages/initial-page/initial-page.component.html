@@ -1,4 +1,32 @@
 <div class="graficos">
+  <div class="cima">
   <app-graficos/>
-  <app-pie-chart/>
+
+  
+  <app-table
+  [columns]="['Nome', 'CPF', 'Telefone', 'Status', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
+  [data]="pessoasData"
+  [showActions]="true"
+  [itemsPerPage]="10"
+ 
+  [showAllActions]="false"
+  [showDelete]="false"
+  [showOpcoes]="false"
+></app-table>
+</div>
+
+
+  <app-table
+  [columns]="['Nome', 'CPF', 'Telefone', 'Status', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
+  [data]="pessoasData"
+  [showActions]="true"
+  [itemsPerPage]="10"
+ 
+  [showAllActions]="false"
+  [showDelete]="false"
+  [showOpcoes]="false"
+></app-table>
+
+
+
 </div>
