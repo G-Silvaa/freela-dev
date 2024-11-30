@@ -83,7 +83,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
   iniciarLoopMeses(): void {
     this.intervalId = setInterval(() => {
       this.onMesProximo();
-    }, 3000); // Troca de mês a cada 3 segundos
+    }, 8000); // Troca de mês a cada 3 segundos
   }
 
   atualizarGrafico(mes: string): void {
@@ -111,16 +111,6 @@ export class GraficosComponent implements OnInit, OnDestroy {
       // Calcular o valor máximo entre os valores de 'value'
       this.yScaleMax = Math.max(...this.datagrafico.map(d => d.value));
     }
-  }
-
-  onMesAnterior(): void {
-    const index = this.meses.indexOf(this.mesSelecionado);
-    if (index > 0) {
-      this.mesSelecionado = this.meses[index - 1];
-    } else {
-      this.mesSelecionado = this.meses[this.meses.length - 1];
-    }
-    this.atualizarGrafico(this.mesSelecionado);
   }
 
   onMesProximo(): void {
