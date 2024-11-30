@@ -1,11 +1,12 @@
 .table-container {
   width: 100%;
+  max-width: 856px; /* Define a largura máxima da tabela */
   padding: 0.625rem;
   background-color: var(--background-secundary);
   border-radius: 0.4375rem;
   text-align: center;
   justify-content: flex-end;
-
+  overflow-x: auto; /* Adiciona rolagem horizontal */
 
   nav {
     width: 100%;
@@ -77,6 +78,7 @@
 
   table {
     width: 100%;
+    max-width: 856px; /* Define a largura máxima da tabela */
     margin: 0 auto;
     border-collapse: collapse;
     border-radius: 0.3125rem;
@@ -111,7 +113,7 @@
 
         &.actions-container-relatorios {
           flex-direction: row-reverse;
-          position:-ms-page;
+          position: -ms-page;
         }
 
         button {
@@ -227,7 +229,6 @@ img {
   filter: invert(1) brightness(2);
   object-fit: contain;
 }
-
 
 @media (max-width: 1000px) {
   .table-container {

@@ -9,12 +9,11 @@ import { TableComponent } from "../../../../../shared/components/table/table.com
 import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
 import { environment } from 'src/environments/environment.development';
 import Swal from 'sweetalert2';
-import { TableComponent2 } from '@shared/components/table-scroll/table.component';
 
 @Component({
   selector: 'app-processos',
   standalone: true,
-  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent, FormsModule, TableComponent2],
+  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent, FormsModule, ],
   templateUrl: './processos.component.html',
   styleUrls: ['./processos.component.scss']
 })
