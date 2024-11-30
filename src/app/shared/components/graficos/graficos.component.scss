@@ -1,11 +1,49 @@
 ngx-charts-legend-title {
-    display: none; /* Isso vai esconder o texto "Legend" padrão */
-  }
-  
-  /* Você pode estilizar o título customizado */
-  h3 {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-  
+  display: none; /* Isso vai esconder o texto "Legend" padrão */
+}
+
+/* Estilizar o título customizado */
+h3 {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+  color: #333;
+}
+
+/* Container do gráfico */
+.grafico-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ 
+ 
+}
+
+/* Navegação entre meses */
+.navegacao-meses {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.navegacao-botao {
+  background-color: #5AA454;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0 10px;
+  transition: background-color 0.3s;
+}
+
+.navegacao-botao:hover {
+  background-color: #4a8a3f;
+}
+
+.mes-selecionado {
+  font-size: 18px;
+  color: #333;
+}

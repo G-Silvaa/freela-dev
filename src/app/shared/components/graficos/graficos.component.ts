@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GraficosService } from '@modules/home/pages/initial-page/services/initial.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 
@@ -9,6 +9,8 @@ export interface IDados {
 
 interface IDadosResponse {
   content: {
+    ano: number;
+    mes: string;
     totalBeneficiosAguardando: number;
     totalBeneficiosConcedidos: number;
     totalContratos: number;
@@ -23,11 +25,15 @@ interface IDadosResponse {
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.scss']
 })
-export class GraficosComponent implements OnInit {
+export class GraficosComponent implements OnInit, OnDestroy {
   view: [number, number] = [700, 400]; 
 
   datagrafico: IDados[] = [];
   yScaleMax: number = 200;
+  meses: string[] = [];
+  mesSelecionado: string = '';
+  dadosContent: any[] = [];
+  intervalId: any;
 
   showXAxis = true;
   showYAxis = true;
@@ -51,38 +57,82 @@ export class GraficosComponent implements OnInit {
     this.getdads();
   }
 
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
   getdads(): void {
     this.initialService.getDados().subscribe((data: IDadosResponse) => {
-      console.log(data);
+      console.log("esse aqui", data);
 
       if (data.content && Array.isArray(data.content) && data.content.length > 0) {
-        this.datagrafico = data.content.map((item: any) => ({
-          name: 'Benefícios Aguardando', 
-          value: item.totalBeneficiosAguardando,
-        }));
-
-        this.datagrafico.push(
-          {
-            name: 'Benefícios Concedidos',
-            value: data.content[0].totalBeneficiosConcedidos,
-          },
-          {
-            name: 'Contratos',
-            value: data.content[0].totalContratos,
-          },
-          {
-            name: 'Dados de Entrada',
-            value: data.content[0].dadoEntrada,
-          }
-        );
-
-        // Calcular o valor máximo entre os valores de 'value'
-        this.yScaleMax = Math.max(...this.datagrafico.map(d => d.value));
+        this.dadosContent = data.content;
+        this.meses = data.content.map(item => item.mes);
+        this.mesSelecionado = this.meses[0]; 
+        this.atualizarGrafico(this.mesSelecionado);
+        this.iniciarLoopMeses();
       }
 
       console.log('Dados do gráfico:', this.datagrafico);
       console.log('yScaleMax:', this.yScaleMax);
     });
+  }
+
+  iniciarLoopMeses(): void {
+    this.intervalId = setInterval(() => {
+      this.onMesProximo();
+    }, 3000); // Troca de mês a cada 3 segundos
+  }
+
+  atualizarGrafico(mes: string): void {
+    const item = this.dadosContent.find(i => i.mes === mes);
+    if (item) {
+      this.datagrafico = [
+        {
+          name: 'Benefícios Aguardando',
+          value: item.totalBeneficiosAguardando,
+        },
+        {
+          name: 'Benefícios Concedidos',
+          value: item.totalBeneficiosConcedidos,
+        },
+        {
+          name: 'Contratos',
+          value: item.totalContratos,
+        },
+        {
+          name: 'Dados de Entrada',
+          value: item.dadoEntrada,
+        }
+      ];
+
+      // Calcular o valor máximo entre os valores de 'value'
+      this.yScaleMax = Math.max(...this.datagrafico.map(d => d.value));
+    }
+  }
+
+  onMesAnterior(): void {
+    const index = this.meses.indexOf(this.mesSelecionado);
+    if (index > 0) {
+      this.mesSelecionado = this.meses[index - 1];
+      this.atualizarGrafico(this.mesSelecionado);
+    } else {
+      this.mesSelecionado = this.meses[this.meses.length - 1];
+      this.atualizarGrafico(this.mesSelecionado);
+    }
+  }
+
+  onMesProximo(): void {
+    const index = this.meses.indexOf(this.mesSelecionado);
+    if (index < this.meses.length - 1) {
+      this.mesSelecionado = this.meses[index + 1];
+      this.atualizarGrafico(this.mesSelecionado);
+    } else {
+      this.mesSelecionado = this.meses[0];
+      this.atualizarGrafico(this.mesSelecionado);
+    }
   }
 
   yAxisTickFormatting = (value: number) => {
