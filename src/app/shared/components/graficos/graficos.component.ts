@@ -15,7 +15,7 @@ interface IDadosResponse {
     totalBeneficiosAguardando: number;
     totalBeneficiosConcedidos: number;
     totalContratos: number;
-    dadoEntrada: number; 
+    dadoEntrada: number;
   }[];
 }
 
@@ -27,7 +27,7 @@ interface IDadosResponse {
   styleUrls: ['./graficos.component.scss']
 })
 export class GraficosComponent implements OnInit, OnDestroy {
-  view: [number, number] = [700, 400]; 
+  view: [number, number] = [700, 400];
 
   datagrafico: IDados[] = [];
   yScaleMax: number = 200;
@@ -41,7 +41,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Categorias'; 
+  xAxisLabel = 'Categorias';
   showYAxisLabel = true;
   yAxisLabel = 'Total de Registros';
 
@@ -71,7 +71,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
       if (data.content && Array.isArray(data.content) && data.content.length > 0) {
         this.dadosContent = data.content;
         this.meses = data.content.map(item => item.mes);
-        this.mesSelecionado = this.meses[0]; 
+        this.mesSelecionado = this.meses[0];
         this.atualizarGrafico(this.mesSelecionado);
       }
 
@@ -115,6 +115,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
       this.mesSelecionado = this.meses[this.meses.length - 1];
     }
     this.atualizarGrafico(this.mesSelecionado);
+    console.log("esse é o mes selecionado: cliquei no anterior", this.mesSelecionado);
   }
 
   onMesProximo(): void {
@@ -125,6 +126,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
       this.mesSelecionado = this.meses[0];
     }
     this.atualizarGrafico(this.mesSelecionado);
+    console.log("esse é o mes selecionado: cliquei no proximo", this.mesSelecionado);
   }
 
   yAxisTickFormatting = (value: number) => {
