@@ -117,22 +117,20 @@ export class GraficosComponent implements OnInit, OnDestroy {
     const index = this.meses.indexOf(this.mesSelecionado);
     if (index > 0) {
       this.mesSelecionado = this.meses[index - 1];
-      this.atualizarGrafico(this.mesSelecionado);
     } else {
       this.mesSelecionado = this.meses[this.meses.length - 1];
-      this.atualizarGrafico(this.mesSelecionado);
     }
+    this.atualizarGrafico(this.mesSelecionado);
   }
 
   onMesProximo(): void {
     const index = this.meses.indexOf(this.mesSelecionado);
     if (index < this.meses.length - 1) {
       this.mesSelecionado = this.meses[index + 1];
-      this.atualizarGrafico(this.mesSelecionado);
     } else {
       this.mesSelecionado = this.meses[0];
-      this.atualizarGrafico(this.mesSelecionado);
     }
+    this.atualizarGrafico(this.mesSelecionado);
   }
 
   yAxisTickFormatting = (value: number) => {
