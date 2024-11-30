@@ -29,6 +29,22 @@ h3 {
   margin-bottom: 20px;
 }
 
+.navegacao-botao {
+  background-color: #5AA454;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0 10px;
+  transition: background-color 0.3s;
+}
+
+.navegacao-botao:hover {
+  background-color: #4a8a3f;
+}
+
 .mes-selecionado {
   font-size: 18px;
   color: #333;

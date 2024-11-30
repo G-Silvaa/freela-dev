@@ -17,6 +17,8 @@ export class GraficosService {
       'ngrok-skip-browser-warning': '1',
     });
 
-    return this.http.get(`${this.API_URL}domain/relatorio/query/recentes`, { headers });
+    const params = { size: '6' };
+
+    return this.http.get(`${this.API_URL}domain/relatorio/query/recentes`, { headers, params });
   }
 }
