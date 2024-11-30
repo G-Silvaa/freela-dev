@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GraficosService } from '@modules/home/pages/initial-page/services/initial.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { Observable } from 'rxjs';
 
 export interface IDados {
   name: string,
@@ -50,6 +51,11 @@ export class GraficosComponent implements OnInit, OnDestroy {
     group: ScaleType.Ordinal,
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
+
+  currentMonthIndex: number = 0;
+  months: string[] = [];
+  currentMonth: string = '';
+  apiData: any;
 
   constructor(private readonly initialService: GraficosService) {}
 
