@@ -17,6 +17,7 @@
 }
 
 .sidenav {
+  position: fixed;
   width: 270px;
   overflow-x: auto;
   z-index: 1;
@@ -101,7 +102,7 @@
 main {
   width: 100%;
   min-height: 100vh;
-
+  margin-left: 270px;
   background-color: var(--background-primary);
   header {
     width: 100%;

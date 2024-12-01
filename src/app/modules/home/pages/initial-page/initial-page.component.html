@@ -1,21 +1,23 @@
 <div class="graficos">
-  <div class="cima">
   <app-graficos/>
 
-  
-  <app-tablescroll
-  [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão']"
-  [data]="pessoasDataConcedido"
-  [showActions]="true"
-  [itemsPerPage]="3"
- 
-  [showAllActions]="false"
-  [showDelete]="false"
-  [showOpcoes]="false"
+
+<div class="border bordertd">
+<h1 class="margin">Contratos em 60 e 30 dias depois de concedido (nome de ex)</h1>
+<app-tablescroll
+[columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão']"
+[data]="pessoasDataConcedido"
+[showActions]="true"
+[itemsPerPage]="3"
+
+[showAllActions]="false"
+[showDelete]="false"
+[showOpcoes]="false"
 ></app-tablescroll>
 </div>
 
-
+<div class="border">
+<h1>Contratos em 60 e 30 dias depois de concedido(nome de ex)</h1>
   <app-table
   [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
   [data]="pessoasData"
@@ -26,6 +28,7 @@
   [showDelete]="false"
   [showOpcoes]="false"
 ></app-table>
+</div>
 
 
 

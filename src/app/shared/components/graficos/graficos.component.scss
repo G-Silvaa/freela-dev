@@ -17,8 +17,9 @@ h3 {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1000px; /* Ajuste conforme necessário */
+  max-width: 1200px; /* Ajuste conforme necessário */
   margin: 0 auto;
+  margin: -76px auto;
 }
 
 /* Navegação entre meses */
@@ -48,3 +49,16 @@ h3 {
   font-size: 18px;
   color: #333;
 }
+
+/* Media query para dispositivos móveis */
+@media (max-width: 980px) {
+  .grafico-container {
+    max-width: 100%; /* Ajuste a largura máxima para 100% */
+  }
+
+  ngx-charts-bar-vertical {
+    width: 100%; /* Ajuste a largura do gráfico para 100% */
+    height: auto; /* Ajuste a altura do gráfico automaticamente */
+  }
+}
+
