@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { GraficosService } from '@modules/home/pages/initial-page/services/initial.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { Observable } from 'rxjs';
@@ -56,12 +56,25 @@ export class GraficosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getdads();
+    this.updateChartSize();
   }
 
   ngOnDestroy(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.updateChartSize();
+  }
+
+  updateChartSize(): void {
+    const width = window.innerWidth < 980 ? window.innerWidth * 0.9 : 700; 
+    const height = window.innerHeight * 0; 
+    this.view = [width, height];
+    this.showLegend = window.innerWidth >= 980; // Mostrar legenda apenas se a largura for maior ou igual a 980px
   }
 
   getdads(): void {
@@ -86,19 +99,19 @@ export class GraficosComponent implements OnInit, OnDestroy {
       this.datagrafico = [
         {
           name: 'Benefícios Aguardando',
-          value: item.totalBeneficiosAguardando,
+          value: item.totalBeneficiosAguardando || 0,
         },
         {
           name: 'Benefícios Concedidos',
-          value: item.totalBeneficiosConcedidos,
+          value: item.totalBeneficiosConcedidos || 0,
         },
         {
           name: 'Contratos',
-          value: item.totalContratos,
+          value: item.totalContratos || 0,
         },
         {
           name: 'Dado de Entrada',
-          value: item.dadoEntrada,
+          value: item.dadoEntrada || 0,
         }
       ];
 
