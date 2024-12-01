@@ -64,6 +64,13 @@ export class AddprocessosModalComponent implements OnInit {
     );
   }
 
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
   formatarData(data: string): string {
     if (!data) return '';
     const [ano, mes, dia] = data.split('T')[0].split('-');
