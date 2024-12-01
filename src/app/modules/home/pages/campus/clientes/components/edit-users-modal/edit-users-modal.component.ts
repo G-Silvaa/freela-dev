@@ -128,36 +128,54 @@ export class EditUsersModalComponent implements OnInit {
     const dados = this.form.value;
   
     // Remover caracteres especiais do CEP
+    // Função para converter data do formato brasileiro para o formato americano
+    const converterDataParaAmericano = (data: string) => {
+      const [dia, mes, ano] = data.split('/');
+      return `${ano}-${mes}-${dia}`;
+    };
+
+    // Remover caracteres especiais dos campos e converter datas
+    const dataNascimentoAmericano = converterDataParaAmericano(dados.dataNascimento);
+    const representanteDataNascimentoAmericano = dados.representanteDataNascimento ? converterDataParaAmericano(dados.representanteDataNascimento) : null;
     const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
-  
+    const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
+    const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
+    const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
+    const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
+    const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
+    const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
+
     const payload = {
       contato: {
         nome: dados.nome,
         email: dados.email,
-        telefone: dados.telefone
+        telefone: telefoneSemCaracteresEspeciais,
       },
-      cpf: dados.cpf,
-      rg: dados.rg,
+      cpf: cpfSemCaracteresEspeciais,
+      rg: rgSemCaracteresEspeciais,
       nascimento: dados.dataNascimento,
       endereco: {
         cep: cepSemCaracteresEspeciais,
         logradouro: dados.logradouro,
         complemento: dados.complemento,
         bairro: dados.bairro,
-        cidade: dados.cidade
+        cidade: dados.cidade,
       },
       representante: dados.temRepresentante === 'sim' ? {
         contato: {
           nome: dados.representanteNome,
           email: dados.representanteEmail,
-          telefone: dados.representanteTelefone
+          telefone: representanteTelefoneSemCaracteresEspeciais,
         },
         parentesco: dados.parentesco,
-        cpf: dados.representanteCpf,
-        rg: dados.representanteRg,
-        nascimento: dados.representanteDataNascimento
+        cpf: representanteCpfSemCaracteresEspeciais,
+        rg: representanteRgSemCaracteresEspeciais,
+        nascimento: dados.representanteDataNascimento,
       } : null,
+      beneficios: dados.beneficios,
+      valor: dados.preco
     };
+
   
     console.log('Payload:', payload);
     this.clientesService.atualizarUsuario(this.data.id, payload).subscribe(

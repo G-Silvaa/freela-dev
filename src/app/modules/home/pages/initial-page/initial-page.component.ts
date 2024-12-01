@@ -15,16 +15,24 @@ import { TableComponent2 } from '@shared/components/table-scroll/table.component
 })
 export class InitialPageComponent implements OnInit {
   pessoasData: any[] = [];
+  pessoasDataConcedido: any[] = [];
 
   constructor(private readonly graficosService: GraficosService) {}
 
   ngOnInit(): void {
     this.fetchDadosDaTabela();
+    this.fetchDadosConcedidos();
   }
 
   fetchDadosDaTabela(): void {
     this.graficosService.getDadosDaTabela().subscribe((response) => {
       this.pessoasData = response.content;
+    });
+  }
+
+  fetchDadosConcedidos(): void {
+    this.graficosService.getDadosConcedidos().subscribe((response) => {
+      this.pessoasDataConcedido = response.content;
     });
   }
 }

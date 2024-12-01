@@ -37,6 +37,20 @@ export class GraficosService {
     );
   }
 
+  getDadosConcedidos(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': '1',
+    });
+
+    return this.http.get(`${this.API_URL}processo/concedido`, { headers }).pipe(
+      map((response: any) => {
+        response.content = this.formatarDados(response.content);
+        return response;
+      })
+    );
+  }
+
   private formatarDados(dados: any[]): any[] {
     return dados.map((item: any) => ({
       Nome: item.nome,
@@ -46,7 +60,7 @@ export class GraficosService {
       Status: this.formatarStatus(item.status),
       Beneficio: item.beneficio,
       'Data de Concessão': this.formatarData(item.dataConcessao),
-      Cessação: this.formatarData(item.cessacao),
+      Cessação: item.cessacao ? this.formatarData(item.cessacao) : '',
     }));
   }
 

@@ -97,7 +97,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
           value: item.totalContratos,
         },
         {
-          name: 'Dados de Entrada',
+          name: 'Dado de Entrada',
           value: item.dadoEntrada,
         }
       ];
