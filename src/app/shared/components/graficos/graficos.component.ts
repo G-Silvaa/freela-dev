@@ -43,7 +43,7 @@ export class GraficosComponent implements OnInit, OnDestroy {
   showXAxisLabel = true;
   xAxisLabel = 'Categorias';
   showYAxisLabel = true;
-  yAxisLabel = 'Total de Registros';
+  yAxisLabel = 'Quantidade';
 
   colorScheme: Color = {
     name: 'custom',
@@ -71,10 +71,10 @@ export class GraficosComponent implements OnInit, OnDestroy {
   }
 
   updateChartSize(): void {
-    const width = window.innerWidth < 980 ? window.innerWidth * 0.9 : 1200; // Ajuste a largura com base no tamanho da janela
-    const height = window.innerWidth < 980 ? window.innerHeight * 0.5 : 600; // Ajuste a altura com base no tamanho da janela
+    const width = window.innerWidth < 980 ? window.innerWidth * 0.9 : 1200; 
+    const height = window.innerWidth < 980 ? window.innerHeight * 0.5 : 600; 
     this.view = [width, height];
-    this.showLegend = window.innerWidth >= 980; // Mostrar legenda apenas se a largura for maior ou igual a 980px
+    this.showLegend = window.innerWidth >= 980; 
   }
 
   getdads(): void {

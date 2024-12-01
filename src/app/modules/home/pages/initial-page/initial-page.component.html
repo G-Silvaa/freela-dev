@@ -3,7 +3,7 @@
 
 
 <div class="border bordertd">
-<h1 class="margin">Contratos em 60 e 30 dias depois de concedido (nome de ex)</h1>
+<h1 class="margin">Benefícios Concedodos perto de 60 dias</h1>
 <app-tablescroll
 [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão']"
 [data]="pessoasDataConcedido"
@@ -17,12 +17,13 @@
 </div>
 
 <div class="border">
-<h1>Contratos em 60 e 30 dias depois de concedido(nome de ex)</h1>
+<h1>Benefícios por incapacidade Temporária em Cessação
+</h1>
   <app-table
   [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
   [data]="pessoasData"
   [showActions]="true"
-  [itemsPerPage]="2"
+  [itemsPerPage]="3"
  
   [showAllActions]="false"
   [showDelete]="false"
