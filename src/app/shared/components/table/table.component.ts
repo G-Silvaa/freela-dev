@@ -27,6 +27,7 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   @Output() delete = new EventEmitter<T>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() gerarCartas = new EventEmitter<{ id: any; tipo: any }>();
+  @Output() downloadContract = new EventEmitter<{ id: any }>();
   @Output() renewContract = new EventEmitter<{ id: any }>();
 
   currentPage: number = 1;
@@ -79,6 +80,9 @@ export class TableComponent<T> implements OnInit, OnDestroy {
 
   toggleDropdown(id: any) {
     this.dropdownOpen = this.dropdownOpen === id ? null : id;
+  }
+  emitDownloadContract(item: any) {
+    this.downloadContract.emit({ id: item.Id });
   }
 
   emitRenewContractId(item: any) {

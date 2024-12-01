@@ -75,6 +75,45 @@ export class ContratosService {
     });
   }
 
+  downloadAndSaveFile(id: any) {
+    this.http.patch(`${this.API_URL}domain/contrato/${id}/gerar-contrato`, {}, {
+      responseType: 'blob' as 'json',
+      observe: 'response',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1',
+      }),
+    }).subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+          ? contentDisposition.split('filename=')[1].trim()
+          : 'download.pdf';
+
+        if (response.body) {
+          const blob = new Blob([response.body as Blob], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+
+          console.log('Carta gerada com sucesso:', response);
+        } else {
+          console.error('Resposta vazia ou inválida:', response);
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao baixar o arquivo', error);
+      },
+    });
+  }
+
+
+
   renewContract(id: any): void {
     this.http
       .patch(

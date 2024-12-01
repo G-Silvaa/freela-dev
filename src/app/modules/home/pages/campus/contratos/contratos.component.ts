@@ -173,6 +173,11 @@ export class ContratosComponent implements OnInit {
     });
   }
 
+  onEmitDownloadContract(item: { id: any }) {
+    this.contratosService.downloadAndSaveFile(item.id);
+    console.log("Download contrato", item);
+  }
+
   onEmitRenewContractId(item: { id: any }) {
     Swal.fire({
       title: "Cuidado!",
