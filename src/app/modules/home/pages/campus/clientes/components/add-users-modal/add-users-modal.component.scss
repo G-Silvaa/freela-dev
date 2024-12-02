@@ -131,17 +131,13 @@ form {
   }
 
   .t{
-    margin-right: 448px;
+    margin-right: 384px;
   }
-  .repon{
-    display: flex;
-   
-    gap: 14px;
-    align-items: center;
-    justify-content: center;
+  .t{
+    margin-right: 458px;
   }
 
-  app-input-money{
-    width: 250px;
-    margin-top: 15px;
+  app-data-input{
+    width: 198px;
+    display: flex;
   }

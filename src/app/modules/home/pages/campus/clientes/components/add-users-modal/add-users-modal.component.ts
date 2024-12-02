@@ -72,6 +72,7 @@ export class AddUsersModalComponent implements OnInit {
       preco: ['', Validators.required]
     });
   }
+
   ngOnInit() {
     let isUpdating = false;
     let cpfValidado = false;
@@ -106,7 +107,8 @@ export class AddUsersModalComponent implements OnInit {
           this.existingUserId = cliente.id;
 
           const datePipe = new DatePipe('en-US');
-          const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
+          const formattedDate = datePipe.transform(cliente.nascimento, 'yyyy-MM-dd');
+          const formattedDate2 = datePipe.transform(cliente.representante?.nascimento, 'yyyy-MM-dd');
 
           isUpdating = true;
           // Preenche o formulário com os dados do cliente
@@ -129,7 +131,7 @@ export class AddUsersModalComponent implements OnInit {
             parentesco: cliente.representante?.parentesco,
             representanteCpf: cliente.representante?.cpf,
             representanteRg: cliente.representante?.rg,
-            representanteDataNascimento: cliente.representante?.nascimento,
+            representanteDataNascimento: formattedDate2,
           });
 
           // Desabilita os campos após preencher, exceto os especificados
@@ -199,7 +201,6 @@ export class AddUsersModalComponent implements OnInit {
     this.form.get('cpf')?.updateValueAndValidity();
   }
 
-
   onCloseModal() {
     this.modalService.hide();
     this.closeModal.emit();
@@ -264,10 +265,6 @@ export class AddUsersModalComponent implements OnInit {
     { value: '36', label: 'Auxílio Acidente' },
     { value: '80', label: 'Salário Maternidade' },
   ];
-
-
-
-
 
   onSubmit() {
     this.isLoading = true;
@@ -384,7 +381,6 @@ export class AddUsersModalComponent implements OnInit {
     }
   }
 
-
   hasMaxLengthAndRequiredError(input: string): boolean {
     return this.customValidationService.hasMaxLengthAndRequiredError(
       this.form,
@@ -430,7 +426,6 @@ export class AddUsersModalComponent implements OnInit {
         return [];
     }
   }
-
 
   formatarData(data: string): string {
     if (!data) return '';
