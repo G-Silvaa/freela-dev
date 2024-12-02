@@ -21,7 +21,7 @@ export class ContratosService {
   getContratos(): void {
     const params = new HttpParams().set(
       "fields",
-      "*,cliente,beneficio,processos",
+      "*,cliente",
     );
 
     this.http

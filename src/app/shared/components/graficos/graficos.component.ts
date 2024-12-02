@@ -5,6 +5,7 @@ import { SelectInputComponent } from '../inputs/select-input/select-input.compon
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { modalPostComponent } from './components/modal-post/modal-post.components';
 import { RelatoriosService } from '@core/services/relatorios.service';
+import { LucideAngularModule } from 'lucide-angular';
 
 export interface IDados {
   name: string,
@@ -28,7 +29,7 @@ interface IDadosResponse {
 @Component({
   selector: 'app-graficos',
   standalone: true,
-  imports: [NgxChartsModule, modalPostComponent],
+  imports: [NgxChartsModule, modalPostComponent, LucideAngularModule],
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.scss']
 })
@@ -71,9 +72,9 @@ export class GraficosComponent implements OnInit, OnDestroy {
   ]
 
   relatoriosOptionsMes = [
-    { label: "Relação de contratos(mês)", value: "relacao-contratos-do-mes" },
-    { label: "Concessões(mês)", value: "concessoes-do-mes" },
-    { label: "Perícia e avaliação social(mês)", value: "pericia-avaliacao-social-do-mes" },
+    { label: "Relação de contratos (mês)", value: "relacao-contratos-do-mes" },
+    { label: "Concessões (mês)", value: "concessoes-do-mes" },
+    { label: "Perícia e avaliação social (mês)", value: "pericia-avaliacao-social-do-mes" },
   ]
 
    beneficiosOptions = [
