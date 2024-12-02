@@ -2,10 +2,11 @@
   <h3>Quantidade Total</h3>
   <div class="navegacao-meses">
     <button (click)="onMesAnterior()" class="navegacao-botao">&#9664;</button>
-    <span class="mes-selecionado">Estatísticas do mês de: {{ mesSelecionado }}</span>
+    <span class="mes-selecionado">Estatísticas do mês de: {{ itemSelectionado?.mes }} de {{ itemSelectionado?.ano }}</span>
     <button (click)="onMesProximo()" class="navegacao-botao">&#9654;</button>
   </div>
-  <ngx-charts-bar-vertical
+  <div class="conteudo">
+    <ngx-charts-bar-vertical
     [view]="view"
     [scheme]="colorScheme"
     [results]="datagrafico"
@@ -23,4 +24,28 @@
     (select)="onSelect($event)"
   >
   </ngx-charts-bar-vertical>
+
+  <div class="select-options">
+    <div class="dropdown">
+      <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Relatórios
+      </a>
+
+      <ul class="dropdown-menu">
+        @for(item of relatoriosOptionsIntervalo; track $index) {
+          <li><a class="dropdown-item" (click)="openModal(item)">{{ item.label }}</a></li>
+        }
+        @for(item of relatoriosOptionsMes; track $index) {
+          <li><a class="dropdown-item" (click)="onDownloadRelatorioMes(item)">{{ item.label }}</a></li>
+        }
+      </ul>
+    </div>
+  </div>
+
+
+  </div>
 </div>
+
+<ng-template #modalPost>
+  <app-modal-post/>
+</ng-template>

@@ -19,6 +19,16 @@ h3 {
   width: 100%;
   max-width: 1000px; /* Ajuste conforme necessário */
   margin: 0 auto;
+  .conteudo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    .select-options {
+      position: absolute;
+      right: 0;
+    }
+  }
 }
 
 /* Navegação entre meses */
@@ -26,6 +36,7 @@ h3 {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+
 }
 
 .navegacao-botao {
