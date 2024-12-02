@@ -42,7 +42,7 @@ export class EditUsersModalComponent implements OnInit {
       dataNascimento: ['', Validators.required],
       cep: ['', Validators.required],
       logradouro: ['', Validators.required],
-      complemento: ['', Validators.required],
+      complemento: [''],
       bairro: ['', Validators.required],
       cidade: ['', Validators.required],
       temRepresentante: ['', Validators.required],
