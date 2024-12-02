@@ -17,7 +17,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { InputMoneyComponent } from "../../../../../../../shared/components/inputs/input-money/input-money.component";
-import { DataInputComponent } from "../../../../../../../shared/components/inputs/data-input/data-input.component";
+import { DataInputComponent } from '@shared/components/inputs/data-input/data-input.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-users-modal',
@@ -30,7 +31,7 @@ import { DataInputComponent } from "../../../../../../../shared/components/input
     ReactiveFormsModule,
     InputMoneyComponent,
     DataInputComponent
-],
+  ],
   templateUrl: './add-users-modal.component.html',
   styleUrls: ['./add-users-modal.component.scss'],
 })
@@ -46,7 +47,8 @@ export class AddUsersModalComponent implements OnInit {
     private modalService: BsModalService,
     private fb: FormBuilder,
     private clientesService: ClientesService,
-    private customValidationService: CustomValidationService
+    private customValidationService: CustomValidationService,
+    private http: HttpClient
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -195,6 +197,31 @@ export class AddUsersModalComponent implements OnInit {
         this.existingUserId = null;
         cpfValidado = false;
         console.log('Campos limpos, CPF apagado.');
+      }
+    });
+
+    // Observe changes to the CEP input field
+    this.form.get('cep')?.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((cep) => {
+        const cepLimpo = cep ? cep.replace(/\D/g, '') : '';
+        if (cepLimpo.length === 8) {
+          return this.http.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+        } else {
+          return [];
+        }
+      })
+    ).subscribe((response: any) => {
+      if (response && !response.erro) {
+        this.form.patchValue({
+          logradouro: response.logradouro,
+          complemento: response.complemento,
+          bairro: response.bairro,
+          cidade: response.localidade,
+        });
+      } else {
+        console.log('CEP não encontrado.');
       }
     });
 
