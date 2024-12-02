@@ -1,31 +1,35 @@
 <div class="graficos">
-  <div class="cima">
   <app-graficos/>
 
-  
-  <app-tablescroll
-  [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão']"
-  [data]="pessoasDataConcedido"
+
+<div class="border bordertd">
+<h1 class="margin">Benefícios Concedodos perto de 60 dias</h1>
+<app-tablescroll
+[columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão']"
+[data]="pessoasDataConcedido"
+[showActions]="true"
+[itemsPerPage]="3"
+
+[showAllActions]="false"
+[showDelete]="false"
+[showOpcoes]="false"
+></app-tablescroll>
+</div>
+
+<div class="border">
+<h1>Benefícios por incapacidade Temporária em Cessação
+</h1>
+  <app-table
+  [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
+  [data]="pessoasData"
   [showActions]="true"
   [itemsPerPage]="3"
  
   [showAllActions]="false"
   [showDelete]="false"
   [showOpcoes]="false"
-></app-tablescroll>
-</div>
-
-
-  <app-table
-  [columns]="['Nome', 'CPF', 'Telefone', 'Numero do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
-  [data]="pessoasData"
-  [showActions]="true"
-  [itemsPerPage]="2"
- 
-  [showAllActions]="false"
-  [showDelete]="false"
-  [showOpcoes]="false"
 ></app-table>
+</div>
 
 
 

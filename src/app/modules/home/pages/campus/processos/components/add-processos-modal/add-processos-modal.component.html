@@ -11,7 +11,9 @@
     <app-input
       label="Número do Protocolo:"
       placeholder="Digite o número do protocolo:"
-      formControlName="numeroProtocolo">
+      formControlName="numeroProtocolo"
+      (keypress)="allowOnlyNumbers($event)"
+      >
     </app-input>
 
     <app-data-input

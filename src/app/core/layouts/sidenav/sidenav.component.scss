@@ -17,6 +17,7 @@
 }
 
 .sidenav {
+  position: fixed;
   width: 270px;
   overflow-x: auto;
   z-index: 1;
@@ -30,6 +31,7 @@
 
   @media (max-width: 992px) {
     width: 250px;
+  
   }
 }
 
@@ -101,8 +103,14 @@
 main {
   width: 100%;
   min-height: 100vh;
-
+  margin-left: 270px;
   background-color: var(--background-primary);
+
+  @media(max-width: 998px) {
+   
+      margin-left: 0px !important;
+    
+  }
   header {
     width: 100%;
     height: 60px;
