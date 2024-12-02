@@ -38,7 +38,7 @@ export class EditUsersModalComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', Validators.required],
       cpf: ['', Validators.required],
-      rg: ['', Validators.required],
+      rg: ['',],
       dataNascimento: ['', Validators.required],
       cep: ['', Validators.required],
       logradouro: ['', Validators.required],
