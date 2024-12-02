@@ -56,7 +56,7 @@ export class GraficosService {
       Nome: item.nome,
       CPF: this.formatarCPF(item.cpf),
       Telefone: item.telefone,
-      'Numero do Protocolo': item.numeroProtocolo,
+      'Número do Protocolo': item.numeroProtocolo,
       Status: this.formatarStatus(item.status),
       Beneficio: item.beneficio,
       'Data de Concessão': this.formatarData(item.dataConcessao),
