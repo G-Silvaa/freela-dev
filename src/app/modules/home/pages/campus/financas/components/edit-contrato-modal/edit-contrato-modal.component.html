@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <div class="info-modal">
+    <h4 class="modal-title pull-left">{{ title }}</h4>
+  </div>
+  <button>
+    <i
+      class="bi bi-x"
+      style="font-size: 1.5rem"
+      (click)="bsModalRef.hide()"
+    ></i>
+  </button>
+</div>
+
+<form [formGroup]="form" action="javascript:void(0)">
+  <div class="container-inputs">
+    <app-data-input
+      label="Inicio"
+      placeholder="Digite a data de início:"
+      formControlName="Inicio"
+    >
+    </app-data-input>
+
+    <app-data-input
+      label="Conclusão"
+      placeholder="Digite a data de conclusão:"
+      formControlName="Conclusao"
+    >
+    </app-data-input>
+
+    <app-input
+      label="Indicação"
+      placeholder="Digite quem indicou:"
+      formControlName="Indicacao"
+    >
+    </app-input>
+
+    <app-input
+      label="Valor"
+      placeholder="Digite o valor:"
+      formControlName="Valor"
+    >
+    </app-input>
+  </div>
+
+  <div class="footer-modal">
+    <app-button variant="danger" width="100px" (click)="onCloseModal()">
+      Fechar
+    </app-button>
+    <app-button width="100px" [isLoading]="isLoading" (click)="onSave()">
+      Salvar
+    </app-button>
+  </div>
+</form>

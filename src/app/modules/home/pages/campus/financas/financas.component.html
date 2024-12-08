@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="adicionar">
+    <h1>Finanças</h1>
+  </div>
+
+  <div class="filter">
+    <form [formGroup]="filterForm">
+      <app-input
+        label="Nome"
+        type="text"
+        placeholder="Digite o nome"
+        [hasError]="false"
+        [isDisable]="false"
+        formControlName="nome"
+      ></app-input>
+      <app-input
+        label="Cpf"
+        type="text"
+        placeholder="Digite o cpf"
+        [hasError]="false"
+        [isDisable]="false"
+        formControlName="cpf"
+      ></app-input>
+      <app-select-input
+        label="Beneficio"
+        [options]="beneficiosOptions"
+        placeholder="Selecione um beneficio"
+        formControlName="beneficio"
+      >
+      </app-select-input>
+      <app-select-input
+        label="Situação Parcela"
+        [options]="[{label: 'Aguardando pagamento', value: 'aguardandopagamento'}, {label: 'Pago', value: 'pago'}]"
+        placeholder="Selecione a situação da parcela"
+        formControlName="situacaoParcela"
+      >
+      </app-select-input>
+      <app-select-input
+        label="Situação Pagamento"
+        [options]="[{label: 'Pago', value: 'true'}, {label: 'Aguardando Pagamento', value: 'false'}]"
+        placeholder="Selecione a situação do pagamento"
+        formControlName="situacaoPagamento"
+      >
+      </app-select-input>
+    </form>
+    <div class="filtrosB">
+      <button class="lupa" (click)="submitFilter()"></button>
+      <button class="limpar" (click)="clearFilter()">Limpar filtro</button>
+    </div>
+  </div>
+
+  <app-table
+    [columns]="[
+      'Nome',
+      'CPF',
+      'Benefício',
+      'Valor total à pagar',
+      'Número solicitação pagamento',
+      'Montante pago',
+      'Próxima parcela',
+      'Valor pago da parcela',
+      'Data pagamento da parcela',
+      'Parcelas restantes',
+      'Parcelas pagas',
+      'Situação parcela',
+      'Situação pagamento'
+    ]"
+    [data]="pessoasFinanceiro"
+    [showActions]="true"
+    [showDelete]="false"
+    [itemsPerPage]="10"
+  ></app-table>
+</div>

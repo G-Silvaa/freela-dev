@@ -49,6 +49,13 @@ export const routes: Routes = [
             (m) => m.ClientesComponent,
           ),
       },
+      {
+        path: "financas",
+        loadComponent: () =>
+          import("./modules/home/pages/campus/financas/financas.component").then(
+            (m) => m.FinancasComponent,
+          ),
+      },
     ],
   },
 ];

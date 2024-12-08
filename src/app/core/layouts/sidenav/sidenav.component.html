@@ -30,6 +30,11 @@
           <lucide-icon name="file-chart-column-increasing" [size]="18"></lucide-icon>
           Contratos
         </li>
+        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 5 }" (click)="selectNav(5)"
+        [routerLink]="['/financas']" routerLinkActive="active-link">
+        <lucide-icon name="file-chart-column-increasing" [size]="18"></lucide-icon>
+        Finanças
+      </li>
       </ul>
     </div>
   </div>
