@@ -20,6 +20,8 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   @Input() showOpcoes: boolean = false;
   @Input() showRenew?: boolean = false;
   @Input() showBaixarContrato?: boolean = false;
+  @Input() showBoleto?: boolean = false;
+  @Input() showComprovante?: boolean = false;
   @Input() itemsPerPage: number = 10;
   @Input() showAllActions: boolean = true;
 
@@ -29,6 +31,8 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   @Output() gerarCartas = new EventEmitter<{ id: any; tipo: any }>();
   @Output() downloadContract = new EventEmitter<{ id: any }>();
   @Output() renewContract = new EventEmitter<{ id: any }>();
+  @Output() generateBoleto = new EventEmitter<{ id: any }>();
+  @Output() downloadComprovante = new EventEmitter<{ id: any }>();
 
   currentPage: number = 1;
   dropdownOpen: any = null;
@@ -81,12 +85,21 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   toggleDropdown(id: any) {
     this.dropdownOpen = this.dropdownOpen === id ? null : id;
   }
+
   emitDownloadContract(item: any) {
     this.downloadContract.emit({ id: item.Id });
   }
 
   emitRenewContractId(item: any) {
     this.renewContract.emit({ id: item.Id });
+  }
+
+  emitGenerateBoleto(item: any) {
+    this.generateBoleto.emit({ id: item.Id });
+  }
+
+  emitDownloadComprovante(item: any) {
+    this.downloadComprovante.emit({ id: item.Id });
   }
 
   get visiblePages(): number[] {

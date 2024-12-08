@@ -34,6 +34,14 @@ export class FinancasService {
           const { content } = data;
           this.financasSubject.next(content);
         },
+        error: (err) => {
+          console.error("Erro ao buscar dados financeiros", err);
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Ocorreu um erro ao buscar os dados financeiros.",
+          });
+        },
       });
   }
 
@@ -67,6 +75,28 @@ export class FinancasService {
 
   updateFinanceiro(id: number, data: any): Observable<any> {
     return this.http.patch(`${this.API_URL}domain/financeiro/${id}`, data, this.createOptions());
+  }
+
+  generateBoleto(id: number): Observable<any> {
+    return this.http.patch(`${this.API_URL}domain/financeiro/${id}/boleto`, {}, {
+      responseType: 'blob' as 'json',
+      observe: 'response',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1',
+      }),
+    });
+  }
+
+  downloadComprovante(id: number): Observable<any> {
+    return this.http.patch(`${this.API_URL}domain/financeiro/${id}/comprovante`, {}, {
+      responseType: 'blob' as 'json',
+      observe: 'response',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1',
+      }),
+    });
   }
 
   private createOptions() {

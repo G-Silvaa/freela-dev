@@ -68,8 +68,12 @@
     [data]="pessoasFinanceiro"
     [showActions]="true"
     [showDelete]="false"
+    [showBoleto]="true"
+    [showComprovante]="true"
     [itemsPerPage]="10"
     (edit)="onEdit($event)"
+    (generateBoleto)="onGenerateBoleto($event)"
+    (downloadComprovante)="onDownloadComprovante($event)"
   ></app-table>
 </div>
 

@@ -28,7 +28,7 @@ import { EditFinanceiroModalComponent } from "./components/edit-contrato-modal/e
   ],
   providers: [DatePipe],
   templateUrl: "./financas.component.html",
-  styleUrl: "./financas.component.scss",
+  styleUrls: ["./financas.component.scss"],
 })
 export class FinancasComponent implements OnInit {
   pessoasFinanceiro = <any>[];
@@ -108,6 +108,68 @@ export class FinancasComponent implements OnInit {
       initialState,
     });
     this.bsModalRef.content.closeBtnName = "Close";
+  }
+
+  onGenerateBoleto(item: any) {
+    
+    this.financasService.generateBoleto(item.id).subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+          ? contentDisposition.split('filename=')[1].trim()
+          : 'boleto.pdf';
+
+        if (response.body) {
+          const blob = new Blob([response.body as Blob], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+
+          console.log('Boleto gerado com sucesso:', response);
+        } else {
+          console.error('Resposta vazia ou inválida:', response);
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao gerar o boleto', error);
+      },
+    });
+  }
+
+  onDownloadComprovante(item: any) {
+    
+    this.financasService.downloadComprovante(item.id).subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition
+          ? contentDisposition.split('filename=')[1].trim()
+          : 'comprovante.pdf';
+
+        if (response.body) {
+          const blob = new Blob([response.body as Blob], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+
+          console.log('Comprovante baixado com sucesso:', response);
+        } else {
+          console.error('Resposta vazia ou inválida:', response);
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao baixar o comprovante', error);
+      },
+    });
   }
 
   dataTransform(data: any[]) {

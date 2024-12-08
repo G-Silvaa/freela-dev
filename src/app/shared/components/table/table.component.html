@@ -41,6 +41,22 @@
         >
           <i class="bi bi-trash-fill"></i>
         </button>
+        <button
+          *ngIf="showBoleto"
+          class="btn btn-info"
+          (click)="emitGenerateBoleto(item)"
+          title="Gerar Boleto"
+        >
+          <i class="bi bi-receipt"></i>
+        </button>
+        <button
+          *ngIf="showComprovante"
+          class="btn btn-success"
+          (click)="emitDownloadComprovante(item)"
+          title="Baixar Comprovante"
+        >
+          <i class="bi bi-file-earmark-arrow-down"></i>
+        </button>
         <div *ngIf="showOpcoes" class="dropdown">
           <button
             title="Baixar cartas"
