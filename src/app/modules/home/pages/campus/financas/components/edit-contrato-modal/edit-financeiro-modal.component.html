@@ -13,31 +13,17 @@
 
 <form [formGroup]="form" action="javascript:void(0)">
   <div class="container-inputs">
-    <app-data-input
-      label="Inicio"
-      placeholder="Digite a data de início:"
-      formControlName="Inicio"
-    >
-    </app-data-input>
-
-    <app-data-input
-      label="Conclusão"
-      placeholder="Digite a data de conclusão:"
-      formControlName="Conclusao"
-    >
-    </app-data-input>
-
     <app-input
-      label="Indicação"
-      placeholder="Digite quem indicou:"
-      formControlName="Indicacao"
+      label="Parcelas Restantes"
+      placeholder="Digite o número de parcelas restantes:"
+      formControlName="parcelasRestantes"
     >
     </app-input>
 
     <app-input
-      label="Valor"
-      placeholder="Digite o valor:"
-      formControlName="Valor"
+      label="Valor Próxima Parcela"
+      placeholder="Digite o valor da próxima parcela:"
+      formControlName="valorProximaParcela"
     >
     </app-input>
   </div>

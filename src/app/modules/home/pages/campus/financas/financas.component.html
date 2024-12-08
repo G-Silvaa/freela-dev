@@ -69,5 +69,11 @@
     [showActions]="true"
     [showDelete]="false"
     [itemsPerPage]="10"
+    (edit)="onEdit($event)"
   ></app-table>
 </div>
+
+<ng-template #editTemplate>
+  <!-- <app-add-users-modal /> -->
+  <app-edit-financeiro-modal />
+</ng-template>

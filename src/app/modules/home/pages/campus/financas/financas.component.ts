@@ -13,6 +13,8 @@ import { DatePipe } from "@angular/common";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { beneficiosOptions } from "@core/consts/benenficios.const";
 import Swal from "sweetalert2";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { EditFinanceiroModalComponent } from "./components/edit-contrato-modal/edit-financeiro-modal.component";
 
 @Component({
   selector: "app-financas",
@@ -22,6 +24,7 @@ import Swal from "sweetalert2";
     InputDefaultComponent,
     SelectInputComponent,
     ReactiveFormsModule,
+    EditFinanceiroModalComponent,
   ],
   providers: [DatePipe],
   templateUrl: "./financas.component.html",
@@ -32,6 +35,7 @@ export class FinancasComponent implements OnInit {
   beneficiosOptions = beneficiosOptions;
   isLoading = false;
   protected lastfilter = {};
+  bsModalRef?: BsModalRef;
   private financasService = inject(FinancasService);
   private datePipe = inject(DatePipe);
   protected formBuilder = inject(FormBuilder);
@@ -44,18 +48,16 @@ export class FinancasComponent implements OnInit {
     situacaoPagamento: [""],
   });
 
-  constructor() {}
+  @ViewChild("editTemplate") editTemplate!: TemplateRef<any>;
+
+  constructor(private modalService: BsModalService) {}
 
   ngOnInit(): void {
     this.financasService.financas$().subscribe((res) => {
-      console.log("res", res);
       this.pessoasFinanceiro = this.dataTransform(res);
-
     });
 
     this.financasService.getFinancas();
-
-    console.log("pessoasFinanceiro", this.dataTransform);
   }
 
   submitFilter() {
@@ -97,6 +99,17 @@ export class FinancasComponent implements OnInit {
     }
   }
 
+  onEdit(item: any) {
+    const initialState = {
+      title: "Editar Financeiro",
+      financeiroData: item,
+    };
+    this.bsModalRef = this.modalService.show(EditFinanceiroModalComponent, {
+      initialState,
+    });
+    this.bsModalRef.content.closeBtnName = "Close";
+  }
+
   dataTransform(data: any[]) {
     return data.map((item: any) => {
       const dataPagamentoParcelaTransformed = this.datePipe.transform(
@@ -105,6 +118,7 @@ export class FinancasComponent implements OnInit {
       );
 
       const dataTransformed = {
+        Id: item.id,
         Nome: item.contrato.cliente.contato.nome,
         CPF: this.addSpecialCharacters(item.contrato.cliente.cpf),
         'Benefício': item.contrato.beneficio,
@@ -119,12 +133,8 @@ export class FinancasComponent implements OnInit {
         "Situação parcela": item.situacaoParcela,
         "Situação pagamento": item.situacaoPagamento ? "Pago" : "Aguardando Pagamento",
       };
-      console.log("pessoasFinanceiro", dataTransformed);
       return dataTransformed;
-      
     });
-
-   
   }
 
   removeSpecialCharacters(input: string): string {

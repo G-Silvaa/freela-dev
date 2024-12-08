@@ -65,6 +65,10 @@ export class FinancasService {
     });
   }
 
+  updateFinanceiro(id: number, data: any): Observable<any> {
+    return this.http.patch(`${this.API_URL}domain/financeiro/${id}`, data, this.createOptions());
+  }
+
   private createOptions() {
     return {
       headers: new HttpHeaders({
