@@ -36,6 +36,7 @@ export class EditFinanceiroModalComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   protected bsModalRef = inject(BsModalRef);
   private financasService = inject(FinancasService);
+  
 
   @Output() closeModal = new EventEmitter<void>();
   @Input() title!: string;
@@ -63,17 +64,19 @@ export class EditFinanceiroModalComponent implements OnInit {
 
   onSave() {
     const formValue = this.form.value;
-
+    this.isLoading = true;
     const result = {
       parcelasRestantes: formValue.parcelasRestantes,
       valorProximaParcela: formValue.valorProximaParcela,
     };
     this.financasService.updateFinanceiro(this.financeiroData.Id, result).subscribe({
       next: (res) => {
+        this.isLoading = false;
         this.financasService.getFinancas();
         this.onCloseModal();
       },
       error: (err) => {
+        this.isLoading = false;
         const { error } = err;
         Swal.fire({
           icon: "error",
