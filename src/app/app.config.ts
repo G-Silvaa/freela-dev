@@ -15,7 +15,7 @@ import { provideAnimationsAsync } from "@angular/platform-browser/animations/asy
 import { ModalModule } from "ngx-bootstrap/modal";
 import { AuthInterceptor } from "@core/interceptors/auth.interceptor";
 import { provideEnvironmentNgxMask } from "ngx-mask";
-import { LucideAngularModule, House, Users, ClipboardList, FileChartColumnIncreasing } from "lucide-angular";
+import { LucideAngularModule, House, Users, ClipboardList, FileChartColumnIncreasing, ArrowBigLeft, ArrowBigRight, ChevronsLeft, ChevronsRight } from "lucide-angular";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,6 +31,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     importProvidersFrom(ModalModule.forRoot()),
     provideEnvironmentNgxMask(),
-    importProvidersFrom(LucideAngularModule.pick({ House, Users, ClipboardList, FileChartColumnIncreasing }))
+    importProvidersFrom(LucideAngularModule.pick({ House, Users, ClipboardList, FileChartColumnIncreasing, ArrowBigLeft, ArrowBigRight, ChevronsLeft, ChevronsRight }))
   ],
 };

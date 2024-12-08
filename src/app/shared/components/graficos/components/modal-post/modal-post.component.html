@@ -1,0 +1,67 @@
+<div class="modal-header">
+  <div class="info-modal">
+    <h4 class="modal-title pull-left">{{ relatorioItem.label }}</h4>
+  </div>
+  <button (click)="onCloseModal()">
+    <i
+    class="bi bi-x"
+    style="font-size: 1.5rem"
+
+    ></i>
+  </button>
+</div>
+
+
+<form [formGroup]="form">
+  <p class="pull-right">Selecione o intervalo:</p>
+  <div class="container-inputs">
+    <div class="interval-wrapper">
+      <h4>Início</h4>
+      <div class="inputs-wrapper">
+        <app-select-input
+          label=""
+          placeholder="Selecione o mês:"
+          [options]="mesesDoAno"
+          formControlName="mesInicio"
+        >
+        </app-select-input>
+        <app-select-input
+          label=""
+          placeholder="Selecione o ano:"
+          [options]="anos"
+          formControlName="anoInicio"
+        >
+        </app-select-input>
+      </div>
+    </div>
+
+    <div class="interval-wrapper">
+      <h4>Conclusão</h4>
+      <div class="inputs-wrapper">
+        <app-select-input
+        label=""
+        placeholder="Selecione o mês:"
+        [options]="mesesDoAno"
+        formControlName="mesConclusao"
+      >
+      </app-select-input>
+      <app-select-input
+        label=""
+        placeholder="Selecione o ano:"
+        [options]="anos"
+        formControlName="anoConclusao"
+      >
+      </app-select-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-modal">
+    <app-button variant="danger" width="100px" (click)="onCloseModal()">
+      Fechar
+    </app-button>
+    <app-button width="100px" [isLoading]="isLoading" (click)="onSave()">
+      Salvar
+    </app-button>
+  </div>
+</form>

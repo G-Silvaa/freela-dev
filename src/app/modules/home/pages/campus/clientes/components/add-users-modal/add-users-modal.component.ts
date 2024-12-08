@@ -12,12 +12,13 @@ import { ButtonComponent } from '../../../../../../../shared/components/button/b
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
-import { CustomValidationService } from './utils/customvalidators'; // Importar o CustomValidationService
+import { CustomValidationService } from './utils/customvalidators';  
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { InputMoneyComponent } from "../../../../../../../shared/components/inputs/input-money/input-money.component";
-import { DataInputComponent } from "../../../../../../../shared/components/inputs/data-input/data-input.component";
+import { DataInputComponent } from '@shared/components/inputs/data-input/data-input.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-users-modal',
@@ -30,7 +31,7 @@ import { DataInputComponent } from "../../../../../../../shared/components/input
     ReactiveFormsModule,
     InputMoneyComponent,
     DataInputComponent
-],
+  ],
   templateUrl: './add-users-modal.component.html',
   styleUrls: ['./add-users-modal.component.scss'],
 })
@@ -46,7 +47,8 @@ export class AddUsersModalComponent implements OnInit {
     private modalService: BsModalService,
     private fb: FormBuilder,
     private clientesService: ClientesService,
-    private customValidationService: CustomValidationService
+    private customValidationService: CustomValidationService,
+    private http: HttpClient
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -72,31 +74,32 @@ export class AddUsersModalComponent implements OnInit {
       preco: ['', Validators.required]
     });
   }
+
   ngOnInit() {
     let isUpdating = false;
     let cpfValidado = false;
 
-    // Observe changes to the CPF input field
+    
     this.form
       .get('cpf')
       ?.valueChanges.pipe(
         debounceTime(300),
         switchMap((cpf) => {
-          // Remove the mask (remove non-numeric characters)
-          const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : ''; // Remove todos os caracteres não numéricos
+          
+          const cpfLimpo = cpf ? cpf.replace(/\D/g, '') : ''; 
 
-          // Quando o CPF tem 11 caracteres e não foi validado
+         
           if (cpfLimpo.length === 11 && !cpfValidado) {
             console.log('CPF atingiu 11 caracteres, disparando requisição:', cpfLimpo);
 
             cpfValidado = true;
 
-            // Fazer a requisição para buscar o cliente com o CPF limpo
+            
             return this.clientesService.buscarClientesComFiltros({ cpf: cpfLimpo });
           } else if (cpfLimpo.length === 11) {
-            return []; // Já foi validado, retorna um array vazio
+            return []; 
           } else {
-            return []; // CPF com menos de 11 dígitos não dispara a requisição
+            return []; 
           }
         })
       )
@@ -106,15 +109,16 @@ export class AddUsersModalComponent implements OnInit {
           this.existingUserId = cliente.id;
 
           const datePipe = new DatePipe('en-US');
-          const formattedDate = datePipe.transform(cliente.nascimento, 'ddMMyyyy');
+          const formattedDate = datePipe.transform(cliente.nascimento, 'yyyy-MM-dd');
+          const formattedDate2 = datePipe.transform(cliente.representante?.nascimento, 'yyyy-MM-dd');
 
           isUpdating = true;
-          // Preenche o formulário com os dados do cliente
+         
           this.form.patchValue({
             nome: cliente.contato.nome,
             email: cliente.contato.email,
             telefone: cliente.contato.telefone,
-            cpf: cliente.cpf,  // Mantém o CPF com a máscara, que é o formato esperado
+            cpf: cliente.cpf,  
             rg: cliente.rg,
             dataNascimento: formattedDate,
             cep: cliente.endereco.cep,
@@ -129,10 +133,9 @@ export class AddUsersModalComponent implements OnInit {
             parentesco: cliente.representante?.parentesco,
             representanteCpf: cliente.representante?.cpf,
             representanteRg: cliente.representante?.rg,
-            representanteDataNascimento: cliente.representante?.nascimento,
+            representanteDataNascimento: formattedDate2,
           });
 
-          // Desabilita os campos após preencher, exceto os especificados
           const fieldsToDisable = [
             'nome',
             'rg',
@@ -160,7 +163,7 @@ export class AddUsersModalComponent implements OnInit {
         }
       });
 
-    // Observe the CPF field changes to clear the other fields when CPF is deleted
+    
     this.form.get('cpf')?.valueChanges.subscribe((value) => {
       if (!value) {
         const fieldsToClear = [
@@ -181,7 +184,6 @@ export class AddUsersModalComponent implements OnInit {
           'representanteDataNascimento',
         ];
 
-        // Limpa os campos e os habilita novamente
         fieldsToClear.forEach((field) => {
           const control = this.form.get(field);
           if (control) {
@@ -196,9 +198,33 @@ export class AddUsersModalComponent implements OnInit {
       }
     });
 
+   
+    this.form.get('cep')?.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((cep) => {
+        const cepLimpo = cep ? cep.replace(/\D/g, '') : '';
+        if (cepLimpo.length === 8) {
+          return this.http.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+        } else {
+          return [];
+        }
+      })
+    ).subscribe((response: any) => {
+      if (response && !response.erro) {
+        this.form.patchValue({
+          logradouro: response.logradouro,
+          complemento: response.complemento,
+          bairro: response.bairro,
+          cidade: response.localidade,
+        });
+      } else {
+        console.log('CEP não encontrado.');
+      }
+    });
+
     this.form.get('cpf')?.updateValueAndValidity();
   }
-
 
   onCloseModal() {
     this.modalService.hide();
@@ -265,22 +291,18 @@ export class AddUsersModalComponent implements OnInit {
     { value: '80', label: 'Salário Maternidade' },
   ];
 
-
-
-
-
   onSubmit() {
     this.isLoading = true;
 
     const dados = this.form.getRawValue();
 
-    // Função para converter data do formato brasileiro para o formato americano
+   
     const converterDataParaAmericano = (data: string) => {
       const [dia, mes, ano] = data.split('/');
       return `${ano}-${mes}-${dia}`;
     };
 
-    // Remover caracteres especiais dos campos e converter datas
+  
     const dataNascimentoAmericano = converterDataParaAmericano(dados.dataNascimento);
     const representanteDataNascimentoAmericano = dados.representanteDataNascimento ? converterDataParaAmericano(dados.representanteDataNascimento) : null;
     const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
@@ -333,7 +355,7 @@ export class AddUsersModalComponent implements OnInit {
     };
 
     if (this.existingUserId) {
-      // Update existing user
+      
       this.clientesService.atualizarUsuario(this.existingUserId, payload).pipe(
         switchMap(() => this.clientesService.associarBeneficio(beneficioPayload))
       ).subscribe(
@@ -356,7 +378,7 @@ export class AddUsersModalComponent implements OnInit {
         }
       );
     } else {
-      // Add new user
+    
       this.clientesService.adicionarUsuario(payload).pipe(
         switchMap((response) => {
           beneficioPayload.cliente.id = response.id;
@@ -383,7 +405,6 @@ export class AddUsersModalComponent implements OnInit {
       );
     }
   }
-
 
   hasMaxLengthAndRequiredError(input: string): boolean {
     return this.customValidationService.hasMaxLengthAndRequiredError(
@@ -430,7 +451,6 @@ export class AddUsersModalComponent implements OnInit {
         return [];
     }
   }
-
 
   formatarData(data: string): string {
     if (!data) return '';

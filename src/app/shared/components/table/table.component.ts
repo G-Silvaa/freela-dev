@@ -1,4 +1,4 @@
-import { CommonModule, TitleCasePipe } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
 
 interface DataItem<T> {
@@ -8,7 +8,7 @@ interface DataItem<T> {
 @Component({
   selector: "app-table",
   standalone: true,
-  imports: [TitleCasePipe, CommonModule],
+  imports: [CommonModule],
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
 })

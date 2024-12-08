@@ -1,11 +1,12 @@
 <div class="grafico-container">
   <h3>Quantidade Total</h3>
   <div class="navegacao-meses">
-    <button (click)="onMesAnterior()" class="navegacao-botao">&#9664;</button>
-    <span class="mes-selecionado">Estatísticas do mês de: {{ mesSelecionado }}</span>
-    <button (click)="onMesProximo()" class="navegacao-botao">&#9654;</button>
+    <button (click)="onMesAnterior()" class="navegacao-botao"><lucide-icon name="chevrons-left"  [size]="22"></lucide-icon></button>
+    <span class="mes-selecionado">Estatísticas do mês de: {{ itemSelectionado?.mes }} de {{ itemSelectionado?.ano }}</span>
+    <button (click)="onMesProximo()" class="navegacao-botao"><lucide-icon name="chevrons-right" [size]="22"></lucide-icon></button>
   </div>
-  <ngx-charts-bar-vertical
+  <div class="conteudo">
+    <ngx-charts-bar-vertical
     [view]="view"
     [scheme]="colorScheme"
     [results]="datagrafico"
@@ -13,6 +14,7 @@
     [xAxis]="showXAxis"
     [yAxis]="showYAxis"
     [legend]="showLegend"
+    [legendTitle]="'Legenda'"
     [showXAxisLabel]="showXAxisLabel"
     [showYAxisLabel]="showYAxisLabel"
     [xAxisLabel]="xAxisLabel"
@@ -23,4 +25,28 @@
     (select)="onSelect($event)"
   >
   </ngx-charts-bar-vertical>
+
+  <div class="select-options">
+    <div class="dropdown" id="dropdown-item">
+      <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Relatórios
+      </a>
+
+      <ul class="dropdown-menu">
+        @for(item of relatoriosOptionsMes; track $index) {
+          <li><a class="dropdown-item" (click)="onDownloadRelatorioMes(item)">{{ item.label }}</a></li>
+        }
+        @for(item of relatoriosOptionsIntervalo; track $index) {
+          <li><a class="dropdown-item" (click)="openModal(item)">{{ item.label }}</a></li>
+        }
+      </ul>
+    </div>
+  </div>
+
+
+  </div>
 </div>
+
+<ng-template #modalPost>
+  <app-modal-post/>
+</ng-template>

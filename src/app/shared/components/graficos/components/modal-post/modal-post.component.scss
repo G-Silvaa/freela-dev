@@ -1,4 +1,4 @@
-:host{
+:host {
   margin: 20px 10px;
 }
 
@@ -12,9 +12,9 @@
   h4 {
     font-size: 16px;
 
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 
-    color: #08024C;
+    color: #08024c;
     font-weight: 600;
   }
 
@@ -28,7 +28,7 @@
     width: 2.5rem;
     height: 2.5rem;
 
-    border-radius: .4375rem;
+    border-radius: 0.4375rem;
     transition: 0.3s;
 
     &:hover {
@@ -47,7 +47,8 @@ form {
   width: 100%;
   height: 100%;
   position: relative;
-
+  padding-top: 1rem;
+  padding: 1rem 16px 0 16px;
   .footer-modal {
     width: 100%;
     height: 68px;
@@ -60,13 +61,22 @@ form {
 
 .container-inputs {
   display: flex;
-  gap: 14px;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin-left: 17px;
-  
+  gap: 50px;
 
+  .interval-wrapper {
+    h4 {
+      padding-bottom: 7px;
+    }
+    .inputs-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      min-width: 150px;
+    }
+  }
 }
 
 .ts {
@@ -82,10 +92,10 @@ form {
 
 .progress-bar {
   display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 20px;
-    margin-top: 24px;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 24px;
 }
 
 .step {
@@ -96,7 +106,9 @@ form {
   background-color: #e0e0e0;
   color: #000;
   font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   font-size: 14px; /* Ajuste o tamanho da fonte */
 }
 
@@ -107,16 +119,17 @@ form {
   transition: background-color 0.3s;
 }
 
-.step.active, .line.active {
-  background-color: #08024C;
+.step.active,
+.line.active {
+  background-color: #08024c;
   color: #fff;
 }
 
 @media (max-width: 980px) {
-  .t{
+  .t {
     margin: 0px !important;
   }
-  .container1{
+  .container1 {
     width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
@@ -132,55 +145,49 @@ form {
     flex-direction: column !important;
     width: 90% !important;
     align-items: stretch;
-}
-.teste1{
-  display: flex;
-  gap: 20px;
-  flex-direction: column;
-}
-
-.teste2{
-  display: flex;
-  gap: 21px;
-  width: 100%;
-  margin-left: 0px !important;
-  flex-direction: column;
-}
   }
-
-  .teste1{
+  .teste1 {
     display: flex;
     gap: 20px;
+    flex-direction: column;
   }
 
-  .teste2{
+  .teste2 {
     display: flex;
     gap: 21px;
     width: 100%;
-    margin-left: 48px;
+    margin-left: 0px !important;
+    flex-direction: column;
   }
+}
 
+.teste1 {
+  display: flex;
+  gap: 20px;
+}
 
-  .container1{
-    width: 100%;
-    display: flex;
-    /* justify-content: space-between; */
-    gap: 18px;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-  h4{
-    font-size: 16px;
-    width: 100%;
-    margin: 0px;
-  }
+.teste2 {
+  display: flex;
+  gap: 21px;
+  width: 100%;
+  margin-left: 48px;
+}
 
-  .t{
-    margin-right: 458px;
-  }
+.container1 {
+  width: 100%;
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+h4 {
+  font-size: 16px;
+  width: 100%;
+  margin: 0px;
+}
 
-  app-data-input{
-    width: 198px;
-    display: flex;
-  }
+.t {
+  margin-right: 448px;
+}

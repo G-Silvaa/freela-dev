@@ -161,12 +161,12 @@ export class ContratosComponent implements OnInit {
       const dataTransformed = {
         Id: item.id,
         Nome: item.cliente.contato.nome,
-        Cpf: this.addSpecialCharacters(item.cliente.cpf),
-        Beneficio: item.beneficio,
-        Numero: item.numero,
-        Inicio: beginningDateTransformed ? beginningDateTransformed : "",
-        Conclusao: conclusionDateTransformed ? conclusionDateTransformed : "",
-        Indicacao: item.indicacao ? item.indicacao : "",
+        CPF: this.addSpecialCharacters(item.cliente.cpf),
+        'Benefício': item.beneficio,
+        'Número': item.numero,
+        'Início': beginningDateTransformed ? beginningDateTransformed : "",
+        'Conclusão': conclusionDateTransformed ? conclusionDateTransformed : "",
+        'Indicacão': item.indicacao ? item.indicacao : "",
         Valor: item.valor ? item.valor : 0,
       };
       return dataTransformed;

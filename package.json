@@ -29,6 +29,7 @@
     "@opentelemetry/resources": "^1.25.1",
     "@opentelemetry/sdk-trace-web": "^1.25.1",
     "@opentelemetry/semantic-conventions": "^1.25.1",
+    "@popperjs/core": "^2.11.8",
     "@swimlane/ngx-charts": "^20.5.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",

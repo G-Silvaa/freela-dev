@@ -21,7 +21,7 @@ export class ContratosService {
   getContratos(): void {
     const params = new HttpParams().set(
       "fields",
-      "*,cliente,beneficio,processos",
+      "*,cliente",
     );
 
     this.http
@@ -66,7 +66,7 @@ export class ContratosService {
         (filterString ? " and " : "") + `beneficio eq '${filtros.beneficio}'`;
 
     const params = new HttpParams()
-      .set("fields", "*,cliente,processos")
+      .set("fields", "*,cliente")
       .set("filter", filterString);
 
     return this.http.get(`${this.API_URL}domain/contrato`, {
