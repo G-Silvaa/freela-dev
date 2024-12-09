@@ -111,7 +111,6 @@ export class FinancasComponent implements OnInit {
   }
 
   onGenerateBoleto(item: any) {
-    
     this.financasService.generateBoleto(item.id).subscribe({
       next: (response) => {
         const contentDisposition = response.headers.get('Content-Disposition');
@@ -142,7 +141,6 @@ export class FinancasComponent implements OnInit {
   }
 
   onDownloadComprovante(item: any) {
-    
     this.financasService.downloadComprovante(item.id).subscribe({
       next: (response) => {
         const contentDisposition = response.headers.get('Content-Disposition');

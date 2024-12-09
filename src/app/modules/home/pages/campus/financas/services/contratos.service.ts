@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { BehaviorSubject, Observable } from "rxjs";
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from "@angular/common/http";
+import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
 import { environment } from "src/environments/environment.development";
 import Swal from "sweetalert2";
 
@@ -74,7 +75,10 @@ export class FinancasService {
   }
 
   updateFinanceiro(id: number, data: any): Observable<any> {
-    return this.http.patch(`${this.API_URL}domain/financeiro/${id}`, data, this.createOptions());
+    return this.http.patch(`${this.API_URL}domain/financeiro/${id}`, data, this.createOptions())
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   generateBoleto(id: number): Observable<any> {
@@ -85,7 +89,9 @@ export class FinancasService {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': '1',
       }),
-    });
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   downloadComprovante(id: number): Observable<any> {
@@ -96,7 +102,9 @@ export class FinancasService {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': '1',
       }),
-    });
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   private createOptions() {
@@ -106,5 +114,32 @@ export class FinancasService {
         "ngrok-skip-browser-warning": "1",
       }),
     };
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Ocorreu um erro desconhecido!';
+    if (error.error instanceof Blob) {
+      error.error.text().then((text) => {
+        try {
+          const jsonError = JSON.parse(text);
+          errorMessage = jsonError.message || errorMessage;
+        } catch (e) {
+          errorMessage = text;
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: errorMessage,
+        });
+      });
+    } else {
+      errorMessage = error.error.message || errorMessage;
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: errorMessage,
+      });
+    }
+    return throwError(errorMessage);
   }
 }
