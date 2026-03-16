@@ -2,19 +2,18 @@ import {
   Component,
   inject,
   OnInit,
-  TemplateRef,
-  ViewChild,
 } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+
 import { InputDefaultComponent } from "@shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "@shared/components/inputs/select-input/select-input.component";
 import { TableComponent } from "@shared/components/table/table.component";
 import { FinancasService } from "./services/contratos.service";
-import { DatePipe } from "@angular/common";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { beneficiosOptions } from "@core/consts/benenficios.const";
-import Swal from "sweetalert2";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { EditFinanceiroModalComponent } from "./components/edit-contrato-modal/edit-financeiro-modal.component";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-financas",
@@ -34,7 +33,6 @@ export class FinancasComponent implements OnInit {
   pessoasFinanceiro = <any>[];
   beneficiosOptions = beneficiosOptions;
   isLoading = false;
-  protected lastfilter = {};
   bsModalRef?: BsModalRef;
   private financasService = inject(FinancasService);
   private datePipe = inject(DatePipe);
@@ -48,26 +46,48 @@ export class FinancasComponent implements OnInit {
     situacaoPagamento: [""],
   });
 
-  @ViewChild("editTemplate") editTemplate!: TemplateRef<any>;
-
   constructor(private modalService: BsModalService) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.financasService.financas$().subscribe((res) => {
       this.pessoasFinanceiro = this.dataTransform(res);
+      this.isLoading = false;
     });
 
     this.financasService.getFinancas();
   }
 
+  get totalFinanceiros(): number {
+    return this.pessoasFinanceiro.length;
+  }
+
+  get totalPagos(): number {
+    return this.pessoasFinanceiro.filter((item: any) => item.__quitado).length;
+  }
+
+  get totalPendentes(): number {
+    return this.pessoasFinanceiro.filter((item: any) => !item.__quitado).length;
+  }
+
+  get proximaReceita(): string {
+    const total = this.pessoasFinanceiro.reduce(
+      (acc: number, item: any) => acc + (item.__proximaParcela ?? 0),
+      0,
+    );
+
+    return this.formatCurrency(total);
+  }
+
   submitFilter() {
     const formValue = this.filterForm.value;
-    if(this.lastfilter === formValue) {
+
+    if (!formValue.nome && !formValue.cpf && !formValue.beneficio && !formValue.situacaoParcela && formValue.situacaoPagamento === "") {
+      this.isLoading = true;
+      this.financasService.getFinancas();
       return;
     }
-    if (!formValue.nome && !formValue.cpf && !formValue.beneficio && !formValue.situacaoParcela && formValue.situacaoPagamento === "" && (this.lastfilter === formValue)) {
-      return;
-    }
+
     const filteredCpfForm = {
       nome: formValue.nome,
       cpf: formValue.cpf ? this.removeSpecialCharacters(formValue.cpf) : "",
@@ -76,27 +96,30 @@ export class FinancasComponent implements OnInit {
       situacaoPagamento: formValue.situacaoPagamento,
     };
 
+    this.isLoading = true;
     this.financasService.filterFinancas(filteredCpfForm).subscribe({
       next: (res) => {
         const { content } = res;
-        if (content.length) {
-          this.pessoasFinanceiro = this.dataTransform(content);
-        } else {
-          this.pessoasFinanceiro = [];
-        }
+        this.pessoasFinanceiro = content.length ? this.dataTransform(content) : [];
+        this.isLoading = false;
       },
-      error: (err) => {
-        console.log("erro", err);
+      error: () => {
+        this.isLoading = false;
+        Swal.fire("Erro", "Não foi possível aplicar os filtros financeiros.", "error");
       },
     });
-    this.lastfilter = formValue;
   }
 
   clearFilter() {
-    if(this.filterForm.value.nome || this.filterForm.value.cpf || this.filterForm.value.beneficio || this.filterForm.value.situacaoParcela || this.filterForm.value.situacaoPagamento !== "") {
-      this.filterForm.reset();
-      this.submitFilter();
-    }
+    this.filterForm.reset({
+      nome: "",
+      cpf: "",
+      beneficio: "",
+      situacaoParcela: "",
+      situacaoPagamento: "",
+    });
+    this.isLoading = true;
+    this.financasService.getFinancas();
   }
 
   onEdit(item: any) {
@@ -128,10 +151,6 @@ export class FinancasComponent implements OnInit {
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-
-          console.log('Boleto gerado com sucesso:', response);
-        } else {
-          console.error('Resposta vazia ou inválida:', response);
         }
       },
       error: (error) => {
@@ -158,10 +177,6 @@ export class FinancasComponent implements OnInit {
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-
-          console.log('Comprovante baixado com sucesso:', response);
-        } else {
-          console.error('Resposta vazia ou inválida:', response);
         }
       },
       error: (error) => {
@@ -177,24 +192,31 @@ export class FinancasComponent implements OnInit {
         "dd/MM/yyyy",
       );
 
-      const dataTransformed = {
+      return {
         Id: item.id,
+        __quitado: !!item.situacaoPagamento,
+        __valorTotal: Number(item.valorTotalPagar ?? 0),
+        __proximaParcela: Number(item.valorProximaParcela ?? 0),
         Nome: item.contrato.cliente.contato.nome,
         CPF: this.addSpecialCharacters(item.contrato.cliente.cpf),
         'Benefício': item.contrato.beneficio,
-        "Valor total à pagar": item.valorTotalPagar,
-        "Número solicitação pagamento": item.numeroSolicitacaoPagamento,
-        "Montante pago": item.montantePago,
-        "Próxima parcela": item.valorProximaParcela,
-        "Valor pago da parcela": item.valorPagoDaParcela,
-        "Data pagamento da parcela": dataPagamentoParcelaTransformed ? dataPagamentoParcelaTransformed : "",
+        "Valor total à pagar": this.formatCurrency(item.valorTotalPagar ?? 0),
+        "Montante pago": this.formatCurrency(item.montantePago ?? 0),
+        "Próxima parcela": this.formatCurrency(item.valorProximaParcela ?? 0),
         "Parcelas restantes": item.parcelasRestantes,
-        "Parcelas pagas": item.parcelasPagas,
         "Situação parcela": item.situacaoParcela,
         "Situação pagamento": item.situacaoPagamento ? "Pago" : "Aguardando Pagamento",
+        "Data pagamento da parcela": dataPagamentoParcelaTransformed ? dataPagamentoParcelaTransformed : "",
       };
-      return dataTransformed;
     });
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      maximumFractionDigits: 2,
+    }).format(value);
   }
 
   removeSpecialCharacters(input: string): string {
@@ -202,7 +224,6 @@ export class FinancasComponent implements OnInit {
   }
 
   addSpecialCharacters(cpf: string): string {
-    // Formata o CPF usando substrings
     return `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9)}`;
   }
 }

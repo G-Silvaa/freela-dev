@@ -1,61 +1,80 @@
-import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
-import { SelectInputComponent } from "../../../../../shared/components/inputs/select-input/select-input.component";
-import { InputDefaultComponent } from "../../../../../shared/components/inputs/input-default/input-default.component";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ProcessosService } from './services/processos.service';  // Importe o serviço correto
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ModalComponent } from '@shared/components/modal/modal.component';
-import { TableComponent } from "../../../../../shared/components/table/table.component";
-import { AddprocessosModalComponent } from "./components/add-processos-modal/add-processos-modal.component";
-import { environment } from 'src/environments/environment.development';
 import Swal from 'sweetalert2';
+
+import { SelectInputComponent } from '../../../../../shared/components/inputs/select-input/select-input.component';
+import { InputDefaultComponent } from '../../../../../shared/components/inputs/input-default/input-default.component';
+import { TableComponent } from '../../../../../shared/components/table/table.component';
+import { AddprocessosModalComponent } from './components/add-processos-modal/add-processos-modal.component';
+import { ProcessosService } from './services/processos.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-processos',
   standalone: true,
-  imports: [SelectInputComponent, InputDefaultComponent, ReactiveFormsModule, AddprocessosModalComponent, TableComponent, FormsModule, ],
+  imports: [SelectInputComponent, InputDefaultComponent, AddprocessosModalComponent, TableComponent, FormsModule],
   templateUrl: './processos.component.html',
   styleUrls: ['./processos.component.scss']
 })
 export class ProcessosComponent implements OnInit {
-  cadatrarUsuario = true;
-  pessoasData: any[] = [];  
+  pessoasData: any[] = [];
   isLoading = false;
   bsModalRef?: BsModalRef;
-  selectedProcessoId?: number;
   private API_URL = environment.apiUrl;
+  readonly statusOptions = [
+    { value: 'AGUARDANDO', label: 'Aguardando' },
+    { value: 'PENDENTE', label: 'Pendente' },
+    { value: 'ANALISE', label: 'Análise' },
+    { value: 'CUMPRIMENTO_EXIGENCIA', label: 'Cumprimento de exigência' },
+    { value: 'ANALISE_ADMINISTRATIVA', label: 'Análise administrativa' },
+    { value: 'APROVADO', label: 'Aprovado' },
+    { value: 'REPROVADO', label: 'Reprovado' },
+  ];
 
-  @ViewChild('editTemplate') editTemplate!: TemplateRef<any>;
+  filtros = {
+    Nome: '',
+    CPF: '',
+    Status: '',
+  };
 
   constructor(
-    private processosService: ProcessosService,  
+    private processosService: ProcessosService,
     private modalService: BsModalService
   ) {}
 
   ngOnInit() {
-    this.loadProcessos();  
-    this.aplicarFiltros();
+    this.loadProcessos();
+  }
+
+  get totalProcessos(): number {
+    return this.pessoasData.length;
+  }
+
+  get processosAprovados(): number {
+    return this.pessoasData.filter((item) => item.Status === 'Aprovado').length;
+  }
+
+  get processosEmAcompanhamento(): number {
+    return this.pessoasData.filter((item) => !['Aprovado', 'Reprovado'].includes(item.Status)).length;
+  }
+
+  get cessacoesProximas(): number {
+    return this.pessoasData.filter((item) => !!item['Cessação']).length;
   }
 
   loadProcessos() {
-    this.isLoading = true;  
+    this.isLoading = true;
 
-    this.processosService.carregarTodosProcessos(); 
     this.processosService.processos$.subscribe((processos) => {
-      console.log('teste', processos);
       this.pessoasData = processos;
-      this.isLoading = false;  
-    }, (error) => {
-      console.error('Erro ao carregar processos:', error);
+      this.isLoading = false;
+    }, () => {
       this.isLoading = false;
     });
-  }
 
-  filtros = {
-    Nome: '', 
-    CPF: '',
-    Status: '',
-  };
+    this.processosService.carregarTodosProcessos();
+  }
 
   limparFiltros() {
     this.filtros = {
@@ -63,29 +82,37 @@ export class ProcessosComponent implements OnInit {
       Nome: '',
       CPF: ''
     };
-    this.aplicarFiltros();
+    this.isLoading = true;
+    this.processosService.carregarTodosProcessos();
   }
 
   aplicarFiltros() {
+    if (!this.filtros.Nome && !this.filtros.CPF && !this.filtros.Status) {
+      this.isLoading = true;
+      this.processosService.carregarTodosProcessos();
+      return;
+    }
+
     this.isLoading = true;
     const filtrosComLabel = {
       ...this.filtros,
-      CPF: this.limparCPF(this.filtros.CPF), // Limpar caracteres especiais do CPF
-      Status: this.filtros.Status // Use diretamente o valor do status
+      CPF: this.limparCPF(this.filtros.CPF),
+      Status: this.filtros.Status
     };
     this.processosService.buscarProcessosComFiltros(filtrosComLabel).subscribe(
       (response) => {
         if (Array.isArray(response.content)) {
           this.pessoasData = response.content;
-        } else {
-          console.error('A resposta da API não é um array:', response);
         }
-        console.log("Dados filtrados:", this.pessoasData);
         this.isLoading = false;
       },
-      (error) => {
-        console.error('Erro ao aplicar filtros:', error);
+      () => {
         this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao filtrar',
+          text: 'Não foi possível carregar os processos com os filtros informados.',
+        });
       }
     );
   }
@@ -95,28 +122,23 @@ export class ProcessosComponent implements OnInit {
   }
 
   onEdit(item: any) {
-    // Verifique a estrutura do objeto item para garantir que a propriedade id está presente
     const processoId = item.id || item.nome?.id;
-  
+
     if (!processoId) {
-      console.error('ID do processo não encontrado:', item);
       return;
     }
-  
+
     const initialState = {
       title: 'Editar um Processo',
-      formTemplate: this.editTemplate,
-      processoId: processoId // Envia o processoId para o modal
+      processoId: processoId
     };
-  
+
     this.bsModalRef = this.modalService.show(AddprocessosModalComponent, {
-      initialState, // Passa o estado inicial ao modal
+      initialState,
     });
     this.bsModalRef.content.closeBtnName = 'Close';
-  
-    console.log('Edit item:', processoId);
   }
-  
+
   onDelete(item: any) {
     console.log('Delete item:', item);
   }
@@ -136,35 +158,33 @@ export class ProcessosComponent implements OnInit {
         url = `${this.API_URL}domain/processo/${id}/carta-de-concessao`;
         break;
     }
+
     this.processosService.gerarCarta(url).subscribe(
       (response) => {
         const contentDisposition = response.headers.get('Content-Disposition');
         const filename = contentDisposition ? contentDisposition.split('filename=')[1] : 'download.pdf';
         const blob = new Blob([response.body], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
+        const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = downloadUrl;
         a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        console.log('Carta gerada com sucesso:', response);
       },
       (error) => {
         if (error.error instanceof Blob && error.error.type === 'application/problem+json') {
           const reader = new FileReader();
           reader.onload = () => {
             const errorResponse = JSON.parse(reader.result as string);
-            console.error('Erro ao gerar carta:', errorResponse);
             Swal.fire({
               icon: 'error',
-              title: errorResponse.title || 'error',
+              title: errorResponse.title || 'Erro',
               text: errorResponse.detail || 'Ocorreu um erro ao gerar a carta.',
             });
           };
           reader.readAsText(error.error);
         } else {
-          console.error('Erro ao gerar carta:', error);
           Swal.fire({
             icon: 'error',
             title: 'Erro ao gerar carta',
@@ -173,10 +193,5 @@ export class ProcessosComponent implements OnInit {
         }
       }
     );
-  }
-
-
-  back() {
-    this.cadatrarUsuario = true;
   }
 }

@@ -36,18 +36,19 @@ export class TableComponent<T> implements OnInit, OnDestroy {
 
   currentPage: number = 1;
   dropdownOpen: any = null;
+  private readonly handleDocumentClick = (event: MouseEvent) => this.handleClickOutside(event);
 
   ngOnInit() {
-    document.addEventListener('click', this.handleClickOutside.bind(this));
+    document.addEventListener("click", this.handleDocumentClick);
   }
 
   ngOnDestroy() {
-    document.removeEventListener('click', this.handleClickOutside.bind(this));
+    document.removeEventListener("click", this.handleDocumentClick);
   }
 
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.dropdown')) {
+    if (!target.closest(".dropdown")) {
       this.dropdownOpen = null;
     }
   }
@@ -60,6 +61,10 @@ export class TableComponent<T> implements OnInit, OnDestroy {
 
   get totalPages(): number {
     return Math.ceil(this.data.length / this.itemsPerPage);
+  }
+
+  get hasData(): boolean {
+    return this.data?.length > 0;
   }
 
   truncateText(column: string, item: any): string {
@@ -87,19 +92,19 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   }
 
   emitDownloadContract(item: any) {
-    this.downloadContract.emit({ id: item.Id });
+    this.downloadContract.emit({ id: this.getItemId(item) });
   }
 
   emitRenewContractId(item: any) {
-    this.renewContract.emit({ id: item.Id });
+    this.renewContract.emit({ id: this.getItemId(item) });
   }
 
   emitGenerateBoleto(item: any) {
-    this.generateBoleto.emit({ id: item.Id });
+    this.generateBoleto.emit({ id: this.getItemId(item) });
   }
 
   emitDownloadComprovante(item: any) {
-    this.downloadComprovante.emit({ id: item.Id });
+    this.downloadComprovante.emit({ id: this.getItemId(item) });
   }
 
   get visiblePages(): number[] {
@@ -158,5 +163,9 @@ export class TableComponent<T> implements OnInit, OnDestroy {
     if (this.currentPage > 1) {
       this.changePage(this.currentPage - 1);
     }
+  }
+
+  getItemId(item: any): any {
+    return item?.id ?? item?.Id;
   }
 }

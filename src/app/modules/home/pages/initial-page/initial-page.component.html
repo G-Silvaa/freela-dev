@@ -1,36 +1,160 @@
-<div class="graficos">
-  <app-graficos/>
+<section class="page-shell dashboard-shell" *ngIf="overview as dashboard; else dashboardFallback">
+  <div class="surface-card summary-banner">
+    <div class="summary-copy">
+      <span class="eyebrow">Resumo rápido</span>
+      <strong>{{ totalProcessosEmAlerta }} alertas exigem atenção agora</strong>
+      <p>
+        {{ pessoasData.length }} casos em cessação, {{ pessoasDataConcedido.length }} concedidos recentes e
+        {{ dashboard.financeirosEmAberto }} pendências financeiras.
+      </p>
+    </div>
 
+    <div class="quick-links">
+      <a *ngFor="let link of quickLinks" class="quick-link" [routerLink]="link.route">
+        <i class="bi" [ngClass]="link.icon"></i>
+        <span>{{ link.label }}</span>
+      </a>
+    </div>
+  </div>
 
-<div class="border bordertd">
-<h1 class="margin">Benefícios Concedidos perto de 60 dias</h1>
-<app-tablescroll
-[columns]="['Nome', 'CPF', 'Telefone', 'Número do Protocolo', 'Status', 'Beneficio','Data de Concessão']"
-[data]="pessoasDataConcedido"
-[showActions]="true"
-[itemsPerPage]="3"
+  <div class="stats-grid">
+    <article class="surface-card stat-card">
+      <span class="stat-label">Clientes cadastrados</span>
+      <strong class="stat-value">{{ dashboard.totalClientes }}</strong>
+      <span class="stat-meta">Base total em acompanhamento.</span>
+    </article>
 
-[showAllActions]="false"
-[showDelete]="false"
-[showOpcoes]="false"
-></app-tablescroll>
-</div>
+    <article class="surface-card stat-card">
+      <span class="stat-label">Contratos ativos</span>
+      <strong class="stat-value">{{ dashboard.contratosAtivos }}</strong>
+      <span class="stat-meta">{{ dashboard.contratosEncerrados }} encerrados.</span>
+    </article>
 
-<div class="border">
-<h1>Benefícios por Incapacidade Temporária em Cessação
-</h1>
-  <app-table
-  [columns]="['Nome', 'CPF', 'Telefone', 'Número do Protocolo', 'Status', 'Beneficio','Data de Concessão', 'Cessação']"
-  [data]="pessoasData"
-  [showActions]="true"
-  [itemsPerPage]="3"
- 
-  [showAllActions]="false"
-  [showDelete]="false"
-  [showOpcoes]="false"
-></app-table>
-</div>
+    <article class="surface-card stat-card">
+      <span class="stat-label">Processos em andamento</span>
+      <strong class="stat-value">{{ dashboard.processosEmAndamento }}</strong>
+      <span class="stat-meta">{{ dashboard.processosPendentes }} pendentes.</span>
+    </article>
 
+    <article class="surface-card stat-card">
+      <span class="stat-label">Carteira financeira</span>
+      <strong class="stat-value currency-highlight">{{ formatCurrency(dashboard.valorCarteira) }}</strong>
+      <span class="stat-meta">{{ dashboard.financeirosEmAberto }} em aberto.</span>
+    </article>
+  </div>
 
+  <div class="dashboard-grid">
+    <div class="surface-card section-card priorities-card">
+      <div class="section-heading compact">
+        <div>
+          <h2>Prioridades</h2>
+          <p>Entradas que merecem acompanhamento imediato.</p>
+        </div>
+      </div>
 
-</div>
+      <div class="priority-list">
+        <a *ngFor="let item of priorityItems" class="priority-item" [routerLink]="item.route">
+          <span class="priority-icon">
+            <i class="bi" [ngClass]="item.icon"></i>
+          </span>
+
+          <div class="priority-copy">
+            <strong>{{ item.label }}</strong>
+            <small>{{ item.description }}</small>
+          </div>
+
+          <span class="priority-value">{{ item.value }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="surface-card section-card status-card">
+      <div class="section-heading compact">
+        <div>
+          <h2>Status dos processos</h2>
+          <p>Distribuição atual da carteira processual.</p>
+        </div>
+
+        <span class="soft-badge">
+          <i class="bi bi-check2-circle"></i>
+          {{ dashboard.processosConcedidos }} concedidos
+        </span>
+      </div>
+
+      <div class="status-list" *ngIf="statusProcessos.length; else emptyStatus">
+        <div class="status-row" *ngFor="let status of statusProcessos">
+          <div class="status-copy">
+            <span>{{ statusLabel(status.status) }}</span>
+            <strong>{{ status.total }}</strong>
+          </div>
+
+          <div class="status-progress">
+            <span [style.width.%]="statusWidth(status.total)"></span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #emptyStatus>
+        <p class="empty-message">Nenhum status de processo foi encontrado.</p>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading compact">
+      <div>
+        <h2>Concedidos recentes</h2>
+        <p>Benefícios próximos da janela de 60 dias.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-graph-up-arrow"></i>
+        {{ pessoasDataConcedido.length }} registros
+      </span>
+    </div>
+
+    <app-table
+      [columns]="['Nome', 'CPF', 'Telefone', 'Número do Protocolo', 'Status', 'Beneficio', 'Data de Concessão']"
+      [data]="pessoasDataConcedido"
+      [showActions]="false"
+      [itemsPerPage]="4"
+      [showAllActions]="false"
+      [showDelete]="false"
+      [showOpcoes]="false"
+    ></app-table>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading compact">
+      <div>
+        <h2>Casos em cessação</h2>
+        <p>Clientes que precisam de contato e revisão do acompanhamento.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-hourglass-split"></i>
+        {{ pessoasData.length }} registros
+      </span>
+    </div>
+
+    <app-table
+      [columns]="['Nome', 'CPF', 'Telefone', 'Número do Protocolo', 'Status', 'Beneficio', 'Data de Concessão', 'Cessação']"
+      [data]="pessoasData"
+      [showActions]="false"
+      [itemsPerPage]="4"
+      [showAllActions]="false"
+      [showDelete]="false"
+      [showOpcoes]="false"
+    ></app-table>
+  </div>
+</section>
+
+<ng-template #dashboardFallback>
+  <section class="page-shell dashboard-shell">
+    <div class="surface-card section-card">
+      <p class="empty-message">
+        {{ isLoading ? 'Carregando a visão inicial...' : 'Não foi possível carregar a visão inicial.' }}
+      </p>
+    </div>
+  </section>
+</ng-template>

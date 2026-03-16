@@ -1,32 +1,74 @@
-<div class="container-login" #container>
-    <aside class="left-wrapper">
-        <div class="container-img">
-            <img src="nova-logo.png" />
-        </div>
-    </aside>
+<div class="login-shell">
+  <section class="login-hero">
+    <span class="eyebrow">LIV Assessoria Previdenciária</span>
+    <h1>Uma central mais elegante para conduzir toda a jornada previdenciária.</h1>
+    <p>
+      O novo ambiente prioriza leitura rápida, ações importantes e integração com os fluxos já expostos
+      pelo backend.
+    </p>
 
-    <aside class="right-wrapper">
-        <h1>Faça seu login</h1>
-        <form [formGroup]="loginForm">
-            <app-input-layout
-                type="email"
-                formControlName="email"
-                placeholder="Digite seu email"
-            ></app-input-layout>
-            <app-input-layout
-                type="password"
-                formControlName="password"
-                placeholder="Digite sua senha"
-            ></app-input-layout>
-            <a href="">Esqueceu a senha?</a>
-            <button
-                type="submit"
-                class="primary"
-                (click)="submitLogin()"
-                (keydown.enter)="submitLogin()"
-            >
-                Entrar
-            </button>
-        </form>
-    </aside>
+    <div class="hero-grid">
+      <article class="hero-card surface-card">
+        <i class="bi bi-people-fill"></i>
+        <strong>Clientes centralizados</strong>
+        <span>Cadastros, representantes e histórico operacional com leitura mais limpa.</span>
+      </article>
+
+      <article class="hero-card surface-card">
+        <i class="bi bi-clipboard2-pulse-fill"></i>
+        <strong>Processos sob controle</strong>
+        <span>Alertas, status e geração de cartas sem sair das listagens principais.</span>
+      </article>
+
+      <article class="hero-card surface-card">
+        <i class="bi bi-bank2"></i>
+        <strong>Financeiro visível</strong>
+        <span>Boletos, comprovantes e acompanhamento da carteira em um só fluxo.</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="login-panel surface-card">
+    <div class="panel-header">
+      <div class="brand-lockup">
+        <img src="nova-logo.png" alt="LIV Assessoria" />
+      </div>
+
+      <div>
+        <span class="eyebrow">Acesso interno</span>
+        <h2>Entrar na plataforma</h2>
+        <p>Use suas credenciais para continuar no painel administrativo.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+      <label class="field">
+        <span>E-mail</span>
+        <input type="email" formControlName="email" placeholder="voce@empresa.com.br" />
+        <small *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+          Informe um e-mail válido.
+        </small>
+      </label>
+
+      <label class="field">
+        <span>Senha</span>
+        <input type="password" formControlName="password" placeholder="Digite sua senha" />
+        <small *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+          A senha deve ter pelo menos 6 caracteres.
+        </small>
+      </label>
+
+      <button type="submit" class="submit-button">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Entrar no painel
+      </button>
+    </form>
+
+    <div class="panel-footer">
+      <span class="soft-badge">
+        <i class="bi bi-shield-lock"></i>
+        acesso institucional
+      </span>
+    </div>
+  </section>
 </div>

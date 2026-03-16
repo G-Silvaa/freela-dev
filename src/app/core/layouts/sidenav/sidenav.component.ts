@@ -1,38 +1,38 @@
 import {
   animate,
-  keyframes,
   style,
   transition,
   trigger,
 } from '@angular/animations';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MenuItemComponent } from './menu-item/menu-item.component';
+import { CommonModule } from '@angular/common';
+import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 import { SidebarService } from '@core/services/sidebar/sidebar.service';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { LucideAngularModule } from 'lucide-angular';
+interface NavigationItem {
+  label: string;
+  route: string;
+  icon: string;
+  description: string;
+}
 
-
-interface SideNavToggle {
-  screenWidth: number;
-  collapsed: boolean;
+interface PageMeta {
+  eyebrow: string;
+  title: string;
+  description: string;
 }
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    NgOptimizedImage,
-    MenuItemComponent,
-    LucideAngularModule
-  ],
+  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
   animations: [
@@ -46,40 +46,84 @@ interface SideNavToggle {
         animate('350ms', style({ opacity: 0 })),
       ]),
     ]),
-    trigger('rotate', [
-      transition(':enter', [
-        animate(
-          '1000ms',
-          keyframes([
-            style({ transform: 'rotate(0deg)', offset: '0' }),
-            style({ transform: 'rotate(2turn)', offset: '1' }),
-          ]),
-        ),
-      ]),
-    ]),
   ],
 })
-export class SidenavComponent {
-  @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
-  collapsed = true;
+export class SidenavComponent implements OnInit {
   screenWidth = 0;
-  isDropdownOpen = false;
-  imageUrl?: string | ArrayBuffer | null = null;
-  animationClass = '';
-  isInitialPage: boolean = false;
-  selectedNav: number = 0;
-
-  selectNav(navNumber: number): void {
-    this.selectedNav = navNumber;
-  }
-
-  headerTitle!: string;
-  headerDescription!: string;
+  readonly todayLabel = new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date());
+  readonly navigationItems: NavigationItem[] = [
+    {
+      label: 'Painel',
+      route: '/home',
+      icon: 'bi-grid-1x2-fill',
+      description: 'Resumo e prioridades',
+    },
+    {
+      label: 'Clientes',
+      route: '/clientes',
+      icon: 'bi-people-fill',
+      description: 'Cadastros e contatos',
+    },
+    {
+      label: 'Processos',
+      route: '/processos',
+      icon: 'bi-clipboard2-pulse-fill',
+      description: 'Status e exigências',
+    },
+    {
+      label: 'Contratos',
+      route: '/contratos',
+      icon: 'bi-file-earmark-text-fill',
+      description: 'Vigência e renovação',
+    },
+    {
+      label: 'Finanças',
+      route: '/financas',
+      icon: 'bi-bank2',
+      description: 'Cobrança e baixa',
+    },
+  ];
+  readonly pageMeta: Record<string, PageMeta> = {
+    '/home': {
+      eyebrow: 'Resumo do dia',
+      title: 'Visão geral',
+      description:
+        'Acompanhe alertas, carteira ativa e os próximos movimentos da operação em uma leitura mais objetiva.',
+    },
+    '/clientes': {
+      eyebrow: 'Atendimento',
+      title: 'Clientes e representantes',
+      description:
+        'Organize cadastros, documentos e contatos de forma direta.',
+    },
+    '/processos': {
+      eyebrow: 'Acompanhamento',
+      title: 'Processos em andamento',
+      description:
+        'Visualize status, prazos e ações pendentes sem sair da listagem.',
+    },
+    '/contratos': {
+      eyebrow: 'Contratos',
+      title: 'Contratos e vigência',
+      description:
+        'Consulte contratos ativos, renovações disponíveis e emissão de documentos.',
+    },
+    '/financas': {
+      eyebrow: 'Financeiro',
+      title: 'Financeiro da carteira',
+      description:
+        'Controle parcelas, boletos e comprovantes com leitura mais rápida.',
+    },
+  };
+  currentPage = this.pageMeta['/home'];
 
   constructor(
     private sidebarService: SidebarService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
   ) {}
 
   get isActiveBar(): boolean {
@@ -87,63 +131,52 @@ export class SidenavComponent {
   }
 
   toggleSideBar(): void {
-    if(this.isActiveBar) {
-      this.sidebarService.onInactiveSide()
+    if (this.isActiveBar) {
+      this.sidebarService.onInactiveSide();
     } else {
-      this.sidebarService.onActiveSide()
+      this.sidebarService.onActiveSide();
     }
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize(): void {
     this.screenWidth = window.innerWidth;
-    if (this.screenWidth <= 768) {
-      this.collapsed = false;
-      this.onToggleSideNav.emit({
-        collapsed: this.collapsed,
-        screenWidth: this.screenWidth,
-      });
+
+    if (this.screenWidth > 992) {
+      this.sidebarService.onInactiveSide();
     }
   }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
+    this.updatePageMeta(this.router.url);
 
-  }
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.updatePageMeta(event.urlAfterRedirects);
 
-  toggleCollapse(): void {
-    this.collapsed = !this.collapsed;
-    this.onToggleSideNav.emit({
-      collapsed: this.collapsed,
-      screenWidth: this.screenWidth,
-    });
+        if (this.screenWidth <= 992) {
+          this.sidebarService.onInactiveSide();
+        }
+      });
   }
 
   closeSidenav(): void {
-    this.collapsed = false;
-    this.onToggleSideNav.emit({
-      collapsed: this.collapsed,
-      screenWidth: this.screenWidth,
-    });
+    this.sidebarService.onInactiveSide();
   }
 
-  dropdownMenu() {
-    if (this.isDropdownOpen) {
-      this.animationClass = 'closing';
-      setTimeout(() => {
-        this.isDropdownOpen = false;
-        this.animationClass = '';
-      }, 20);
-    } else {
-      this.isDropdownOpen = true;
-      this.animationClass = 'opening';
-      setTimeout(() => {
-        this.animationClass = '';
-      }, 20);
-    }
+  isExactRoute(route: string): boolean {
+    return route === '/home';
   }
 
+  private updatePageMeta(url: string): void {
+    const matchedRoute =
+      Object.keys(this.pageMeta)
+        .sort((left, right) => right.length - left.length)
+        .find((route) => (route === '/home' ? url === route : url.startsWith(route))) ??
+      '/home';
 
-
-
+    this.currentPage = this.pageMeta[matchedRoute];
+  }
 }

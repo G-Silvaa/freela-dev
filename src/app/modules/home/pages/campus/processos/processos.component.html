@@ -1,10 +1,59 @@
-<div class="container">
-  <div class="adicionar">
-    <h1>Processos</h1>
+<section class="page-shell">
+  <div class="page-header">
+    <div class="page-header-copy">
+      <span class="eyebrow">Ritmo operacional</span>
+      <h1>Processos</h1>
+      <p>
+        Acompanhe protocolos, status, datas estratégicas e gere cartas diretamente a partir da listagem.
+      </p>
+    </div>
+
+    <span class="soft-badge">
+      <i class="bi bi-envelope-paper-heart"></i>
+      cartas integradas
+    </span>
   </div>
 
-  <div class="filter">
-    <div class="dividir">
+  <div class="stats-grid">
+    <article class="surface-card stat-card">
+      <span class="stat-label">Processos listados</span>
+      <strong class="stat-value">{{ totalProcessos }}</strong>
+      <span class="stat-meta">Volume atual da consulta exibida.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Em acompanhamento</span>
+      <strong class="stat-value">{{ processosEmAcompanhamento }}</strong>
+      <span class="stat-meta">Casos ainda ativos no fluxo previdenciário.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Benefícios aprovados</span>
+      <strong class="stat-value">{{ processosAprovados }}</strong>
+      <span class="stat-meta">Concessões já registradas no sistema.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Cessações mapeadas</span>
+      <strong class="stat-value">{{ cessacoesProximas }}</strong>
+      <span class="stat-meta">Registros com data de cessação disponível.</span>
+    </article>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Filtrar processos</h2>
+        <p>Pesquise por nome, CPF ou status atual do requerimento.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-clipboard2-data"></i>
+        operação ao vivo
+      </span>
+    </div>
+
+    <div class="filter-grid">
       <app-input
         label="Nome"
         type="text"
@@ -14,6 +63,7 @@
         errorMsg="Nome é obrigatório"
         [isDisable]="false"
       ></app-input>
+
       <app-input
         label="CPF"
         [(ngModel)]="filtros.CPF"
@@ -22,43 +72,52 @@
         [hasError]="false"
         errorMsg="CPF é obrigatório"
         [isDisable]="false"
+        [mask]="'000.000.000-00'"
       ></app-input>
+
       <app-select-input
-        [label]="'Status:'"
-        [options]="[
-          { value: 'AGUARDANDO', label: 'Aguardando' },
-          { value: 'PENDENTE', label: 'Pendente' },
-          { value: 'ANALISE', label: 'Análise' },
-          { value: 'CUMPRIMENTO_EXIGENCIA', label: 'Cumprimento com Exigencia' },
-          { value: 'ANALISE_ADMINISTRATIVA', label: 'Analise Administrativa' },
-          { value: 'APROVADO', label: 'Aprovado' },
-          { value: 'REPROVADO', label: 'Reprovado' }
-        ]"
+        [label]="'Status'"
+        [options]="statusOptions"
         [placeholder]="'Selecione o status'"
         [(ngModel)]="filtros.Status"
       ></app-select-input>
     </div>
-    <div class="filtrosB">
-      <button class="lupa" (click)="aplicarFiltros()"></button>
-      <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
+
+    <div class="filter-actions">
+      <button class="primary-action" type="button" (click)="aplicarFiltros()">
+        <i class="bi bi-funnel-fill"></i>
+        Aplicar filtros
+      </button>
+      <button class="secondary-action" type="button" (click)="limparFiltros()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Limpar
+      </button>
     </div>
   </div>
 
-  <app-table
-    [columns]="['Nome', 'CPF', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
-    [data]="pessoasData"
-    [showActions]="true"
-    [itemsPerPage]="10"
-    (edit)="onEdit($event)"
-    (delete)="onDelete($event)"
-    (gerarCartas)="gerarCarta($event)"
-    [showDelete]="false"
-    [showOpcoes]="true"
-  ></app-table>
-</div>
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Fila de processos</h2>
+        <p>Edição rápida e geração de cartas por processo.</p>
+      </div>
 
-<ng-template #editTemplate>
-  <app-add-process-modal [processoId]="selectedProcessoId!"></app-add-process-modal>
-</ng-template>
+      <span class="soft-badge">
+        <i class="bi bi-list-task"></i>
+        {{ pessoasData.length }} registros
+      </span>
+    </div>
 
-
+    <app-table
+      [columns]="['Nome', 'CPF', 'Número do protocolo', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
+      [data]="pessoasData"
+      [showActions]="true"
+      [itemsPerPage]="10"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+      (gerarCartas)="gerarCarta($event)"
+      [showDelete]="false"
+      [showOpcoes]="true"
+    ></app-table>
+  </div>
+</section>

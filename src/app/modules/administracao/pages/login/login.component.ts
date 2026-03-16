@@ -1,18 +1,12 @@
+import { CommonModule } from "@angular/common";
 import { Component, inject, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { InputLayoutComponent } from "@shared/components/input-layout/input-layout.component";
-import { NgxMaskDirective, NgxMaskPipe } from "ngx-mask";
 
 @Component({
   selector: "app-login",
   standalone: true,
-  imports: [
-    InputLayoutComponent,
-    NgxMaskPipe,
-    NgxMaskDirective,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: "./login.component.html",
   styleUrl: "./login.component.scss",
   encapsulation: ViewEncapsulation.Emulated,
@@ -22,12 +16,16 @@ export class LoginComponent {
   private router = inject(Router);
 
   loginForm = this.formBuilder.group({
-    email: [""],
-    password: [""],
+    email: ["", [Validators.required, Validators.email]],
+    password: ["", [Validators.required, Validators.minLength(6)]],
   });
 
   submitLogin() {
-    console.log(this.loginForm.value);
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
     this.router.navigate(["/home"]);
   }
 }

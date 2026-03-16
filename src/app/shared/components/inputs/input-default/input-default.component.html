@@ -1,18 +1,20 @@
 <div class="box-input" [ngClass]="variant">
   <label for="" class="form-label">{{ label }}</label>
-  <input
-    [type]="type"
-    (input)="onInputChange($event)"
-    [placeholder]="placeholder"
-    [disabled]="isDisable"
-    class="form-control"
-    [formControl]="formControl"
-    [ngClass]="{ 'is-invalid': hasError }"
-    mask="{{ mask }}"
-    [clearIfNotMatch]="clearIfNotMatch"
-    [attr.maxlength]="maxlength"
-    [attr.readonly]="isReadonly"
-  />
+  <div class="input-shell">
+    <input
+      [type]="type"
+      (input)="onInputChange($event)"
+      [placeholder]="placeholder"
+      [disabled]="isDisable"
+      class="form-control"
+      [formControl]="formControl"
+      [ngClass]="{ 'is-invalid': hasError }"
+      mask="{{ mask }}"
+      [clearIfNotMatch]="clearIfNotMatch"
+      [attr.maxlength]="maxlength"
+      [attr.readonly]="isReadonly"
+    />
+  </div>
   <div class="invalid-feedback">
     {{ errorMsg }}
   </div>

@@ -1,6 +1,6 @@
-<div class="box-input col-md-6"> <!-- Ajuste a largura usando classes do Bootstrap -->
+<div class="box-input">
   <label for="" class="form-label">{{ label }}</label>
-  <div class="input-wrapper" [ngClass]="{ 'is-invalid': hasError }">
+  <div class="input-shell" [ngClass]="{ 'is-invalid': hasError }">
     <input
       [type]="withTimepicker ? 'datetime-local' : 'date'"
       placeholder="{{ placeholder }}"

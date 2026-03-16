@@ -11,6 +11,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ModalComponent {
   title?: string;
+  subtitle?: string;
   closeBtnName?: string;
   list: string[] = [];
   formTemplate!: TemplateRef<any>;

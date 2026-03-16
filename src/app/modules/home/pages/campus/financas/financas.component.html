@@ -1,10 +1,59 @@
-<div class="container">
-  <div class="adicionar">
-    <h1>Finanças</h1>
+<section class="page-shell">
+  <div class="page-header">
+    <div class="page-header-copy">
+      <span class="eyebrow">Cobrança e recebimento</span>
+      <h1>Finanças</h1>
+      <p>
+        Controle parcelas, boletos e comprovantes com uma leitura mais enxuta da carteira financeira.
+      </p>
+    </div>
+
+    <span class="soft-badge">
+      <i class="bi bi-receipt-cutoff"></i>
+      boletos e comprovantes
+    </span>
   </div>
 
-  <div class="filter">
-    <form [formGroup]="filterForm">
+  <div class="stats-grid">
+    <article class="surface-card stat-card">
+      <span class="stat-label">Registros financeiros</span>
+      <strong class="stat-value">{{ totalFinanceiros }}</strong>
+      <span class="stat-meta">Itens atualmente carregados na consulta.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Pagamentos concluídos</span>
+      <strong class="stat-value">{{ totalPagos }}</strong>
+      <span class="stat-meta">Contratos com situação financeira quitada.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Pendências financeiras</span>
+      <strong class="stat-value">{{ totalPendentes }}</strong>
+      <span class="stat-meta">Registros aguardando nova ação de cobrança.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Próxima receita estimada</span>
+      <strong class="stat-value currency-highlight">{{ proximaReceita }}</strong>
+      <span class="stat-meta">Soma das próximas parcelas previstas.</span>
+    </article>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Filtrar financeiro</h2>
+        <p>Combine benefício, situação da parcela e pagamento para refinar a carteira.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-bank"></i>
+        visão por cobrança
+      </span>
+    </div>
+
+    <form [formGroup]="filterForm" class="filter-grid">
       <app-input
         label="Nome"
         type="text"
@@ -13,71 +62,91 @@
         [isDisable]="false"
         formControlName="nome"
       ></app-input>
+
       <app-input
-        label="Cpf"
+        label="CPF"
         type="text"
-        placeholder="Digite o cpf"
+        placeholder="Digite o CPF"
         [hasError]="false"
         [isDisable]="false"
         formControlName="cpf"
+        [mask]="'000.000.000-00'"
       ></app-input>
+
       <app-select-input
-        label="Beneficio"
+        label="Benefício"
         [options]="beneficiosOptions"
-        placeholder="Selecione um beneficio"
+        placeholder="Selecione um benefício"
         formControlName="beneficio"
-      >
-      </app-select-input>
+      ></app-select-input>
+
       <app-select-input
-        label="Situação Parcela"
-        [options]="[{label: 'Aguardando pagamento', value: 'aguardandopagamento'}, {label: 'Pago', value: 'pago'}]"
+        label="Situação da parcela"
+        [options]="[
+          { label: 'Aguardando pagamento', value: 'aguardandopagamento' },
+          { label: 'Pago', value: 'pago' }
+        ]"
         placeholder="Selecione a situação da parcela"
         formControlName="situacaoParcela"
-      >
-      </app-select-input>
+      ></app-select-input>
+
       <app-select-input
-        label="Situação Pagamento"
-        [options]="[{label: 'Pago', value: 'true'}, {label: 'Aguardando Pagamento', value: 'false'}]"
+        label="Situação do pagamento"
+        [options]="[
+          { label: 'Pago', value: 'true' },
+          { label: 'Aguardando pagamento', value: 'false' }
+        ]"
         placeholder="Selecione a situação do pagamento"
         formControlName="situacaoPagamento"
-      >
-      </app-select-input>
+      ></app-select-input>
     </form>
-    <div class="filtrosB">
-      <button class="lupa" (click)="submitFilter()"></button>
-      <button class="limpar" (click)="clearFilter()">Limpar filtro</button>
+
+    <div class="filter-actions">
+      <button class="primary-action" type="button" (click)="submitFilter()">
+        <i class="bi bi-funnel-fill"></i>
+        Aplicar filtros
+      </button>
+      <button class="secondary-action" type="button" (click)="clearFilter()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Limpar
+      </button>
     </div>
   </div>
 
-  <app-table
-    [columns]="[
-      'Nome',
-      'CPF',
-      'Benefício',
-      'Valor total à pagar',
-      'Número solicitação pagamento',
-      'Montante pago',
-      'Próxima parcela',
-      'Valor pago da parcela',
-      'Data pagamento da parcela',
-      'Parcelas restantes',
-      'Parcelas pagas',
-      'Situação parcela',
-      'Situação pagamento'
-    ]"
-    [data]="pessoasFinanceiro"
-    [showActions]="true"
-    [showDelete]="false"
-    [showBoleto]="true"
-    [showComprovante]="true"
-    [itemsPerPage]="10"
-    (edit)="onEdit($event)"
-    (generateBoleto)="onGenerateBoleto($event)"
-    (downloadComprovante)="onDownloadComprovante($event)"
-  ></app-table>
-</div>
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Carteira financeira</h2>
+        <p>Edição rápida e emissão de documentos financeiros diretamente na tabela.</p>
+      </div>
 
-<ng-template #editTemplate>
-  <!-- <app-add-users-modal /> -->
-  <app-edit-financeiro-modal />
-</ng-template>
+      <span class="soft-badge">
+        <i class="bi bi-wallet2"></i>
+        {{ pessoasFinanceiro.length }} registros
+      </span>
+    </div>
+
+    <app-table
+      [columns]="[
+        'Nome',
+        'CPF',
+        'Benefício',
+        'Valor total à pagar',
+        'Montante pago',
+        'Próxima parcela',
+        'Parcelas restantes',
+        'Situação parcela',
+        'Situação pagamento'
+      ]"
+      [data]="pessoasFinanceiro"
+      [showActions]="true"
+      [showDelete]="false"
+      [showBoleto]="true"
+      [showComprovante]="true"
+      [itemsPerPage]="10"
+      (edit)="onEdit($event)"
+      (generateBoleto)="onGenerateBoleto($event)"
+      (downloadComprovante)="onDownloadComprovante($event)"
+    ></app-table>
+  </div>
+</section>

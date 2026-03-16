@@ -1,65 +1,68 @@
-<div class="main-layout" [ngClass]="{ backdrop: isActiveBar }">
-  <div class="shadow sidenav flex-shrink-0" [ngClass]="{ isActive: isActiveBar }">
-    <a href="/home" class="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none">
-      <img class="logo-sidebar" ngSrc="logo.jpeg" width="170" height="60" alt="estrutura Logo" />
-    </a>
-    <div class="texts4">
-      <h3>Assessoria</h3>
-      <h3>Previdenciária</h3>
-    </div>
-
-    <div class="d-flex align-items-center link-body-emphasis text-decoration-none navegacaot">
-      <ul class="list-unstyled">
-        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 1 }" (click)="selectNav(1)"
-          [routerLink]="['/home']" routerLinkActive="active-link">
-          <lucide-icon name="house" [size]="18"></lucide-icon>
-          Inicio
-        </li>
-        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 2 }" (click)="selectNav(2)"
-          [routerLink]="['/clientes']" routerLinkActive="active-link">
-          <lucide-icon name="users" [size]="18"></lucide-icon>
-          Clientes
-        </li>
-        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 3 }" (click)="selectNav(3)"
-          [routerLink]="['/processos']" routerLinkActive="active-link">
-          <lucide-icon name="clipboard-list" [size]="18"></lucide-icon>
-          Processos
-        </li>
-        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 4 }" (click)="selectNav(4)"
-          [routerLink]="['/contratos']" routerLinkActive="active-link">
-          <lucide-icon name="file-chart-column-increasing" [size]="18"></lucide-icon>
-          Contratos
-        </li>
-        <li class="cursor-pointer" [ngClass]="{ active: selectedNav === 5 }" (click)="selectNav(5)"
-        [routerLink]="['/financas']" routerLinkActive="active-link">
-        <lucide-icon name="file-chart-column-increasing" [size]="18"></lucide-icon>
-        Finanças
-      </li>
-      </ul>
-    </div>
-  </div>
-  <main>
-    <header>
-      <div class="box-button">
-        <button class="button-bar" (click)="toggleSideBar()" [ngClass]="{ active: isActiveBar}">
-          @if (isActiveBar) {
-            <i class="bi bi-x"></i>
-          } @else {
-            <i class="bi bi-list"></i>
-          }
-        </button>
+<div class="app-shell">
+  <aside class="sidebar" [class.sidebar-open]="isActiveBar">
+    <a class="brand" [routerLink]="['/home']" (click)="closeSidenav()">
+      <div class="brand-mark">
+        <i class="bi bi-grid-1x2-fill"></i>
       </div>
 
-      <h6 class="none" *ngIf="isInitialPage">
-        {{ headerTitle }}
-        <div class="neg">{{ headerDescription }}</div>
-      </h6>
+      <div class="brand-copy">
+        <span class="eyebrow brand-eyebrow">Painel</span>
+        <strong>Operação previdenciária</strong>
+        <p>Clientes, processos, contratos e financeiro em um fluxo direto.</p>
+      </div>
+    </a>
 
+    <nav class="navigation">
+      <a
+        *ngFor="let item of navigationItems"
+        class="navigation-link"
+        [routerLink]="[item.route]"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: isExactRoute(item.route) }"
+        (click)="closeSidenav()"
+      >
+        <span class="icon-shell">
+          <i class="bi" [ngClass]="item.icon"></i>
+        </span>
+
+        <span class="navigation-copy">
+          <strong>{{ item.label }}</strong>
+          <small>{{ item.description }}</small>
+        </span>
+      </a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-backdrop" [class.visible]="isActiveBar" (click)="closeSidenav()"></div>
+
+  <main class="content">
+    <header class="topbar surface-card">
+      <div class="topbar-leading">
+        <button class="menu-button" type="button" (click)="toggleSideBar()">
+          <i class="bi" [ngClass]="isActiveBar ? 'bi-x-lg' : 'bi-list'"></i>
+        </button>
+
+        <div class="topbar-copy">
+          <span class="eyebrow">{{ currentPage.eyebrow }}</span>
+          <h1>{{ currentPage.title }}</h1>
+          <p>{{ currentPage.description }}</p>
+        </div>
+      </div>
+
+      <div class="topbar-meta">
+        <span class="meta-pill">
+          <i class="bi bi-calendar3"></i>
+          {{ todayLabel }}
+        </span>
+        <span class="meta-pill emphasis">
+          <i class="bi bi-activity"></i>
+          carteira ativa
+        </span>
+      </div>
     </header>
-    <section>
+
+    <section class="page-content">
       <router-outlet></router-outlet>
     </section>
   </main>
-
-  <div class="backdrop" [ngClass]="{ backdropActive: isActiveBar }" (click)="toggleSideBar()"></div>
 </div>

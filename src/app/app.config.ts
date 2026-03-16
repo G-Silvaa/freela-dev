@@ -27,7 +27,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
     provideAnimationsAsync(),
     importProvidersFrom(ModalModule.forRoot()),
     provideEnvironmentNgxMask(),

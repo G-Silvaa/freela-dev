@@ -1,61 +1,134 @@
-<div class="container">
-  <div class="adicionar">
-    <h1>Clientes</h1>
-    <button class="adicionarUsuario" (click)="adicionarCliente()">
-      Adicionar Clientes <img src="/adicionarUsuario.svg" alt="" />
-    </button>
-  </div>
+<section class="page-shell">
+  <div class="page-header">
+    <div class="page-header-copy">
+      <span class="eyebrow">Relacionamento com segurados</span>
+      <h1>Clientes</h1>
+      <p>
+        Cadastros, representantes e informações de contato organizados em uma tela mais clara para o
+        atendimento diário.
+      </p>
+    </div>
 
-  <div class="filter">
-    <div class="resp">
-    <app-input
-      label="Nome"
-      type="text"
-      placeholder="Digite o nome"
-      [(ngModel)]="filtros.nome"
-      [hasError]="false"
-      errorMsg="Nome é obrigatório"
-      [isDisable]="false"
-    ></app-input>
-    <app-input
-    label="CPF"
-    type="text"
-    placeholder="Digite o CPF"
-    [(ngModel)]="filtros.cpf"
-    [hasError]="false"
-    errorMsg="CPF é obrigatório"
-    [isDisable]="false"
-  ></app-input>
-    <app-input
-      label="RG"
-      type="text"
-      placeholder="Digite o RG"
-      [(ngModel)]="filtros.rg"
-      [hasError]="false"
-      errorMsg="RG é obrigatório"
-      [isDisable]="false"
-    ></app-input>
- 
-  </div>
-    <div class="filtrosB">
-      <button class="lupa" (click)="aplicarFiltros()"></button>
-      <button class="limpar" (click)="limparFiltros()">Limpar filtro</button>
+    <div class="header-actions">
+      <button class="primary-action" type="button" (click)="adicionarCliente()">
+        <i class="bi bi-person-plus-fill"></i>
+        Novo cliente
+      </button>
     </div>
   </div>
 
-  <app-table
-    [columns]="['Nome', 'CPF', 'RG', 'E-mail', 'Tem representante?']"
-    [data]="pessoasData"
-    [showActions]="true"
-    [itemsPerPage]="10"
-    (edit)="onEdit($event)"
-    (delete)="onDelete($event)"
-  ></app-table>
-</div>
+  <div class="stats-grid">
+    <article class="surface-card stat-card">
+      <span class="stat-label">Total de clientes</span>
+      <strong class="stat-value">{{ totalClientes }}</strong>
+      <span class="stat-meta">Base total cadastrada na plataforma.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Com representante</span>
+      <strong class="stat-value">{{ clientesComRepresentante }}</strong>
+      <span class="stat-meta">Casos com apoio ou representação formal.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Sem representante</span>
+      <strong class="stat-value">{{ clientesSemRepresentante }}</strong>
+      <span class="stat-meta">Atendimento direto ao segurado.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">E-mails cadastrados</span>
+      <strong class="stat-value">{{ emailsCadastrados }}</strong>
+      <span class="stat-meta">Contatos com canal digital preenchido.</span>
+    </article>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Filtrar carteira de clientes</h2>
+        <p>Use nome, CPF ou RG para localizar rapidamente um cadastro.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-search"></i>
+        busca inteligente
+      </span>
+    </div>
+
+    <div class="filter-grid">
+      <app-input
+        label="Nome"
+        type="text"
+        placeholder="Digite o nome"
+        [(ngModel)]="filtros.nome"
+        [hasError]="false"
+        errorMsg="Nome é obrigatório"
+        [isDisable]="false"
+      ></app-input>
+
+      <app-input
+        label="CPF"
+        type="text"
+        placeholder="Digite o CPF"
+        [(ngModel)]="filtros.cpf"
+        [hasError]="false"
+        errorMsg="CPF é obrigatório"
+        [isDisable]="false"
+        [mask]="'000.000.000-00'"
+      ></app-input>
+
+      <app-input
+        label="RG"
+        type="text"
+        placeholder="Digite o RG"
+        [(ngModel)]="filtros.rg"
+        [hasError]="false"
+        errorMsg="RG é obrigatório"
+        [isDisable]="false"
+      ></app-input>
+    </div>
+
+    <div class="filter-actions">
+      <button class="primary-action" type="button" (click)="aplicarFiltros()">
+        <i class="bi bi-funnel-fill"></i>
+        Aplicar filtros
+      </button>
+      <button class="secondary-action" type="button" (click)="limparFiltros()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Limpar
+      </button>
+    </div>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Base cadastral</h2>
+        <p>Listagem principal para edição e exclusão dos registros.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-people"></i>
+        {{ pessoasData.length }} registros
+      </span>
+    </div>
+
+    <app-table
+      [columns]="['Nome', 'CPF', 'RG', 'E-mail', 'Tem representante?']"
+      [data]="pessoasData"
+      [showActions]="true"
+      [itemsPerPage]="10"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+    ></app-table>
+  </div>
+</section>
 
 <ng-template #adicionar>
   <app-add-users-modal />
 </ng-template>
+
 <ng-template #editar>
   <app-edit-users-modal />
 </ng-template>

@@ -49,20 +49,21 @@ export class FinancasService {
   filterFinancas(filtros: any): Observable<any> {
     let filterString = "";
 
-    if (filtros.nome)
+    if (filtros.nome) {
       filterString += `contrato.cliente.contato.nome ilike '${filtros.nome}'`;
-    if (filtros.cpf)
-      filterString +=
-        (filterString ? " and " : "") + `contrato.cliente.cpf ilike '${filtros.cpf}'`;
-    if (filtros.beneficio)
-      filterString +=
-        (filterString ? " and " : "") + `contrato.beneficio eq '${filtros.beneficio}'`;
-    if (filtros.situacaoParcela)
-      filterString +=
-        (filterString ? " and " : "") + `situacaoParcela eq '${filtros.situacaoParcela}'`;
-    if (filtros.situacaoPagamento !== undefined)
-      filterString +=
-        (filterString ? " and " : "") + `situacaoPagamento eq ${filtros.situacaoPagamento}`;
+    }
+    if (filtros.cpf) {
+      filterString += (filterString ? " and " : "") + `contrato.cliente.cpf ilike '${filtros.cpf}'`;
+    }
+    if (filtros.beneficio) {
+      filterString += (filterString ? " and " : "") + `contrato.beneficio eq '${filtros.beneficio}'`;
+    }
+    if (filtros.situacaoParcela) {
+      filterString += (filterString ? " and " : "") + `situacaoParcela eq '${filtros.situacaoParcela}'`;
+    }
+    if (filtros.situacaoPagamento !== undefined && filtros.situacaoPagamento !== "") {
+      filterString += (filterString ? " and " : "") + `situacaoPagamento eq ${filtros.situacaoPagamento}`;
+    }
 
     const params = new HttpParams()
       .set("fields", "*,contrato.cliente.contato.nome,contrato.cliente.cpf,contrato.beneficio")

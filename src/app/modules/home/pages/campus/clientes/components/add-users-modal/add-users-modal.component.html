@@ -1,294 +1,312 @@
-<div class="progress-bar">
-  <div class="step" [class.active]="currentStep >= 1">Dados</div>
-  <div class="line" [class.active]="currentStep >= 2"></div>
-  <div class="step" [class.active]="currentStep >= 2">Contato</div>
-  <div class="line" [class.active]="currentStep >= 3"></div>
-  <div class="step" [class.active]="currentStep >= 3">Endereço</div>
-  <div
-    class="line"
-    [class.active]="currentStep >= 4 && shouldShowStep(4)"
-  ></div>
-  <div class="step" [class.active]="currentStep >= 4 && shouldShowStep(4)">
-    Representante
-  </div>
-  <div class="line" [class.active]="currentStep >= 5"></div>
-  <div class="step" [class.active]="currentStep >= 5">Contrato</div>
-</div>
+<div class="client-wizard">
+  <aside class="wizard-sidebar">
+    <span class="wizard-kicker">Cadastro guiado</span>
+    <h3>{{ existingUserId ? 'Cliente localizado' : 'Novo cliente previdenciário' }}</h3>
+    <p>{{ currentStepMeta.description }}</p>
 
-<form [formGroup]="form">
-  <div class="pt1" *ngIf="currentStep === 1">
-    <div class="container-inputs">
-      <app-input
-        label="RG:"
-        placeholder="Digite seu RG:"
-        formControlName="rg"
-        [clearIfNotMatch]="true"
-        [maxlength]="30"
-        [hasError]="hasMaxLengthAndRequiredError('rg')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')"
-      >
-      </app-input>
-
-      <app-input
-        label="CPF:"
-        mask="000.000.000-00"
-        [maxlength]="14"
-        placeholder="Digite seu CPF:"
-        formControlName="cpf"
-        [clearIfNotMatch]="true"
-        [hasError]="hasMaxLengthAndRequiredError('cpf')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')"
-      >
-      </app-input>
-
-      <app-data-input
-        label="Data De Nascimento:"
-        placeholder="Digite sua data de nascimento:"
-        formControlName="dataNascimento"
-        [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')"
-      >
-      </app-data-input>
+    <div class="wizard-progress">
+      <span [style.width.%]="progressPercentage"></span>
     </div>
-  </div>
 
-  <div class="pt2" *ngIf="currentStep === 2">
-    <div class="container-inputs">
-      <app-input
-        label="Nome:"
-        placeholder="Digite seu nome:"
-        formControlName="nome"
-        [maxlength]="200"
-        [hasError]="hasMaxLengthAndRequiredError('nome')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')"
-      >
-      </app-input>
-
-      <app-input
-        label="E-mail:"
-        placeholder="Digite seu email:"
-        formControlName="email"
-        [maxlength]="200"
-        [hasError]="hasMaxLengthAndRequiredError('email')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')"
-      >
-      </app-input>
-      <app-input
-        label="Telefone:"
-        placeholder="Digite seu telefone:"
-        formControlName="telefone"
-        mask="(00) 00000-0000"
-        [maxlength]="15"
-        [clearIfNotMatch]="true"
-        [hasError]="hasMaxLengthAndRequiredError('telefone')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')"
-      >
-      </app-input>
+    <div class="wizard-progress-copy">
+      Etapa {{ currentVisibleStepIndex }} de {{ visibleSteps.length }}
     </div>
-  </div>
 
-  <div class="pt3" *ngIf="currentStep === 3">
-    <div class="container-inputs">
-      <div class="teste1">
+    <div class="wizard-steps">
+      <div
+        class="wizard-step"
+        *ngFor="let step of visibleSteps"
+        [class.active]="currentStep === step.step"
+        [class.completed]="isStepCompleted(step.step)"
+      >
+        <span class="wizard-step-index">
+          <i *ngIf="isStepCompleted(step.step)" class="bi bi-check-lg"></i>
+          <ng-container *ngIf="!isStepCompleted(step.step)">{{ step.step }}</ng-container>
+        </span>
+
+        <div class="wizard-step-copy">
+          <strong>{{ step.label }}</strong>
+          <small>{{ step.title }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-note" *ngIf="existingUserId">
+      <i class="bi bi-stars"></i>
+      <div>
+        <strong>Cadastro reaproveitado</strong>
+        <span>Os dados encontrados pelo CPF foram preenchidos para você concluir apenas o vínculo contratual.</span>
+      </div>
+    </div>
+  </aside>
+
+  <form [formGroup]="form" class="wizard-form">
+    <div class="step-header">
+      <span class="step-badge">{{ currentStepMeta.label }}</span>
+      <h4>{{ currentStepMeta.title }}</h4>
+      <p>{{ currentStepMeta.description }}</p>
+    </div>
+
+    <div class="step-panel" *ngIf="currentStep === 1">
+      <div class="field-grid three-columns">
+        <app-input
+          label="RG"
+          placeholder="Digite o RG"
+          formControlName="rg"
+          [clearIfNotMatch]="true"
+          [maxlength]="30"
+          [hasError]="hasMaxLengthAndRequiredError('rg')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('rg')"
+        ></app-input>
+
+        <app-input
+          label="CPF"
+          mask="000.000.000-00"
+          [maxlength]="14"
+          placeholder="Digite o CPF"
+          formControlName="cpf"
+          [clearIfNotMatch]="true"
+          [hasError]="hasMaxLengthAndRequiredError('cpf')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('cpf')"
+        ></app-input>
+
+        <app-data-input
+          label="Data de nascimento"
+          placeholder="Digite a data de nascimento"
+          formControlName="dataNascimento"
+          [hasError]="hasMaxLengthAndRequiredError('dataNascimento')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('dataNascimento')"
+        ></app-data-input>
+      </div>
+    </div>
+
+    <div class="step-panel" *ngIf="currentStep === 2">
+      <div class="field-grid three-columns">
+        <app-input
+          label="Nome"
+          placeholder="Digite o nome completo"
+          formControlName="nome"
+          [maxlength]="200"
+          [hasError]="hasMaxLengthAndRequiredError('nome')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('nome')"
+        ></app-input>
+
+        <app-input
+          label="E-mail"
+          placeholder="Digite o e-mail"
+          formControlName="email"
+          [maxlength]="200"
+          [hasError]="hasMaxLengthAndRequiredError('email')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('email')"
+        ></app-input>
+
+        <app-input
+          label="Telefone"
+          placeholder="Digite o telefone"
+          formControlName="telefone"
+          mask="(00) 00000-0000"
+          [maxlength]="15"
+          [clearIfNotMatch]="true"
+          [hasError]="hasMaxLengthAndRequiredError('telefone')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('telefone')"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="step-panel" *ngIf="currentStep === 3">
+      <div class="field-grid three-columns">
         <app-input
           mask="00000-000"
           [maxlength]="10"
-          label="CEP:"
+          label="CEP"
           [clearIfNotMatch]="true"
-          placeholder="Digite seu CEP:"
+          placeholder="Digite o CEP"
           formControlName="cep"
           [hasError]="hasMaxLengthAndRequiredError('cep')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('cep')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-input
-          label="Logradouro:"
-          placeholder="Digite seu logradouro:"
+          label="Logradouro"
+          placeholder="Digite o logradouro"
           formControlName="logradouro"
           [maxlength]="150"
           [hasError]="hasMaxLengthAndRequiredError('logradouro')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('logradouro')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-input
-          label="Complemento:"
-          placeholder="Digite seu complemento:"
+          label="Complemento"
+          placeholder="Digite o complemento"
           formControlName="complemento"
           [maxlength]="150"
           [hasError]="hasMaxLengthAndRequiredError('complemento')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('complemento')"
-        >
-        </app-input>
-      </div>
-      <div class="teste2">
+        ></app-input>
+
         <app-input
-          label="Bairro:"
-          placeholder="Digite seu bairro:"
+          label="Bairro"
+          placeholder="Digite o bairro"
           formControlName="bairro"
           [maxlength]="150"
           [hasError]="hasMaxLengthAndRequiredError('bairro')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('bairro')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-input
-          label="Cidade:"
+          label="Cidade"
           [maxlength]="150"
-          placeholder="Digite sua cidade:"
+          placeholder="Digite a cidade"
           formControlName="cidade"
           [hasError]="hasMaxLengthAndRequiredError('cidade')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('cidade')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-select-input
-          [label]="'Tem representante?'"
+          [label]="'Tem representante'"
           [options]="selectOptions"
           [placeholder]="'Escolha uma opção'"
           formControlName="temRepresentante"
           [hasError]="hasMaxLengthAndRequiredError('temRepresentante')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('temRepresentante')"
-          (change)="onRepresentativeChange($event)"
-        >
-        </app-select-input>
+        ></app-select-input>
       </div>
     </div>
-  </div>
 
-  <div class="pt4" *ngIf="currentStep === 4 && shouldShowStep(4)">
-    <div class="container-inputs">
-      <h4>Contato</h4>
-      <div class="container1">
+    <div class="step-panel" *ngIf="currentStep === 4 && shouldShowStep(4)">
+      <div class="section-copy">
+        <span>Contato do representante</span>
+      </div>
+
+      <div class="field-grid three-columns">
         <app-input
-          label="Nome do Representante:"
-          placeholder="Digite o nome do representante:"
+          label="Nome do representante"
+          placeholder="Digite o nome do representante"
           formControlName="representanteNome"
           [maxlength]="200"
           [hasError]="hasMaxLengthAndRequiredError('representanteNome')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteNome')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-input
-          label="E-mail do Representante:"
-          placeholder="Digite o e-mail do representante:"
+          label="E-mail do representante"
+          placeholder="Digite o e-mail do representante"
           formControlName="representanteEmail"
           [hasError]="hasMaxLengthAndRequiredError('representanteEmail')"
           [maxlength]="256"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteEmail')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-input
-          label="Telefone do Representante:"
-          placeholder="Digite o telefone do representante:"
+          label="Telefone do representante"
+          placeholder="Digite o telefone do representante"
           formControlName="representanteTelefone"
           mask="(00) 00000-0000"
           [maxlength]="15"
           [clearIfNotMatch]="true"
           [hasError]="hasMaxLengthAndRequiredError('representanteTelefone')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteTelefone')"
-        >
-        </app-input>
+        ></app-input>
       </div>
-      <h4>Dados do parentesco</h4>
-      <div class="container1">
+
+      <div class="section-copy spaced">
+        <span>Parentesco e documentos</span>
+      </div>
+
+      <div class="field-grid three-columns">
         <app-input
-          label="Parentesco:"
-          placeholder="Digite o parentesco:"
+          label="Parentesco"
+          placeholder="Digite o parentesco"
           formControlName="parentesco"
           [hasError]="hasMaxLengthAndRequiredError('parentesco')"
           [maxlength]="30"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('parentesco')"
-        >
-        </app-input>
+        ></app-input>
 
         <app-input
-          label="CPF do Representante:"
-          placeholder="Digite o CPF:"
+          label="CPF do representante"
+          placeholder="Digite o CPF"
           formControlName="representanteCpf"
           mask="000.000.000-00"
           [maxlength]="14"
           [clearIfNotMatch]="true"
           [hasError]="hasMaxLengthAndRequiredError('representanteCpf')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteCpf')"
-        >
-        </app-input>
+        ></app-input>
+
         <app-input
-          label="RG do Representante:"
-          placeholder="Digite o RG:"
+          label="RG do representante"
+          placeholder="Digite o RG"
           [maxlength]="30"
           [clearIfNotMatch]="true"
           formControlName="representanteRg"
           [hasError]="hasMaxLengthAndRequiredError('representanteRg')"
           [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteRg')"
-        >
-        </app-input>
-      </div>
-      <div class="t">
+        ></app-input>
+
         <app-data-input
-        label="Data de Nascimento do Representante:"
-          [maxlength]="10"
+          label="Nascimento do representante"
           formControlName="representanteDataNascimento"
-          [hasError]="
-            hasMaxLengthAndRequiredError('representanteDataNascimento')
-          "
-          [errorMsg]="
-            getMaxLengthAndRequiredErrorMsg('representanteDataNascimento')
-          "
-        >
-        </app-data-input>
+          [hasError]="hasMaxLengthAndRequiredError('representanteDataNascimento')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('representanteDataNascimento')"
+        ></app-data-input>
       </div>
     </div>
-  </div>
 
-  <div class="pt5" *ngIf="currentStep === 5">
-    <div class="container-inputs repon">
-      <app-select-input
-        [label]="'Benefícios'"
-        [options]="beneficiosOptions"
-        [placeholder]="'Escolha um benefício'"
-        formControlName="beneficios"
-        [hasError]="hasMaxLengthAndRequiredError('beneficios')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('beneficios')"
-      >
-      </app-select-input>
-      <app-input-money
-        label="Preço"
-        placeholder="Digite o preço"
-        formControlName="preco"
-        errorMsg="Preço é obrigatório"
-        [hasError]="hasMaxLengthAndRequiredError('preco')"
-        [errorMsg]="getMaxLengthAndRequiredErrorMsg('preco')"
-      >
-        ></app-input-money
-      >
+    <div class="step-panel" *ngIf="currentStep === 5">
+      <div class="field-grid contract-grid">
+        <app-select-input
+          [label]="'Benefício inicial'"
+          [options]="beneficiosOptions"
+          [placeholder]="'Escolha um benefício'"
+          formControlName="beneficios"
+          [hasError]="hasMaxLengthAndRequiredError('beneficios')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('beneficios')"
+        ></app-select-input>
+
+        <app-input-money
+          label="Valor do contrato"
+          placeholder="Digite o valor"
+          formControlName="preco"
+          [hasError]="hasMaxLengthAndRequiredError('preco')"
+          [errorMsg]="getMaxLengthAndRequiredErrorMsg('preco')"
+        ></app-input-money>
+      </div>
     </div>
-  </div>
 
-  <div class="footer-modal">
-    <app-button variant="danger" width="100px" (click)="onCloseModal()">
-      Fechar
-    </app-button>
-    <app-button
-      width="100px"
-      *ngIf="currentStep > 1"
-      (click)="onPreviousStep()"
-    >
-      Voltar
-    </app-button>
-    <app-button width="100px" *ngIf="currentStep < 5" (click)="onNextStep()">
-      Próximo
-    </app-button>
-    <app-button
-      width="100px"
-      *ngIf="currentStep === 5"
-      [isLoading]="isLoading"
-      (click)="onSubmit()"
-    >
-      Salvar
-    </app-button>
-  </div>
-</form>
+    <div class="footer-modal">
+      <button type="button" class="modal-action ghost" (click)="onCloseModal()">
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="modal-action soft"
+        *ngIf="currentStep > 1"
+        (click)="onPreviousStep()"
+      >
+        Voltar
+      </button>
+
+      <button
+        type="button"
+        class="modal-action primary"
+        *ngIf="currentStep < 5"
+        (click)="onNextStep()"
+      >
+        Próxima etapa
+      </button>
+
+      <button
+        type="button"
+        class="modal-action primary"
+        *ngIf="currentStep === 5"
+        [disabled]="isLoading"
+        (click)="onSubmit()"
+      >
+        <span class="button-spinner" *ngIf="isLoading"></span>
+        <span>{{ isLoading ? 'Salvando...' : 'Salvar cliente' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

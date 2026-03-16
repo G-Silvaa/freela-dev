@@ -1,11 +1,17 @@
 <div class="modal-header">
   <div class="info-modal">
-    <h4 class="modal-title pull-left">{{ title }}</h4>
+    <div class="icon-shell" *ngIf="iconTemplate">
+      <i [className]="iconTemplate"></i>
+    </div>
 
-    <i [className]="iconTemplate" style="font-size: 1.5rem; color: #2f9e41"></i>
+    <div class="copy-block">
+      <span class="modal-kicker">Fluxo guiado</span>
+      <h4 class="modal-title pull-left">{{ title }}</h4>
+      <p *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
   </div>
-  <button (click)="bsModalRef.hide()">
-    <i class="bi bi-x" style="font-size: 1.5rem"></i>
+  <button type="button" (click)="bsModalRef.hide()">
+    <i class="bi bi-x-lg"></i>
   </button>
 </div>
 <div class="modal-body">

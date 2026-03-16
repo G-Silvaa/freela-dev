@@ -8,12 +8,10 @@ import {
 } from '@angular/forms';
 import { InputDefaultComponent } from '../../../../../../../shared/components/inputs/input-default/input-default.component';
 import { SelectInputComponent } from '../../../../../../../shared/components/inputs/select-input/select-input.component';
-import { ButtonComponent } from '../../../../../../../shared/components/button/button.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from './utils/customvalidators';  
-import { Subject } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { InputMoneyComponent } from "../../../../../../../shared/components/inputs/input-money/input-money.component";
@@ -26,7 +24,6 @@ import { HttpClient } from '@angular/common/http';
   imports: [
     InputDefaultComponent,
     SelectInputComponent,
-    ButtonComponent,
     CommonModule,
     ReactiveFormsModule,
     InputMoneyComponent,
@@ -40,8 +37,39 @@ export class AddUsersModalComponent implements OnInit {
   isLoading = false;
   currentStep = 1;
   form: FormGroup;
-  private cpfSubject = new Subject<string>();
-  private existingUserId: number | null = null;
+  existingUserId: number | null = null;
+  readonly stepMeta = [
+    {
+      step: 1,
+      label: 'Documentos',
+      title: 'Identificação do cliente',
+      description: 'Use CPF e data de nascimento para localizar um cadastro existente ou iniciar um novo atendimento.',
+    },
+    {
+      step: 2,
+      label: 'Contato',
+      title: 'Contato principal',
+      description: 'Registre nome, e-mail e telefone para o acompanhamento contínuo do segurado.',
+    },
+    {
+      step: 3,
+      label: 'Endereço',
+      title: 'Localização e apoio',
+      description: 'Preencha o endereço e defina se o caso possui representante para o fluxo continuar.',
+    },
+    {
+      step: 4,
+      label: 'Representante',
+      title: 'Dados do representante',
+      description: 'Quando houver apoio formal, registre contato, parentesco e documentos do responsável.',
+    },
+    {
+      step: 5,
+      label: 'Contrato',
+      title: 'Vínculo inicial',
+      description: 'Defina o benefício inicial e o valor do contrato para concluir o cadastro.',
+    },
+  ];
 
   constructor(
     private modalService: BsModalService,
@@ -273,6 +301,23 @@ export class AddUsersModalComponent implements OnInit {
     this.form.get('temRepresentante')?.setValue(target.value);
   }
 
+  get visibleSteps() {
+    return this.stepMeta.filter((item) => this.shouldShowStep(item.step));
+  }
+
+  get currentStepMeta() {
+    return this.stepMeta.find((item) => item.step === this.currentStep) ?? this.stepMeta[0];
+  }
+
+  get currentVisibleStepIndex(): number {
+    const index = this.visibleSteps.findIndex((item) => item.step === this.currentStep);
+    return index >= 0 ? index + 1 : 1;
+  }
+
+  get progressPercentage(): number {
+    return (this.currentVisibleStepIndex / this.visibleSteps.length) * 100;
+  }
+
   selectOptions = [
     { value: 'sim', label: 'Sim' },
     { value: 'nao', label: 'Não' },
@@ -291,6 +336,15 @@ export class AddUsersModalComponent implements OnInit {
     { value: '80', label: 'Salário Maternidade' },
   ];
 
+  private stripNonDigits(value: string | null | undefined): string {
+    return (value ?? '').replace(/\D/g, '');
+  }
+
+  private stripNonDigitsOrNull(value: string | null | undefined): string | null {
+    const sanitizedValue = this.stripNonDigits(value);
+    return sanitizedValue || null;
+  }
+
   onSubmit() {
     this.isLoading = true;
 
@@ -305,13 +359,13 @@ export class AddUsersModalComponent implements OnInit {
   
     const dataNascimentoAmericano = converterDataParaAmericano(dados.dataNascimento);
     const representanteDataNascimentoAmericano = dados.representanteDataNascimento ? converterDataParaAmericano(dados.representanteDataNascimento) : null;
-    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
-    const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
-    const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
-    const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
-    const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
-    const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
-    const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
+    const cepSemCaracteresEspeciais = this.stripNonDigits(dados.cep);
+    const cpfSemCaracteresEspeciais = this.stripNonDigits(dados.cpf);
+    const rgSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.rg);
+    const telefoneSemCaracteresEspeciais = this.stripNonDigits(dados.telefone);
+    const representanteCpfSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.representanteCpf);
+    const representanteRgSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.representanteRg);
+    const representanteTelefoneSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.representanteTelefone);
 
     const payload = {
       contato: {
@@ -467,5 +521,9 @@ export class AddUsersModalComponent implements OnInit {
 
   temRepresentante(representante: any | null | undefined): string {
     return representante && representante.id ? 'sim' : 'nao';
+  }
+
+  isStepCompleted(step: number): boolean {
+    return this.currentStep > step;
   }
 }

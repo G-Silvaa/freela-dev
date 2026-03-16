@@ -123,6 +123,15 @@ export class EditUsersModalComponent implements OnInit {
     { value: 'nao', label: 'Não' },
   ];
 
+  private stripNonDigits(value: string | null | undefined): string {
+    return (value ?? '').replace(/\D/g, '');
+  }
+
+  private stripNonDigitsOrNull(value: string | null | undefined): string | null {
+    const sanitizedValue = this.stripNonDigits(value);
+    return sanitizedValue || null;
+  }
+
   onSubmit() {
     this.isLoading = true;
     const dados = this.form.value;
@@ -137,13 +146,13 @@ export class EditUsersModalComponent implements OnInit {
     // Remover caracteres especiais dos campos e converter datas
     const dataNascimentoAmericano = converterDataParaAmericano(dados.dataNascimento);
     const representanteDataNascimentoAmericano = dados.representanteDataNascimento ? converterDataParaAmericano(dados.representanteDataNascimento) : null;
-    const cepSemCaracteresEspeciais = dados.cep.replace(/\D/g, '');
-    const cpfSemCaracteresEspeciais = dados.cpf.replace(/\D/g, '');
-    const rgSemCaracteresEspeciais = dados.rg.replace(/\D/g, '');
-    const telefoneSemCaracteresEspeciais = dados.telefone.replace(/\D/g, '');
-    const representanteCpfSemCaracteresEspeciais = dados.representanteCpf ? dados.representanteCpf.replace(/\D/g, '') : null;
-    const representanteRgSemCaracteresEspeciais = dados.representanteRg ? dados.representanteRg.replace(/\D/g, '') : null;
-    const representanteTelefoneSemCaracteresEspeciais = dados.representanteTelefone ? dados.representanteTelefone.replace(/\D/g, '') : null;
+    const cepSemCaracteresEspeciais = this.stripNonDigits(dados.cep);
+    const cpfSemCaracteresEspeciais = this.stripNonDigits(dados.cpf);
+    const rgSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.rg);
+    const telefoneSemCaracteresEspeciais = this.stripNonDigits(dados.telefone);
+    const representanteCpfSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.representanteCpf);
+    const representanteRgSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.representanteRg);
+    const representanteTelefoneSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.representanteTelefone);
 
     const payload = {
       contato: {

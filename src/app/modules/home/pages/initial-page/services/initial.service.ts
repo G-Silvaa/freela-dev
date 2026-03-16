@@ -4,6 +4,24 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.development';
 
+export interface DashboardStatusSummary {
+  status: string;
+  total: number;
+}
+
+export interface DashboardOverview {
+  totalClientes: number;
+  contratosAtivos: number;
+  contratosEncerrados: number;
+  processosEmAndamento: number;
+  processosPendentes: number;
+  processosConcedidos: number;
+  financeirosEmAberto: number;
+  financeirosQuitados: number;
+  valorCarteira: number;
+  statusProcessos: DashboardStatusSummary[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +29,15 @@ export class GraficosService {
   private readonly API_URL = environment.apiUrl;
 
   constructor(private readonly http: HttpClient) {}
+
+  getOverview(): Observable<DashboardOverview> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': '1',
+    });
+
+    return this.http.get<DashboardOverview>(`${this.API_URL}dashboard/overview`, { headers });
+  }
 
   getDados(): Observable<any> {
     const headers = new HttpHeaders({

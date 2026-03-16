@@ -19,10 +19,7 @@ export class ContratosService {
   }
 
   getContratos(): void {
-    const params = new HttpParams().set(
-      "fields",
-      "*,cliente",
-    );
+    const params = new HttpParams().set("fields", "*,cliente");
 
     this.http
       .get(`${this.API_URL}domain/contrato`, {
@@ -47,23 +44,22 @@ export class ContratosService {
 
   deleteContrato(id: any) {
     this.http.delete(`${this.API_URL}domain/contrato/${id}`).subscribe({
-      next: (res) => {
+      next: () => {
         this.getContratos();
       }
-    })
+    });
   }
 
   filterContratos(filtros: any): Observable<any> {
     let filterString = "";
 
-    if (filtros.nome)
-      filterString += `cliente.contato.nome ilike '${filtros.nome}'`;
-    if (filtros.cpf)
-      filterString +=
-        (filterString ? " and " : "") + `cliente.cpf ilike '${filtros.cpf}'`;
-    if (filtros.beneficio)
-      filterString +=
-        (filterString ? " and " : "") + `beneficio eq '${filtros.beneficio}'`;
+    if (filtros.nome) filterString += `cliente.contato.nome ilike '${filtros.nome}'`;
+    if (filtros.cpf) {
+      filterString += (filterString ? " and " : "") + `cliente.cpf ilike '${filtros.cpf}'`;
+    }
+    if (filtros.beneficio) {
+      filterString += (filterString ? " and " : "") + `beneficio eq '${filtros.beneficio}'`;
+    }
 
     const params = new HttpParams()
       .set("fields", "*,cliente")
@@ -100,10 +96,6 @@ export class ContratosService {
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-
-          console.log('Carta gerada com sucesso:', response);
-        } else {
-          console.error('Resposta vazia ou inválida:', response);
         }
       },
       error: (error) => {
@@ -112,17 +104,15 @@ export class ContratosService {
     });
   }
 
-
-
   renewContract(id: any): void {
     this.http
       .patch(
         `${this.API_URL}domain/contrato/${id}/renovar`,
+        {},
         this.createOptions(),
       )
       .subscribe({
-        next: (res) => {
-          console.log(res, "resposta contrato");
+        next: () => {
           Swal.fire({
             icon: "success",
             title: "Êxito",
@@ -132,7 +122,6 @@ export class ContratosService {
           this.getContratos();
         },
         error: (err) => {
-          console.log(err);
           const { error } = err;
           Swal.fire({
             icon: error.title === "Atenção" ? "warning" : "error",

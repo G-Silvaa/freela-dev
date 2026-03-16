@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.development';
 
@@ -39,7 +39,12 @@ export class ClientesService {
   carregarTodosUsuarios(): void {
     this.pegarUsuario().pipe(
       mergeMap((response: any) => {
-        const totalPages = response.totalPages;
+        const totalPages = response.totalPages ?? 0;
+
+        if (totalPages <= 1) {
+          return of([response]);
+        }
+
         const requests = [];
         for (let page = 0; page < totalPages; page++) {
           requests.push(this.pegarUsuario(page));
@@ -47,14 +52,14 @@ export class ClientesService {
         return forkJoin(requests);
       }),
       map((responses: any[]) => responses.flatMap(response => response.content)),
-      map((processos: any[]) => this.formatarDados(processos)) 
+      map((processos: any[]) => this.formatarDados(processos))
     ).subscribe(clientes => this.clientesSubject.next(clientes));
   }
 
   adicionarUsuario(payload: any): Observable<any> {
     return this.http.post(`${this.API_URL}domain/cliente/add`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosUsuarios(); 
+        this.carregarTodosUsuarios();
         return response;
       })
     );
@@ -63,7 +68,7 @@ export class ClientesService {
   atualizarUsuario(id: number, payload: any): Observable<any> {
     return this.http.patch(`${this.API_URL}domain/cliente/${id}`, payload).pipe(
       map((response: any) => {
-        this.carregarTodosUsuarios(); 
+        this.carregarTodosUsuarios();
         return response;
       })
     );
@@ -72,7 +77,7 @@ export class ClientesService {
   deletarUsuario(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}domain/cliente/${id}`).pipe(
       map(() => {
-        this.carregarTodosUsuarios(); 
+        this.carregarTodosUsuarios();
       })
     );
   }
@@ -85,8 +90,6 @@ export class ClientesService {
     if (filtros.cpf) filterString += (filterString ? ' and ' : '') + `cpf ilike '${filtros.cpf}'`;
 
     const params = new HttpParams().set('fields', '*,representante').set('filter', filterString);
-
-    console.log('Parâmetros da requisição:', params.toString());
 
     return this.http.get(`${this.API_URL}domain/cliente`, { params, ...this.createOptions() }).pipe(
       map((response: any) => {
@@ -105,7 +108,7 @@ export class ClientesService {
       params: new HttpParams().set('filter', `id eq ${id}`).set('fields', '*,representante'),
       ...this.createOptions()
     }).pipe(
-      map((response: any) => response.content[0]) 
+      map((response: any) => response.content[0])
     );
   }
 
@@ -116,10 +119,9 @@ export class ClientesService {
           ...cliente,
           cpf: this.formatarCPF(cliente.cpf),
         };
-      } else {
-        console.error('Estrutura de dados inesperada:', cliente);
-        return cliente;
       }
+
+      return cliente;
     });
   }
 

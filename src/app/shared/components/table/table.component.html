@@ -1,90 +1,107 @@
 <div class="table-container">
-  <table class="table table-bordered table-hover">
-    <tr>
-      <th *ngFor="let column of columns">{{ column }}</th>
-      <th *ngIf="showActions && showAllActions">Ações</th>
-    </tr>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns">{{ column }}</th>
+        <th *ngIf="showActions && showAllActions">Ações</th>
+      </tr>
+    </thead>
 
-    <tr *ngFor="let item of paginatedData">
-      <td *ngFor="let column of columns">
-        {{ truncateText(column, item) }}
-      </td>
-      <td
-        *ngIf="showActions && showAllActions"
-        class="actions-container"
-        [class.actions-container-relatorios]="showOpcoes"
-      >
-        <button
-          *ngIf="showBaixarContrato"
-          class="btn download-button"
-          (click)="emitDownloadContract(item)"
-          title="Baixar contrato"
+    <tbody>
+      <tr *ngFor="let item of paginatedData">
+        <td *ngFor="let column of columns" [attr.data-label]="column">
+          {{ truncateText(column, item) }}
+        </td>
+
+        <td
+          *ngIf="showActions && showAllActions"
+          class="actions-cell"
+          data-label="Ações"
         >
-          <img class="download" src="download.svg" alt="">
-        </button>
-        <button
-          *ngIf="showRenew"
-          class="btn renew-button"
-          (click)="emitRenewContractId(item)"
-          title="Renovar contrato"
-        >
-          <img class="ct" src="renew-contract-removebg-preview.png" alt="">
-        </button>
-        <button class="btn btn-warning" (click)="onEdit(item)" title="Editar contrato">
-          <i class="bi bi-pencil-fill"></i>
-        </button>
-        <button
-          *ngIf="showDelete"
-          class="btn btn-danger"
-          (click)="onDelete(item)"
-          title="Deletar contrato"
-        >
-          <i class="bi bi-trash-fill"></i>
-        </button>
-        <button
-          *ngIf="showBoleto"
-          class="btn s1 btn-info"
-          (click)="emitGenerateBoleto(item)"
-          title="Gerar Boleto"
-        >
-          <i class="bi bi-receipt"></i>
-        </button>
-        <button
-          *ngIf="showComprovante"
-          class="btn s2 btn-success"
-          (click)="emitDownloadComprovante(item)"
-          title="Baixar Comprovante"
-        >
-          <i class="bi bi-file-earmark-arrow-down"></i>
-        </button>
-        <div *ngIf="showOpcoes" class="dropdown">
-          <button
-            title="Baixar cartas"
-            class="btn btn-secondary dropdown-button"
-            (click)="toggleDropdown(item['id'])"
-          >
-            <img src="cartas.png" alt="">
-          </button>
-          <div
-            class="dropdown-content"
-            [ngClass]="{ show: dropdownOpen === item['id'] }"
-          >
-            <a class="it" (click)="gerarCartas2(item['id'], 'pericia-medica')"
-              >Carta de Perícia Médica</a
+          <div class="actions-container" [class.actions-container-relatorios]="showOpcoes">
+            <button
+              *ngIf="showBaixarContrato"
+              class="action-button success"
+              (click)="emitDownloadContract(item)"
+              title="Baixar contrato"
             >
-            <a class="it" (click)="gerarCartas2(item['id'], 'avaliacao-social')"
-              >Carta de Avaliação Social</a
+              <i class="bi bi-download"></i>
+            </button>
+
+            <button
+              *ngIf="showRenew"
+              class="action-button neutral"
+              (click)="emitRenewContractId(item)"
+              title="Renovar contrato"
             >
-            <a class="it" (click)="gerarCartas2(item['id'], 'concessao')"
-              >Carta de Concessão</a
+              <i class="bi bi-arrow-repeat"></i>
+            </button>
+
+            <button class="action-button warning" (click)="onEdit(item)" title="Editar">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+
+            <button
+              *ngIf="showDelete"
+              class="action-button danger"
+              (click)="onDelete(item)"
+              title="Excluir"
             >
+              <i class="bi bi-trash-fill"></i>
+            </button>
+
+            <button
+              *ngIf="showBoleto"
+              class="action-button info"
+              (click)="emitGenerateBoleto(item)"
+              title="Gerar boleto"
+            >
+              <i class="bi bi-receipt"></i>
+            </button>
+
+            <button
+              *ngIf="showComprovante"
+              class="action-button success"
+              (click)="emitDownloadComprovante(item)"
+              title="Baixar comprovante"
+            >
+              <i class="bi bi-file-earmark-arrow-down"></i>
+            </button>
+
+            <div *ngIf="showOpcoes" class="dropdown">
+              <button
+                title="Cartas do processo"
+                class="action-button neutral"
+                (click)="toggleDropdown(getItemId(item))"
+              >
+                <i class="bi bi-envelope-paper-heart"></i>
+              </button>
+
+              <div class="dropdown-content" [ngClass]="{ show: dropdownOpen === getItemId(item) }">
+                <a class="it" (click)="gerarCartas2(getItemId(item), 'pericia-medica')">
+                  Carta de Perícia Médica
+                </a>
+                <a class="it" (click)="gerarCartas2(getItemId(item), 'avaliacao-social')">
+                  Carta de Avaliação Social
+                </a>
+                <a class="it" (click)="gerarCartas2(getItemId(item), 'concessao')">
+                  Carta de Concessão
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
+        </td>
+      </tr>
+
+      <tr *ngIf="!hasData">
+        <td class="empty-row" [attr.colspan]="columns.length + (showActions && showAllActions ? 1 : 0)">
+          Nenhum registro encontrado para os filtros informados.
+        </td>
+      </tr>
+    </tbody>
   </table>
 
-  <nav>
+  <nav *ngIf="hasData">
     <ul>
       <li>
         <button
@@ -110,7 +127,7 @@
       <li>
         <button
           (click)="nextPage()"
-          [disabled]="currentPage === totalPages"
+          [disabled]="currentPage === totalPages || totalPages === 0"
           class="button-step"
         >
           <i class="bi bi-caret-right-fill"></i>
