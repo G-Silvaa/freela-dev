@@ -121,6 +121,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  background: white;
 }
 
 .page-header {
@@ -320,5 +321,21 @@ img {
     border-radius: 2rem;
     box-shadow: 0 32px 80px rgba(9, 22, 42, 0.2);
     overflow: hidden;
+  }
+}
+
+.liv-process-modal {
+  .modal-dialog {
+    max-width: min(1180px, calc(100vw - 2rem));
+    margin: 1rem auto;
+  }
+
+  .modal-content {
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(17, 38, 65, 0.08);
+    border-radius: 2rem;
+    box-shadow: 0 28px 64px rgba(9, 22, 42, 0.18);
+    overflow: hidden;
+    padding: 1.5rem;
   }
 }

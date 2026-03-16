@@ -157,6 +157,7 @@
   margin-left: 16.75rem;
   min-height: 100vh;
   padding: 1.25rem;
+  background: white;
 
   @media (max-width: 62rem) {
     margin-left: 0;
@@ -165,6 +166,7 @@
 }
 
 .topbar {
+  display: none !important;
   align-items: flex-start;
   display: flex;
   gap: 1rem;

@@ -23,12 +23,6 @@ interface NavigationItem {
   description: string;
 }
 
-interface PageMeta {
-  eyebrow: string;
-  title: string;
-  description: string;
-}
-
 @Component({
   selector: 'app-sidenav',
   standalone: true,
@@ -50,6 +44,7 @@ interface PageMeta {
 })
 export class SidenavComponent implements OnInit {
   screenWidth = 0;
+  currentUrl = '';
   readonly todayLabel = new Intl.DateTimeFormat('pt-BR', {
     day: '2-digit',
     month: 'long',
@@ -87,39 +82,6 @@ export class SidenavComponent implements OnInit {
       description: 'Cobrança e baixa',
     },
   ];
-  readonly pageMeta: Record<string, PageMeta> = {
-    '/home': {
-      eyebrow: 'Resumo do dia',
-      title: 'Visão geral',
-      description:
-        'Acompanhe alertas, carteira ativa e os próximos movimentos da operação em uma leitura mais objetiva.',
-    },
-    '/clientes': {
-      eyebrow: 'Atendimento',
-      title: 'Clientes e representantes',
-      description:
-        'Organize cadastros, documentos e contatos de forma direta.',
-    },
-    '/processos': {
-      eyebrow: 'Acompanhamento',
-      title: 'Processos em andamento',
-      description:
-        'Visualize status, prazos e ações pendentes sem sair da listagem.',
-    },
-    '/contratos': {
-      eyebrow: 'Contratos',
-      title: 'Contratos e vigência',
-      description:
-        'Consulte contratos ativos, renovações disponíveis e emissão de documentos.',
-    },
-    '/financas': {
-      eyebrow: 'Financeiro',
-      title: 'Financeiro da carteira',
-      description:
-        'Controle parcelas, boletos e comprovantes com leitura mais rápida.',
-    },
-  };
-  currentPage = this.pageMeta['/home'];
 
   constructor(
     private sidebarService: SidebarService,
@@ -128,6 +90,10 @@ export class SidenavComponent implements OnInit {
 
   get isActiveBar(): boolean {
     return this.sidebarService.isActive;
+  }
+
+  get isPainelPage(): boolean {
+    return this.currentUrl === '/home';
   }
 
   toggleSideBar(): void {
@@ -149,12 +115,12 @@ export class SidenavComponent implements OnInit {
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
-    this.updatePageMeta(this.router.url);
+    this.currentUrl = this.normalizeUrl(this.router.url);
 
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
-        this.updatePageMeta(event.urlAfterRedirects);
+        this.currentUrl = this.normalizeUrl(event.urlAfterRedirects);
 
         if (this.screenWidth <= 992) {
           this.sidebarService.onInactiveSide();
@@ -170,13 +136,7 @@ export class SidenavComponent implements OnInit {
     return route === '/home';
   }
 
-  private updatePageMeta(url: string): void {
-    const matchedRoute =
-      Object.keys(this.pageMeta)
-        .sort((left, right) => right.length - left.length)
-        .find((route) => (route === '/home' ? url === route : url.startsWith(route))) ??
-      '/home';
-
-    this.currentPage = this.pageMeta[matchedRoute];
+  private normalizeUrl(url: string): string {
+    return url.split('?')[0].split('#')[0];
   }
 }

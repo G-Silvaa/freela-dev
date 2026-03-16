@@ -41,15 +41,9 @@
         <button class="menu-button" type="button" (click)="toggleSideBar()">
           <i class="bi" [ngClass]="isActiveBar ? 'bi-x-lg' : 'bi-list'"></i>
         </button>
-
-        <div class="topbar-copy">
-          <span class="eyebrow">{{ currentPage.eyebrow }}</span>
-          <h1>{{ currentPage.title }}</h1>
-          <p>{{ currentPage.description }}</p>
-        </div>
       </div>
 
-      <div class="topbar-meta">
+      <div class="topbar-meta" *ngIf="isPainelPage">
         <span class="meta-pill">
           <i class="bi bi-calendar3"></i>
           {{ todayLabel }}

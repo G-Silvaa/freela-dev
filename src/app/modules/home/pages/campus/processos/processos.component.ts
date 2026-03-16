@@ -134,6 +134,7 @@ export class ProcessosComponent implements OnInit {
     };
 
     this.bsModalRef = this.modalService.show(AddprocessosModalComponent, {
+      class: 'modal-xl liv-process-modal',
       initialState,
     });
     this.bsModalRef.content.closeBtnName = 'Close';

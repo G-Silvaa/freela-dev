@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
-import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
@@ -12,15 +11,25 @@ import { DataInputComponent } from "../../../../../../../shared/components/input
 @Component({
   selector: 'app-add-process-modal',
   standalone: true,
-  imports: [InputDefaultComponent, ButtonComponent, CommonModule, ReactiveFormsModule, SelectInputComponent, DataInputComponent],
+  imports: [InputDefaultComponent, CommonModule, ReactiveFormsModule, SelectInputComponent, DataInputComponent],
   templateUrl: './add-processos-modal.component.html',
   styleUrls: ['./add-processos-modal.scss']
 })
 export class AddprocessosModalComponent implements OnInit {
+  @Input() title = 'Editar Processo';
   @Input() processoId!: number; 
   @Output() closeModal = new EventEmitter<void>();
   isLoading = false;
   form: FormGroup;
+  readonly statusOptions = [
+    { value: 'AGUARDANDO', label: 'Aguardando' },
+    { value: 'PENDENTE', label: 'Pendente' },
+    { value: 'ANALISE', label: 'Análise' },
+    { value: 'CUMPRIMENTO_EXIGENCIA', label: 'Cumprimento com exigência' },
+    { value: 'ANALISE_ADMINISTRATIVA', label: 'Análise administrativa' },
+    { value: 'APROVADO', label: 'Aprovado' },
+    { value: 'REPROVADO', label: 'Reprovado' }
+  ];
 
   constructor(private modalService: BsModalService, private fb: FormBuilder, private processosService: ProcessosService, public bsModalRef: BsModalRef) {
     this.form = this.fb.group({
@@ -79,6 +88,7 @@ export class AddprocessosModalComponent implements OnInit {
 
   onCloseModal() {
     this.modalService.hide();
+    this.closeModal.emit();
   }
 
   onSave() {
