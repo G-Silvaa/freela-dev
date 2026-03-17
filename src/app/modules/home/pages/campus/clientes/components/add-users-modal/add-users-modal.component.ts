@@ -38,6 +38,15 @@ export class AddUsersModalComponent implements OnInit {
   currentStep = 1;
   form: FormGroup;
   existingUserId: number | null = null;
+  private readonly representativeFields = [
+    'representanteNome',
+    'representanteEmail',
+    'representanteTelefone',
+    'parentesco',
+    'representanteCpf',
+    'representanteRg',
+    'representanteDataNascimento',
+  ] as const;
   readonly stepMeta = [
     {
       step: 1,
@@ -106,6 +115,10 @@ export class AddUsersModalComponent implements OnInit {
   ngOnInit() {
     let isUpdating = false;
     let cpfValidado = false;
+
+    this.form
+      .get('temRepresentante')
+      ?.valueChanges.subscribe(() => this.updateRepresentativeValidators());
 
     
     this.form
@@ -183,6 +196,8 @@ export class AddUsersModalComponent implements OnInit {
             }
           });
 
+          this.updateRepresentativeValidators();
+
           console.log('Formulário preenchido:', this.form.value);
           isUpdating = false;
         } else {
@@ -222,6 +237,7 @@ export class AddUsersModalComponent implements OnInit {
 
         this.existingUserId = null;
         cpfValidado = false;
+        this.updateRepresentativeValidators();
         console.log('Campos limpos, CPF apagado.');
       }
     });
@@ -252,6 +268,7 @@ export class AddUsersModalComponent implements OnInit {
     });
 
     this.form.get('cpf')?.updateValueAndValidity();
+    this.updateRepresentativeValidators();
   }
 
   onCloseModal() {
@@ -472,6 +489,30 @@ export class AddUsersModalComponent implements OnInit {
       this.form,
       input
     );
+  }
+
+  private updateRepresentativeValidators(): void {
+    const hasRepresentative = this.form.get('temRepresentante')?.value === 'sim';
+
+    this.representativeFields.forEach((field) => {
+      const control = this.form.get(field);
+
+      if (!control) {
+        return;
+      }
+
+      if (field === 'representanteEmail') {
+        control.setValidators(
+          hasRepresentative
+            ? [Validators.required, Validators.email]
+            : [Validators.email]
+        );
+      } else {
+        control.setValidators(hasRepresentative ? [Validators.required] : []);
+      }
+
+      control.updateValueAndValidity({ emitEvent: false });
+    });
   }
 
   private getStepControls(step: number): string[] {

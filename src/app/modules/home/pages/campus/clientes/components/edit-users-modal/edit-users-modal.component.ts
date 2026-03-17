@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { InputDefaultComponent } from "../../../../../../../shared/components/inputs/input-default/input-default.component";
 import { SelectInputComponent } from "../../../../../../../shared/components/inputs/select-input/select-input.component";
-import { ButtonComponent } from "../../../../../../../shared/components/button/button.component";
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { CustomValidationService } from '../add-users-modal/utils/customvalidators';
@@ -13,7 +12,7 @@ import { DataInputComponent } from "../../../../../../../shared/components/input
 @Component({
   selector: 'app-edit-users-modal',
   standalone: true,
-  imports: [InputDefaultComponent, SelectInputComponent, ButtonComponent, CommonModule, ReactiveFormsModule, DataInputComponent],
+  imports: [InputDefaultComponent, SelectInputComponent, CommonModule, ReactiveFormsModule, DataInputComponent],
   templateUrl: './edit-users-modal.component.html',
   styleUrls: ['./edit-users-modal.component.scss'],
   providers: [DatePipe]
@@ -24,12 +23,46 @@ export class EditUsersModalComponent implements OnInit {
   isLoading = false;
   currentStep = 1;
   form: FormGroup;
+  private readonly representativeFields = [
+    'representanteNome',
+    'representanteEmail',
+    'representanteTelefone',
+    'parentesco',
+    'representanteCpf',
+    'representanteRg',
+    'representanteDataNascimento',
+  ] as const;
+  readonly stepMeta = [
+    {
+      step: 1,
+      label: 'Contato',
+      title: 'Contato principal',
+      description: 'Revise nome, e-mail e telefone para manter a comunicação do cliente atualizada.',
+    },
+    {
+      step: 2,
+      label: 'Dados',
+      title: 'Documentos e nascimento',
+      description: 'Ajuste CPF, RG e data de nascimento sempre que houver correção cadastral.',
+    },
+    {
+      step: 3,
+      label: 'Endereço',
+      title: 'Localização e apoio',
+      description: 'Confirme o endereço e indique se este cadastro possui representante vinculado.',
+    },
+    {
+      step: 4,
+      label: 'Representante',
+      title: 'Dados do representante',
+      description: 'Quando houver representação, valide contato, parentesco e documentos antes de salvar.',
+    },
+  ];
 
   constructor(
     private modalService: BsModalService,
     private fb: FormBuilder,
     private clientesService: ClientesService,
-    public bsModalRef: BsModalRef,
     private datePipe: DatePipe,
     private customValidationService: CustomValidationService
   ) {
@@ -57,10 +90,11 @@ export class EditUsersModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.form
+      .get('temRepresentante')
+      ?.valueChanges.subscribe(() => this.updateRepresentativeValidators());
+
     if (this.data) {
-      const formattedDate = this.datePipe.transform(this.data.nascimento, 'ddMMyyyy');
-      const formattedRepDate = this.datePipe.transform(this.data.representante?.nascimento, 'ddMMyyyy');
-      
       this.form.patchValue({
         nome: this.data.contato.nome,
         email: this.data.contato.email,
@@ -83,6 +117,8 @@ export class EditUsersModalComponent implements OnInit {
         representanteDataNascimento: this.formatarData(this.data.representante?.nascimento),
       });
     }
+
+    this.updateRepresentativeValidators();
     console.log('Data:', this.data);
   }
 
@@ -98,12 +134,24 @@ export class EditUsersModalComponent implements OnInit {
   }
 
   onNextStep() {
-    if (this.form.valid) {
-      if (this.currentStep < 4) {
+    const stepControls = this.getStepControls(this.currentStep);
+
+    const invalidControls = stepControls.filter((control) => {
+      const formControl = this.form.get(control);
+      return formControl && formControl.enabled && formControl.invalid;
+    });
+
+    if (invalidControls.length === 0) {
+      if (
+        this.currentStep < 4 &&
+        !(this.currentStep === 3 && this.form.get('temRepresentante')?.value === 'nao')
+      ) {
         this.currentStep++;
       }
     } else {
-      this.form.markAllAsTouched();
+      invalidControls.forEach((control) =>
+        this.form.get(control)?.markAsTouched()
+      );
     }
   }
 
@@ -113,9 +161,21 @@ export class EditUsersModalComponent implements OnInit {
     }
   }
 
-  onRepresentativeChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    this.form.get('temRepresentante')?.setValue(target.value);
+  get visibleSteps() {
+    return this.stepMeta.filter((item) => this.shouldShowStep(item.step));
+  }
+
+  get currentStepMeta() {
+    return this.stepMeta.find((item) => item.step === this.currentStep) ?? this.stepMeta[0];
+  }
+
+  get currentVisibleStepIndex(): number {
+    const index = this.visibleSteps.findIndex((item) => item.step === this.currentStep);
+    return index >= 0 ? index + 1 : this.visibleSteps.length;
+  }
+
+  get progressPercentage(): number {
+    return (this.currentVisibleStepIndex / this.visibleSteps.length) * 100;
   }
 
   selectOptions = [
@@ -133,19 +193,18 @@ export class EditUsersModalComponent implements OnInit {
   }
 
   onSubmit() {
-    this.isLoading = true;
-    const dados = this.form.value;
-  
-    // Remover caracteres especiais do CEP
-    // Função para converter data do formato brasileiro para o formato americano
-    const converterDataParaAmericano = (data: string) => {
-      const [dia, mes, ano] = data.split('/');
-      return `${ano}-${mes}-${dia}`;
-    };
+    if (this.form.invalid) {
+      const currentStepControls = this.getStepControls(this.currentStep);
 
-    // Remover caracteres especiais dos campos e converter datas
-    const dataNascimentoAmericano = converterDataParaAmericano(dados.dataNascimento);
-    const representanteDataNascimentoAmericano = dados.representanteDataNascimento ? converterDataParaAmericano(dados.representanteDataNascimento) : null;
+      currentStepControls.forEach((control) =>
+        this.form.get(control)?.markAsTouched()
+      );
+      return;
+    }
+
+    this.isLoading = true;
+    const dados = this.form.getRawValue();
+
     const cepSemCaracteresEspeciais = this.stripNonDigits(dados.cep);
     const cpfSemCaracteresEspeciais = this.stripNonDigits(dados.cpf);
     const rgSemCaracteresEspeciais = this.stripNonDigitsOrNull(dados.rg);
@@ -223,6 +282,63 @@ export class EditUsersModalComponent implements OnInit {
       this.form,
       input
     );
+  }
+
+  shouldShowStep(step: number): boolean {
+    if (step === 4 && this.form.get('temRepresentante')?.value === 'nao') {
+      return false;
+    }
+    return true;
+  }
+
+  isStepCompleted(step: number): boolean {
+    return this.currentStep > step;
+  }
+
+  private updateRepresentativeValidators(): void {
+    const hasRepresentative = this.form.get('temRepresentante')?.value === 'sim';
+
+    this.representativeFields.forEach((field) => {
+      const control = this.form.get(field);
+
+      if (!control) {
+        return;
+      }
+
+      if (field === 'representanteEmail') {
+        control.setValidators(
+          hasRepresentative
+            ? [Validators.required, Validators.email]
+            : [Validators.email]
+        );
+      } else {
+        control.setValidators(hasRepresentative ? [Validators.required] : []);
+      }
+
+      control.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  private getStepControls(step: number): string[] {
+    switch (step) {
+      case 1:
+        return ['nome', 'email', 'telefone'];
+      case 2:
+        return ['rg', 'cpf', 'dataNascimento'];
+      case 3:
+        return [
+          'cep',
+          'logradouro',
+          'complemento',
+          'bairro',
+          'cidade',
+          'temRepresentante',
+        ];
+      case 4:
+        return [...this.representativeFields];
+      default:
+        return [];
+    }
   }
 
 }

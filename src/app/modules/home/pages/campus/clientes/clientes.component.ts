@@ -146,7 +146,10 @@ export class ClientesComponent implements OnInit {
         formTemplate: this.editar,
         data: cliente
       };
-      this.bsModalRef = this.modalService.show(EditUsersModalComponent, { initialState, class: 'modal-lg' });
+      this.bsModalRef = this.modalService.show(EditUsersModalComponent, {
+        initialState,
+        class: 'modal-xl liv-form-modal'
+      });
     }, () => {
       Swal.fire('Erro!', 'Não foi possível carregar o cliente selecionado.', 'error');
     });

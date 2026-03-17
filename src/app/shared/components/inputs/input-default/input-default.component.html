@@ -15,7 +15,7 @@
       [attr.readonly]="isReadonly"
     />
   </div>
-  <div class="invalid-feedback">
+  <div class="invalid-feedback" *ngIf="hasError && errorMsg">
     {{ errorMsg }}
   </div>
 </div>

@@ -211,8 +211,10 @@ export class ValidationService {
       return this.msg.required;
     } else if (this.isInvalid(form, input, 'maxlength')) {
       return this.msg.inputMaxLength;
-    } else {
+    } else if (this.isInvalid(form, input, 'minlength')) {
       return this.msg.inputMinLength;
+    } else {
+      return '';
     }
   }
 
