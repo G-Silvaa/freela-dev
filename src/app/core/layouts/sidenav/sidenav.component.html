@@ -31,6 +31,23 @@
         </span>
       </a>
     </nav>
+
+    <div class="sidebar-footer" *ngIf="currentUser as user">
+      <div class="user-card">
+        <span class="user-avatar">{{ getInitials() }}</span>
+
+        <div class="user-copy">
+          <strong>{{ user.nome }}</strong>
+          <small>{{ getNivelLabel() }}</small>
+          <span>{{ user.email }}</span>
+        </div>
+      </div>
+
+      <button class="logout-button" type="button" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        Sair
+      </button>
+    </div>
   </aside>
 
   <div class="sidebar-backdrop" [class.visible]="isActiveBar" (click)="closeSidenav()"></div>
@@ -53,6 +70,11 @@
           carteira ativa
         </span>
       </div>
+
+      <button class="logout-button mobile-only" type="button" (click)="logout()" *ngIf="currentUser">
+        <i class="bi bi-box-arrow-right"></i>
+        Sair
+      </button>
     </header>
 
     <section class="page-content">

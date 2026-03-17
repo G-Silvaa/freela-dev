@@ -189,6 +189,14 @@
   }
 }
 
+.stat-value-fluid {
+  font-size: clamp(1.35rem, 1.8vw, 2.1rem);
+  line-height: 1.15;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 @media (max-width: 48rem) {
   .summary-banner {
     padding: 1rem;

@@ -16,11 +16,14 @@ import {
 import { filter } from 'rxjs/operators';
 
 import { SidebarService } from '@core/services/sidebar/sidebar.service';
+import { AuthUser } from '@core/interfaces/auth.interface';
+import { AuthService } from '@core/services/auth/auth.service';
 interface NavigationItem {
   label: string;
   route: string;
   icon: string;
   description: string;
+  adminOnly?: boolean;
 }
 
 @Component({
@@ -50,7 +53,7 @@ export class SidenavComponent implements OnInit {
     month: 'long',
     year: 'numeric',
   }).format(new Date());
-  readonly navigationItems: NavigationItem[] = [
+  readonly allNavigationItems: NavigationItem[] = [
     {
       label: 'Painel',
       route: '/home',
@@ -76,16 +79,30 @@ export class SidenavComponent implements OnInit {
       description: 'Vigência e renovação',
     },
     {
+      label: 'Modalidades',
+      route: '/modalidades',
+      icon: 'bi-journal-text',
+      description: 'Códigos e regras',
+    },
+    {
       label: 'Finanças',
       route: '/financas',
       icon: 'bi-bank2',
       description: 'Cobrança e baixa',
+    },
+    {
+      label: 'Usuários',
+      route: '/usuarios',
+      icon: 'bi-shield-lock-fill',
+      description: 'Acessos e níveis',
+      adminOnly: true,
     },
   ];
 
   constructor(
     private sidebarService: SidebarService,
     private router: Router,
+    private authService: AuthService,
   ) {}
 
   get isActiveBar(): boolean {
@@ -94,6 +111,14 @@ export class SidenavComponent implements OnInit {
 
   get isPainelPage(): boolean {
     return this.currentUrl === '/home';
+  }
+
+  get currentUser(): AuthUser | null {
+    return this.authService.currentUserValue;
+  }
+
+  get navigationItems(): NavigationItem[] {
+    return this.allNavigationItems.filter((item) => !item.adminOnly || this.authService.isAdmin());
   }
 
   toggleSideBar(): void {
@@ -116,6 +141,9 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
     this.currentUrl = this.normalizeUrl(this.router.url);
+    this.authService.refreshProfile().subscribe({
+      error: () => this.authService.logout(),
+    });
 
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
@@ -134,6 +162,29 @@ export class SidenavComponent implements OnInit {
 
   isExactRoute(route: string): boolean {
     return route === '/home';
+  }
+
+  getNivelLabel(): string {
+    return this.authService.getNivelLabel(this.currentUser?.nivel);
+  }
+
+  logout(): void {
+    this.closeSidenav();
+    this.authService.logout();
+  }
+
+  getInitials(): string {
+    const nome = this.currentUser?.nome?.trim();
+
+    if (!nome) {
+      return 'U';
+    }
+
+    return nome
+      .split(' ')
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
   }
 
   private normalizeUrl(url: string): string {

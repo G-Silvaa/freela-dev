@@ -1,0 +1,199 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div class="page-header-copy">
+      <span class="eyebrow">Controle de acesso</span>
+      <h1>Usuários</h1>
+      <p>Cadastre acessos, ajuste níveis e mantenha a operação com um controle mais claro da equipe.</p>
+    </div>
+
+    <span class="soft-badge">
+      <i class="bi bi-shield-lock-fill"></i>
+      gerenciamento administrativo
+    </span>
+  </div>
+
+  <div class="stats-grid">
+    <article class="surface-card stat-card">
+      <span class="stat-label">Usuários cadastrados</span>
+      <strong class="stat-value">{{ usuarios.length }}</strong>
+      <span class="stat-meta">Base total com acesso ao sistema.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Administradores</span>
+      <strong class="stat-value">{{ totalAdministradores }}</strong>
+      <span class="stat-meta">Perfis com acesso à gestão de usuários.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Ativos</span>
+      <strong class="stat-value">{{ totalAtivos }}</strong>
+      <span class="stat-meta">Contas prontas para uso no painel.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Inativos</span>
+      <strong class="stat-value">{{ totalInativos }}</strong>
+      <span class="stat-meta">Acessos bloqueados temporariamente.</span>
+    </article>
+  </div>
+
+  <div class="users-layout">
+    <div class="surface-card section-card">
+      <div class="section-heading">
+        <div>
+          <h2>{{ editingUserId ? 'Editar usuário' : 'Cadastrar usuário' }}</h2>
+          <p>
+            {{ editingUserId
+              ? 'Ajuste nome, e-mail, nível e status sem sair da página.'
+              : 'O primeiro cadastro público vira administrador. Os demais podem ser ajustados aqui.' }}
+          </p>
+        </div>
+      </div>
+
+      <form [formGroup]="userForm" class="user-form" (ngSubmit)="submit()">
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" formControlName="nome" placeholder="Digite o nome do usuário" />
+          <small *ngIf="userForm.controls.nome.touched && userForm.controls.nome.invalid">
+            Informe o nome do usuário.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>E-mail</span>
+          <input type="email" formControlName="email" placeholder="usuario@empresa.com.br" />
+          <small *ngIf="userForm.controls.email.touched && userForm.controls.email.invalid">
+            Informe um e-mail válido.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Nível</span>
+          <select formControlName="nivel">
+            <option *ngFor="let nivel of niveis" [value]="nivel.value">{{ nivel.label }}</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>{{ editingUserId ? 'Nova senha' : 'Senha' }}</span>
+          <input
+            type="password"
+            formControlName="senha"
+            [placeholder]="editingUserId ? 'Preencha só se quiser alterar' : 'Digite a senha inicial'"
+          />
+          <small *ngIf="userForm.controls.senha.touched && userForm.controls.senha.invalid">
+            A senha deve ter pelo menos 6 caracteres.
+          </small>
+        </label>
+
+        <label class="toggle-field" *ngIf="editingUserId">
+          <input type="checkbox" formControlName="ativo" />
+          <span>Usuário ativo</span>
+        </label>
+
+        <div class="feedback" *ngIf="feedbackMessage" [class.feedback-error]="feedbackTone === 'error'" [class.feedback-success]="feedbackTone === 'success'">
+          {{ feedbackMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-action" type="submit" [disabled]="isSaving">
+            <i class="bi" [ngClass]="editingUserId ? 'bi-check2-circle' : 'bi-person-plus-fill'"></i>
+            {{ isSaving ? 'Salvando...' : editingUserId ? 'Salvar alterações' : 'Cadastrar usuário' }}
+          </button>
+
+          <button class="secondary-action" type="button" (click)="cancelEdit()" *ngIf="editingUserId">
+            <i class="bi bi-x-circle"></i>
+            Cancelar edição
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="surface-card section-card">
+      <div class="section-heading">
+        <div>
+          <h2>Usuários cadastrados</h2>
+          <p>Filtre por nome, e-mail ou nível para localizar rapidamente o acesso desejado.</p>
+        </div>
+
+        <span class="soft-badge">
+          <i class="bi bi-people-fill"></i>
+          {{ filteredUsuarios.length }} registros
+        </span>
+      </div>
+
+      <label class="search-field">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="Buscar por nome, e-mail ou nível"
+        />
+      </label>
+
+      <div class="users-table-wrap" *ngIf="!isLoading && filteredUsuarios.length; else usersState">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Nível</th>
+              <th>Status</th>
+              <th>Último acesso</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let usuario of filteredUsuarios">
+              <td>
+                <div class="user-main">
+                  <strong>{{ usuario.nome }}</strong>
+                  <small>{{ usuario.email }}</small>
+                </div>
+              </td>
+
+              <td>
+                <span class="level-pill">{{ getNivelLabel(usuario.nivel) }}</span>
+              </td>
+
+              <td>
+                <span class="status-pill" [class.inactive]="!usuario.ativo">
+                  {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+                </span>
+              </td>
+
+              <td>{{ formatDate(usuario.ultimoAcesso) }}</td>
+
+              <td>
+                <div class="table-actions">
+                  <button type="button" class="table-button" (click)="editUser(usuario)">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+                  </button>
+
+                  <button
+                    type="button"
+                    class="table-button secondary"
+                    (click)="toggleStatus(usuario)"
+                    [disabled]="usuario.id === currentUserId"
+                  >
+                    <i class="bi" [ngClass]="usuario.ativo ? 'bi-person-dash-fill' : 'bi-person-check-fill'"></i>
+                    {{ usuario.ativo ? 'Desativar' : 'Ativar' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #usersState>
+        <p class="empty-message">
+          {{ isLoading ? 'Carregando usuários...' : 'Nenhum usuário corresponde ao filtro informado.' }}
+        </p>
+      </ng-template>
+    </div>
+  </div>
+</section>

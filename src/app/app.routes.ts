@@ -1,19 +1,21 @@
 import { Routes } from "@angular/router";
 import { SidenavComponent } from "@core/layouts/sidenav/sidenav.component";
+import { adminGuard, authGuard, guestGuard } from "@core/guards/auth.guard";
 import { adminRoutes } from "@modules/administracao/administracao-routing.module";
-import { ProcessosComponent } from "@modules/home/pages/campus/processos/processos.component";
 
 export const routes: Routes = [
   {
     path: "",
+    canActivate: [guestGuard],
     children: adminRoutes,
   },
   {
-    path: "home",
+    path: "",
     component: SidenavComponent,
+    canActivate: [authGuard],
     children: [
       {
-        path: "",
+        path: "home",
         loadComponent: () =>
           import(
             "./modules/home/pages/initial-page/initial-page.component"
@@ -50,11 +52,35 @@ export const routes: Routes = [
           ),
       },
       {
+        path: "modalidades",
+        loadComponent: () =>
+          import("./modules/home/pages/campus/modalidades/modalidades.component").then(
+            (m) => m.ModalidadesComponent,
+          ),
+      },
+      {
+        path: "usuarios",
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import("./modules/home/pages/campus/usuarios/usuarios.component").then(
+            (m) => m.UsuariosComponent,
+          ),
+      },
+      {
         path: "financas",
         loadComponent: () =>
           import("./modules/home/pages/campus/financas/financas.component").then(
             (m) => m.FinancasComponent,
           ),
+      },
+      {
+        path: "",
+        pathMatch: "full",
+        redirectTo: "home",
+      },
+      {
+        path: "**",
+        redirectTo: "home",
       },
     ],
   },

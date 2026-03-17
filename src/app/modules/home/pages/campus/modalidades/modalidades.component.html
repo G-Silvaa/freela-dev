@@ -1,0 +1,180 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div class="page-header-copy">
+      <span class="eyebrow">Consulta rápida</span>
+      <h1>Modalidades e Regras</h1>
+      <p>
+        Consulte os códigos dos benefícios, veja quando usar perícia médica, avaliação social e confira
+        as regras que mais geram erro no preenchimento do processo.
+      </p>
+    </div>
+
+    <span class="soft-badge">
+      <i class="bi bi-journal-text"></i>
+      {{ modalidades.length }} modalidades mapeadas
+    </span>
+  </div>
+
+  <div class="stats-grid">
+    <article class="surface-card stat-card">
+      <span class="stat-label">Com perícia médica</span>
+      <strong class="stat-value">{{ modalidadesComPericia }}</strong>
+      <span class="stat-meta">Hoje só as modalidades 87 e 31 permitem perícia.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Com avaliação social</span>
+      <strong class="stat-value">{{ modalidadesComAvaliacao }}</strong>
+      <span class="stat-meta">Hoje a avaliação social fica restrita à modalidade 87.</span>
+    </article>
+
+    <article class="surface-card stat-card">
+      <span class="stat-label">Com cessação após aprovado</span>
+      <strong class="stat-value">{{ modalidadesComCessacao }}</strong>
+      <span class="stat-meta">A modalidade 31 exige cessação quando aprovada.</span>
+    </article>
+  </div>
+
+  <div class="surface-card section-card search-card">
+    <div class="section-heading">
+      <div>
+        <h2>Buscar modalidade</h2>
+        <p>Pesquise por código, nome ou palavra-chave.</p>
+      </div>
+    </div>
+
+    <label class="search-field">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Ex.: 87, 31, deficiência, cessação"
+      />
+    </label>
+  </div>
+
+  <div class="surface-card section-card">
+    <div class="section-heading">
+      <div>
+        <h2>Regras do processo</h2>
+        <p>Regras gerais do formulário que impactam qualquer modalidade.</p>
+      </div>
+    </div>
+
+    <div class="rule-grid">
+      <article class="rule-card" *ngFor="let rule of processRules">
+        <strong>{{ rule.title }}</strong>
+        <p>{{ rule.detail }}</p>
+        <div class="rule-tags">
+          <span *ngFor="let field of rule.fields">{{ field }}</span>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="surface-card section-card" *ngIf="filteredModalidades.length; else emptyState">
+    <div class="section-heading">
+      <div>
+        <h2>Tabela de modalidades</h2>
+        <p>Compare códigos e regras lado a lado sem precisar abrir vários cards.</p>
+      </div>
+
+      <span class="soft-badge">
+        <i class="bi bi-table"></i>
+        {{ filteredModalidades.length }} resultados
+      </span>
+    </div>
+
+    <div class="columns-guide">
+      <article class="guide-card">
+        <strong>Perícia</strong>
+        <p>Mostra se a modalidade aceita preencher data e endereço da perícia médica no processo.</p>
+      </article>
+
+      <article class="guide-card">
+        <strong>Avaliação</strong>
+        <p>Indica se a modalidade permite avaliação social. Hoje essa regra fica concentrada na 87.</p>
+      </article>
+
+      <article class="guide-card">
+        <strong>Cessação</strong>
+        <p>Quando estiver como <strong>Sim</strong>, ao aprovar o processo também precisa informar a data de cessação.</p>
+      </article>
+
+      <article class="guide-card">
+        <strong>Valor concedido</strong>
+        <p>Mostra se o valor concedido pode ser informado após aprovação. No fluxo atual isso fica na modalidade 31.</p>
+      </article>
+    </div>
+
+    <div class="reference-table-wrap">
+      <table class="reference-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Modalidade</th>
+            <th>Perícia</th>
+            <th>Avaliação</th>
+            <th>Cessação</th>
+            <th>Valor concedido</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let modalidade of filteredModalidades; trackBy: trackByCode">
+            <td data-label="Código">
+              <span class="code-pill">{{ modalidade.code }}</span>
+            </td>
+
+            <td data-label="Modalidade">
+              <div class="table-title">
+                <strong>{{ modalidade.label }}</strong>
+                <small>{{ modalidade.category }}</small>
+              </div>
+            </td>
+
+            <td data-label="Perícia">
+              <span class="boolean-chip" [class.yes]="modalidade.periciaMedica" [class.no]="!modalidade.periciaMedica">
+                {{ asBooleanLabel(modalidade.periciaMedica) }}
+              </span>
+            </td>
+
+            <td data-label="Avaliação">
+              <span class="boolean-chip" [class.yes]="modalidade.avaliacaoSocial" [class.no]="!modalidade.avaliacaoSocial">
+                {{ asBooleanLabel(modalidade.avaliacaoSocial) }}
+              </span>
+            </td>
+
+            <td data-label="Cessação">
+              <span class="boolean-chip" [class.yes]="modalidade.cessacaoQuandoAprovado" [class.no]="!modalidade.cessacaoQuandoAprovado">
+                {{ asBooleanLabel(modalidade.cessacaoQuandoAprovado) }}
+              </span>
+            </td>
+
+            <td data-label="Valor concedido">
+              <span class="boolean-chip" [class.yes]="modalidade.valorConcedidoQuandoAprovado" [class.no]="!modalidade.valorConcedidoQuandoAprovado">
+                {{ asBooleanLabel(modalidade.valorConcedidoQuandoAprovado) }}
+              </span>
+            </td>
+
+            <td data-label="Observações">
+              <div class="notes-cell">
+                <p>{{ modalidade.summary }}</p>
+                <ul>
+                  <li *ngFor="let note of modalidade.notes">{{ note }}</li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="surface-card section-card">
+      <p class="empty-message">Nenhuma modalidade corresponde ao termo pesquisado.</p>
+    </div>
+  </ng-template>
+</section>

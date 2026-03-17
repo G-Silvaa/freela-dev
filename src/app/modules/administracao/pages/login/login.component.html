@@ -31,17 +31,37 @@
   <section class="login-panel surface-card">
     <div class="panel-header">
       <div class="brand-lockup">
-        <img src="nova-logo.png" alt="LIV Assessoria" />
+        <i class="bi bi-shield-lock-fill"></i>
       </div>
 
       <div>
         <span class="eyebrow">Acesso interno</span>
-        <h2>Entrar na plataforma</h2>
-        <p>Use suas credenciais para continuar no painel administrativo.</p>
+        <h2>{{ activeTab === 'login' ? 'Entrar na plataforma' : 'Criar acesso inicial' }}</h2>
+        <p>
+          {{
+            activeTab === 'login'
+              ? 'Use suas credenciais para continuar no painel administrativo.'
+              : 'Cadastre um usuário para começar. O primeiro acesso registrado vira administrador.'
+          }}
+        </p>
       </div>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+    <div class="auth-switch">
+      <button type="button" [class.active]="activeTab === 'login'" (click)="switchTab('login')">Entrar</button>
+      <button type="button" [class.active]="activeTab === 'register'" (click)="switchTab('register')">Registrar</button>
+    </div>
+
+    <div
+      class="feedback"
+      *ngIf="feedbackMessage"
+      [class.feedback-error]="feedbackTone === 'error'"
+      [class.feedback-success]="feedbackTone === 'success'"
+    >
+      {{ feedbackMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" *ngIf="activeTab === 'login'">
       <label class="field">
         <span>E-mail</span>
         <input type="email" formControlName="email" placeholder="voce@empresa.com.br" />
@@ -52,22 +72,64 @@
 
       <label class="field">
         <span>Senha</span>
-        <input type="password" formControlName="password" placeholder="Digite sua senha" />
-        <small *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+        <input type="password" formControlName="senha" placeholder="Digite sua senha" />
+        <small *ngIf="loginForm.controls.senha.touched && loginForm.controls.senha.invalid">
           A senha deve ter pelo menos 6 caracteres.
         </small>
       </label>
 
-      <button type="submit" class="submit-button">
+      <button type="submit" class="submit-button" [disabled]="isSubmitting">
         <i class="bi bi-box-arrow-in-right"></i>
-        Entrar no painel
+        {{ isSubmitting ? 'Entrando...' : 'Entrar no painel' }}
+      </button>
+    </form>
+
+    <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" *ngIf="activeTab === 'register'">
+      <label class="field">
+        <span>Nome</span>
+        <input type="text" formControlName="nome" placeholder="Nome do responsável" />
+        <small *ngIf="registerForm.controls.nome.touched && registerForm.controls.nome.invalid">
+          Informe o nome do usuário.
+        </small>
+      </label>
+
+      <label class="field">
+        <span>E-mail</span>
+        <input type="email" formControlName="email" placeholder="usuario@empresa.com.br" />
+        <small *ngIf="registerForm.controls.email.touched && registerForm.controls.email.invalid">
+          Informe um e-mail válido.
+        </small>
+      </label>
+
+      <label class="field">
+        <span>Senha</span>
+        <input type="password" formControlName="senha" placeholder="Crie uma senha segura" />
+        <small *ngIf="registerForm.controls.senha.touched && registerForm.controls.senha.invalid">
+          A senha deve ter pelo menos 6 caracteres.
+        </small>
+      </label>
+
+      <label class="field">
+        <span>Confirmar senha</span>
+        <input type="password" formControlName="confirmacaoSenha" placeholder="Repita a senha" />
+        <small *ngIf="registerForm.controls.confirmacaoSenha.touched && registerForm.controls.confirmacaoSenha.invalid">
+          Confirme a senha com pelo menos 6 caracteres.
+        </small>
+        <small *ngIf="registerForm.controls.confirmacaoSenha.touched && hasPasswordMismatch">
+          As senhas precisam ser iguais.
+        </small>
+      </label>
+
+      <button type="submit" class="submit-button" [disabled]="isSubmitting">
+        <i class="bi bi-person-plus-fill"></i>
+        {{ isSubmitting ? 'Criando acesso...' : 'Criar acesso' }}
       </button>
     </form>
 
     <div class="panel-footer">
       <span class="soft-badge">
         <i class="bi bi-shield-lock"></i>
-        acesso institucional
+        login, registro e perfis por nível
       </span>
     </div>
   </section>
