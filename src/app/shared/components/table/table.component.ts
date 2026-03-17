@@ -16,6 +16,7 @@ export class TableComponent<T> implements OnInit, OnDestroy {
   @Input() columns!: string[];
   @Input() data!: DataItem<T>[];
   @Input() showActions: boolean = true;
+  @Input() showEdit: boolean = true;
   @Input() showDelete: boolean = true;
   @Input() showOpcoes: boolean = false;
   @Input() showRenew?: boolean = false;
@@ -65,6 +66,18 @@ export class TableComponent<T> implements OnInit, OnDestroy {
 
   get hasData(): boolean {
     return this.data?.length > 0;
+  }
+
+  get displayActions(): boolean {
+    return this.showActions && (
+      this.showEdit ||
+      this.showDelete ||
+      this.showOpcoes ||
+      Boolean(this.showRenew) ||
+      Boolean(this.showBaixarContrato) ||
+      Boolean(this.showBoleto) ||
+      Boolean(this.showComprovante)
+    );
   }
 
   truncateText(column: string, item: any): string {

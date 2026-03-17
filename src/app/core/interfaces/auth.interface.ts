@@ -1,4 +1,9 @@
-export type NivelUsuario = 'ADMINISTRADOR' | 'GESTOR' | 'OPERADOR';
+export type NivelUsuario =
+  | 'ADMINISTRADOR'
+  | 'GESTOR'
+  | 'OPERADOR'
+  | 'FINANCEIRO'
+  | 'CONSULTA';
 
 export interface AuthUser {
   id: number;

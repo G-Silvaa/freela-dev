@@ -10,7 +10,7 @@
     </div>
 
     <div class="quick-links">
-      <a *ngFor="let link of quickLinks" class="quick-link" [routerLink]="link.route">
+      <a *ngFor="let link of visibleQuickLinks" class="quick-link" [routerLink]="link.route">
         <i class="bi" [ngClass]="link.icon"></i>
         <span>{{ link.label }}</span>
       </a>

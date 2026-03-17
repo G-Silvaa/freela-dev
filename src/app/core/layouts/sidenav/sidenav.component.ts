@@ -23,7 +23,6 @@ interface NavigationItem {
   route: string;
   icon: string;
   description: string;
-  adminOnly?: boolean;
 }
 
 @Component({
@@ -95,7 +94,6 @@ export class SidenavComponent implements OnInit {
       route: '/usuarios',
       icon: 'bi-shield-lock-fill',
       description: 'Acessos e níveis',
-      adminOnly: true,
     },
   ];
 
@@ -118,7 +116,7 @@ export class SidenavComponent implements OnInit {
   }
 
   get navigationItems(): NavigationItem[] {
-    return this.allNavigationItems.filter((item) => !item.adminOnly || this.authService.isAdmin());
+    return this.allNavigationItems.filter((item) => this.authService.canAccessRoute(item.route));
   }
 
   toggleSideBar(): void {
@@ -142,6 +140,11 @@ export class SidenavComponent implements OnInit {
     this.screenWidth = window.innerWidth;
     this.currentUrl = this.normalizeUrl(this.router.url);
     this.authService.refreshProfile().subscribe({
+      next: () => {
+        if (this.currentUrl !== '/home' && !this.authService.canAccessRoute(this.currentUrl)) {
+          this.router.navigate(['/home']);
+        }
+      },
       error: () => this.authService.logout(),
     });
 

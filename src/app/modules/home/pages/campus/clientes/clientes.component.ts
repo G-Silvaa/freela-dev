@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -9,6 +10,7 @@ import { ModalComponent } from '../../../../../shared/components/modal/modal.com
 import { AddUsersModalComponent } from './components/add-users-modal/add-users-modal.component';
 import { EditUsersModalComponent } from './components/edit-users-modal/edit-users-modal.component';
 import { ClientesService } from './services/clientes.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 export interface IContato {
   nome: string;
@@ -49,6 +51,7 @@ interface ClienteTabela {
   selector: 'app-pessoas',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     TableComponent,
     InputDefaultComponent,
@@ -73,7 +76,11 @@ export class ClientesComponent implements OnInit {
   @ViewChild('adicionar') adicionar!: TemplateRef<any>;
   @ViewChild('editar') editar!: TemplateRef<any>;
 
-  constructor(private modalService: BsModalService, private usuarioService: ClientesService) {}
+  constructor(
+    private modalService: BsModalService,
+    private usuarioService: ClientesService,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -107,6 +114,16 @@ export class ClientesComponent implements OnInit {
 
   get emailsCadastrados(): number {
     return this.pessoasData.filter((cliente) => !!cliente['E-mail']).length;
+  }
+
+  get canManageClientes(): boolean {
+    return this.authService.canManageClientes();
+  }
+
+  get baseCadastralDescription(): string {
+    return this.canManageClientes
+      ? 'Listagem principal para edição e exclusão dos registros.'
+      : 'Listagem em modo consulta para visualizar cadastros e representantes.';
   }
 
   adicionarCliente() {

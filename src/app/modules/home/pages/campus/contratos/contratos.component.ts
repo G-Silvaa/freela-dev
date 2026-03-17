@@ -14,6 +14,7 @@ import { TableComponent } from "@shared/components/table/table.component";
 import { EditContratoModalComponent } from "./components/edit-contrato-modal/edit-contrato-modal.component";
 import { ContratosService } from "./services/contratos.service";
 import { beneficiosOptions } from "@core/consts/benenficios.const";
+import { AuthService } from "@core/services/auth/auth.service";
 
 @Component({
   selector: "app-grupo-de-acesso",
@@ -45,6 +46,7 @@ export class ContratosComponent implements OnInit {
   });
 
   constructor(private modalService: BsModalService) {}
+  private authService = inject(AuthService);
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -75,6 +77,30 @@ export class ContratosComponent implements OnInit {
     );
 
     return this.formatCurrency(total);
+  }
+
+  get canManageContratos(): boolean {
+    return this.authService.canManageContratos();
+  }
+
+  get canRenewContratos(): boolean {
+    return this.authService.canRenewContratos();
+  }
+
+  get canDownloadContratos(): boolean {
+    return this.authService.canDownloadContratos();
+  }
+
+  get contratosTableDescription(): string {
+    if (this.canManageContratos) {
+      return 'Edição, exclusão, renovação e emissão do contrato direto da tabela.';
+    }
+
+    if (this.canDownloadContratos) {
+      return 'Consulta da carteira contratual com emissão de documentos disponíveis.';
+    }
+
+    return 'Consulta da carteira contratual em modo leitura.';
   }
 
   submitFilter() {

@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { SidenavComponent } from "@core/layouts/sidenav/sidenav.component";
-import { adminGuard, authGuard, guestGuard } from "@core/guards/auth.guard";
+import { adminGuard, authGuard, guestGuard, routeAccessGuard } from "@core/guards/auth.guard";
 import { adminRoutes } from "@modules/administracao/administracao-routing.module";
 
 export const routes: Routes = [
@@ -16,6 +16,7 @@ export const routes: Routes = [
     children: [
       {
         path: "home",
+        canActivate: [routeAccessGuard('/home')],
         loadComponent: () =>
           import(
             "./modules/home/pages/initial-page/initial-page.component"
@@ -26,26 +27,28 @@ export const routes: Routes = [
   {
     path: "",
     component: SidenavComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: "processos",
+        canActivate: [routeAccessGuard('/processos')],
         loadComponent: () =>
           import("./modules/home/pages/campus/processos/processos.component").then(
             (m) => m.ProcessosComponent,
           ),
-       
       },
       {
         path: "contratos",
+        canActivate: [routeAccessGuard('/contratos')],
         loadComponent: () =>
           import(
             "./modules/home/pages/campus/contratos/contratos.component"
           ).then((m) => m.ContratosComponent),
-        
       },
 
       {
         path: "clientes",
+        canActivate: [routeAccessGuard('/clientes')],
         loadComponent: () =>
           import("./modules/home/pages/campus/clientes/clientes.component").then(
             (m) => m.ClientesComponent,
@@ -53,6 +56,7 @@ export const routes: Routes = [
       },
       {
         path: "modalidades",
+        canActivate: [routeAccessGuard('/modalidades')],
         loadComponent: () =>
           import("./modules/home/pages/campus/modalidades/modalidades.component").then(
             (m) => m.ModalidadesComponent,
@@ -68,6 +72,7 @@ export const routes: Routes = [
       },
       {
         path: "financas",
+        canActivate: [routeAccessGuard('/financas')],
         loadComponent: () =>
           import("./modules/home/pages/campus/financas/financas.component").then(
             (m) => m.FinancasComponent,

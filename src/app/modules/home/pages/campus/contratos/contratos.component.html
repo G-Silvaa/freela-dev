@@ -97,7 +97,7 @@
     <div class="section-heading">
       <div>
         <h2>Carteira contratual</h2>
-        <p>Edição, exclusão, renovação e emissão do contrato direto da tabela.</p>
+        <p>{{ contratosTableDescription }}</p>
       </div>
 
       <span class="soft-badge">
@@ -109,9 +109,11 @@
     <app-table
       [columns]="['Nome', 'CPF', 'Benefício', 'Número', 'Início', 'Conclusão', 'Valor']"
       [data]="pessoasContrato"
-      [showActions]="true"
-      [showRenew]="true"
-      [showBaixarContrato]="true"
+      [showActions]="canManageContratos || canDownloadContratos || canRenewContratos"
+      [showEdit]="canManageContratos"
+      [showDelete]="canManageContratos"
+      [showRenew]="canRenewContratos"
+      [showBaixarContrato]="canDownloadContratos"
       [itemsPerPage]="10"
       (edit)="onEdit($event)"
       (delete)="onDelete($event)"

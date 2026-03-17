@@ -20,6 +20,24 @@ export class AuthService {
   private readonly API_URL = environment.apiUrl;
   private readonly ACCESS_TOKEN_KEY = 'accessToken';
   private readonly AUTH_USER_KEY = 'authUser';
+  private readonly routeAccess: Record<NivelUsuario, string[]> = {
+    ADMINISTRADOR: ['/home', '/clientes', '/processos', '/contratos', '/financas', '/modalidades', '/usuarios'],
+    GESTOR: ['/home', '/clientes', '/processos', '/contratos', '/financas', '/modalidades'],
+    OPERADOR: ['/home', '/clientes', '/processos', '/contratos', '/modalidades'],
+    FINANCEIRO: ['/home', '/contratos', '/financas', '/modalidades'],
+    CONSULTA: ['/home', '/clientes', '/processos', '/contratos', '/financas', '/modalidades'],
+  };
+  private readonly capabilityAccess = {
+    manageUsers: ['ADMINISTRADOR'],
+    manageClientes: ['ADMINISTRADOR', 'GESTOR', 'OPERADOR'],
+    manageProcessos: ['ADMINISTRADOR', 'GESTOR', 'OPERADOR'],
+    issueProcessLetters: ['ADMINISTRADOR', 'GESTOR', 'OPERADOR'],
+    manageContratos: ['ADMINISTRADOR', 'GESTOR', 'OPERADOR'],
+    renewContratos: ['ADMINISTRADOR', 'GESTOR', 'OPERADOR'],
+    downloadContratos: ['ADMINISTRADOR', 'GESTOR', 'OPERADOR', 'FINANCEIRO', 'CONSULTA'],
+    manageFinancas: ['ADMINISTRADOR', 'GESTOR', 'FINANCEIRO'],
+    operateFinanceiroDocuments: ['ADMINISTRADOR', 'GESTOR', 'FINANCEIRO'],
+  } as const;
   private readonly currentUserSubject = new BehaviorSubject<AuthUser | null>(
     Cache.getLocalStorage({ key: this.AUTH_USER_KEY }) ?? null,
   );
@@ -45,6 +63,58 @@ export class AuthService {
 
   isAdmin(): boolean {
     return this.currentUserValue?.nivel === 'ADMINISTRADOR';
+  }
+
+  hasRole(...roles: NivelUsuario[]): boolean {
+    const nivel = this.currentUserValue?.nivel;
+    return Boolean(nivel && roles.includes(nivel));
+  }
+
+  canAccessRoute(route: string): boolean {
+    const nivel = this.currentUserValue?.nivel;
+
+    if (!nivel) {
+      return false;
+    }
+
+    const normalizedRoute = route.startsWith('/') ? route : `/${route}`;
+    return this.routeAccess[nivel]?.includes(normalizedRoute) ?? false;
+  }
+
+  canManageUsers(): boolean {
+    return this.hasCapability('manageUsers');
+  }
+
+  canManageClientes(): boolean {
+    return this.hasCapability('manageClientes');
+  }
+
+  canManageProcessos(): boolean {
+    return this.hasCapability('manageProcessos');
+  }
+
+  canIssueProcessLetters(): boolean {
+    return this.hasCapability('issueProcessLetters');
+  }
+
+  canManageContratos(): boolean {
+    return this.hasCapability('manageContratos');
+  }
+
+  canRenewContratos(): boolean {
+    return this.hasCapability('renewContratos');
+  }
+
+  canDownloadContratos(): boolean {
+    return this.hasCapability('downloadContratos');
+  }
+
+  canManageFinancas(): boolean {
+    return this.hasCapability('manageFinancas');
+  }
+
+  canOperateFinanceiroDocuments(): boolean {
+    return this.hasCapability('operateFinanceiroDocuments');
   }
 
   login(payload: LoginPayload): Observable<AuthResponse> {
@@ -83,9 +153,21 @@ export class AuthService {
       ADMINISTRADOR: 'Administrador',
       GESTOR: 'Gestor',
       OPERADOR: 'Operador',
+      FINANCEIRO: 'Financeiro',
+      CONSULTA: 'Consulta',
     };
 
     return nivel ? labels[nivel] ?? nivel : '';
+  }
+
+  private hasCapability(capability: keyof typeof this.capabilityAccess): boolean {
+    const nivel = this.currentUserValue?.nivel;
+
+    if (!nivel) {
+      return false;
+    }
+
+    return (this.capabilityAccess[capability] as readonly NivelUsuario[]).includes(nivel);
   }
 
   private persistSession(response: AuthResponse): void {

@@ -8,6 +8,7 @@ import {
   GraficosService,
 } from '@modules/home/pages/initial-page/services/initial.service';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '@core/services/auth/auth.service';
 
 interface QuickLinkItem {
   label: string;
@@ -51,7 +52,10 @@ export class InitialPageComponent implements OnInit {
     { label: 'Finanças', route: '/financas', icon: 'bi-bank2' },
   ];
 
-  constructor(private readonly graficosService: GraficosService) {}
+  constructor(
+    private readonly graficosService: GraficosService,
+    private readonly authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboard();
@@ -67,6 +71,10 @@ export class InitialPageComponent implements OnInit {
 
   get maxStatusValue(): number {
     return Math.max(...this.statusProcessos.map((status) => status.total), 1);
+  }
+
+  get visibleQuickLinks(): QuickLinkItem[] {
+    return this.quickLinks.filter((item) => this.authService.canAccessRoute(item.route));
   }
 
   get priorityItems(): PriorityItem[] {
@@ -103,7 +111,7 @@ export class InitialPageComponent implements OnInit {
         route: '/contratos',
         icon: 'bi-arrow-repeat',
       },
-    ];
+    ].filter((item) => this.authService.canAccessRoute(item.route));
   }
 
   statusLabel(status: string): string {

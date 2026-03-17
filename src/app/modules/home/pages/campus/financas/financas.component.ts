@@ -14,6 +14,7 @@ import { FinancasService } from "./services/contratos.service";
 import { beneficiosOptions } from "@core/consts/benenficios.const";
 import { EditFinanceiroModalComponent } from "./components/edit-contrato-modal/edit-financeiro-modal.component";
 import Swal from "sweetalert2";
+import { AuthService } from "@core/services/auth/auth.service";
 
 @Component({
   selector: "app-financas",
@@ -37,6 +38,7 @@ export class FinancasComponent implements OnInit {
   private financasService = inject(FinancasService);
   private datePipe = inject(DatePipe);
   protected formBuilder = inject(FormBuilder);
+  private authService = inject(AuthService);
 
   protected filterForm = this.formBuilder.group({
     nome: [""],
@@ -77,6 +79,26 @@ export class FinancasComponent implements OnInit {
     );
 
     return this.formatCurrency(total);
+  }
+
+  get canManageFinancas(): boolean {
+    return this.authService.canManageFinancas();
+  }
+
+  get canOperateFinanceiroDocuments(): boolean {
+    return this.authService.canOperateFinanceiroDocuments();
+  }
+
+  get financasTableDescription(): string {
+    if (this.canManageFinancas) {
+      return 'Edição rápida e emissão de documentos financeiros diretamente na tabela.';
+    }
+
+    if (this.canOperateFinanceiroDocuments) {
+      return 'Emissão de boletos e comprovantes com visão financeira consolidada.';
+    }
+
+    return 'Consulta da carteira financeira em modo leitura.';
   }
 
   submitFilter() {

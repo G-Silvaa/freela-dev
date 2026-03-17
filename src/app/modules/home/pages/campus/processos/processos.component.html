@@ -99,7 +99,7 @@
     <div class="section-heading">
       <div>
         <h2>Fila de processos</h2>
-        <p>Edição rápida e geração de cartas por processo.</p>
+        <p>{{ processosTableDescription }}</p>
       </div>
 
       <span class="soft-badge">
@@ -111,13 +111,14 @@
     <app-table
       [columns]="['Nome', 'CPF', 'Número do protocolo', 'Status', 'Perícia médica', 'Avaliação social', 'Entrada do protocolo', 'Cessação']"
       [data]="pessoasData"
-      [showActions]="true"
+      [showActions]="canManageProcessos || canIssueProcessLetters"
+      [showEdit]="canManageProcessos"
       [itemsPerPage]="10"
       (edit)="onEdit($event)"
       (delete)="onDelete($event)"
       (gerarCartas)="gerarCarta($event)"
       [showDelete]="false"
-      [showOpcoes]="true"
+      [showOpcoes]="canIssueProcessLetters"
     ></app-table>
   </div>
 </section>

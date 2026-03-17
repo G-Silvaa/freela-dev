@@ -9,6 +9,7 @@ import { TableComponent } from '../../../../../shared/components/table/table.com
 import { AddprocessosModalComponent } from './components/add-processos-modal/add-processos-modal.component';
 import { ProcessosService } from './services/processos.service';
 import { environment } from 'src/environments/environment.development';
+import { AuthService } from '@core/services/auth/auth.service';
 
 @Component({
   selector: 'app-processos',
@@ -40,7 +41,8 @@ export class ProcessosComponent implements OnInit {
 
   constructor(
     private processosService: ProcessosService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -61,6 +63,26 @@ export class ProcessosComponent implements OnInit {
 
   get cessacoesProximas(): number {
     return this.pessoasData.filter((item) => !!item['Cessação']).length;
+  }
+
+  get canManageProcessos(): boolean {
+    return this.authService.canManageProcessos();
+  }
+
+  get canIssueProcessLetters(): boolean {
+    return this.authService.canIssueProcessLetters();
+  }
+
+  get processosTableDescription(): string {
+    if (this.canManageProcessos && this.canIssueProcessLetters) {
+      return 'Edição rápida e geração de cartas por processo.';
+    }
+
+    if (this.canManageProcessos) {
+      return 'Edição rápida dos processos em andamento.';
+    }
+
+    return 'Consulta dos processos em modo leitura, sem ações operacionais.';
   }
 
   loadProcessos() {

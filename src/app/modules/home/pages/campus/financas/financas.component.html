@@ -117,7 +117,7 @@
     <div class="section-heading">
       <div>
         <h2>Carteira financeira</h2>
-        <p>Edição rápida e emissão de documentos financeiros diretamente na tabela.</p>
+        <p>{{ financasTableDescription }}</p>
       </div>
 
       <span class="soft-badge">
@@ -139,10 +139,11 @@
         'Situação pagamento'
       ]"
       [data]="pessoasFinanceiro"
-      [showActions]="true"
+      [showActions]="canManageFinancas || canOperateFinanceiroDocuments"
+      [showEdit]="canManageFinancas"
       [showDelete]="false"
-      [showBoleto]="true"
-      [showComprovante]="true"
+      [showBoleto]="canOperateFinanceiroDocuments"
+      [showComprovante]="canOperateFinanceiroDocuments"
       [itemsPerPage]="10"
       (edit)="onEdit($event)"
       (generateBoleto)="onGenerateBoleto($event)"

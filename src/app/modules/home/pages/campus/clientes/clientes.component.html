@@ -9,7 +9,7 @@
       </p>
     </div>
 
-    <div class="header-actions">
+    <div class="header-actions" *ngIf="canManageClientes">
       <button class="primary-action" type="button" (click)="adicionarCliente()">
         <i class="bi bi-person-plus-fill"></i>
         Novo cliente
@@ -105,7 +105,7 @@
     <div class="section-heading">
       <div>
         <h2>Base cadastral</h2>
-        <p>Listagem principal para edição e exclusão dos registros.</p>
+        <p>{{ baseCadastralDescription }}</p>
       </div>
 
       <span class="soft-badge">
@@ -117,7 +117,7 @@
     <app-table
       [columns]="['Nome', 'CPF', 'RG', 'E-mail', 'Tem representante?']"
       [data]="pessoasData"
-      [showActions]="true"
+      [showActions]="canManageClientes"
       [itemsPerPage]="10"
       (edit)="onEdit($event)"
       (delete)="onDelete($event)"
